@@ -1,0 +1,12 @@
+.header-container {
+    display: flex;
+    justify-content: center; /* Center the content horizontally */
+    align-items: center; /* Center the content vertically */
+    height: 100px; /* Set a fixed height */
+    border-bottom: 2px solid black;
+  }
+  
+  .logo {
+    width: 500px; /* Set width as desired */
+    height: auto; /* Maintain aspect ratio */
+  }
