@@ -27,6 +27,11 @@ To use the LeetCode Meetup Webapp, follow these steps:
     cd CodeCrew-Leetcode/webapp
     npm install
 
+
+    bash
+    cd CodeCrew-Leetcode/server
+    npm install
+
 ## Vscode Extension
 
 To integrate the LeetCode Meetup Assistant with Visual Studio Code, follow these steps:
@@ -41,6 +46,22 @@ To integrate the LeetCode Meetup Assistant with Visual Studio Code, follow these
 
 We welcome contributions from the community! If you have ideas for improvements or encounter issues, please open an [issue](https://github.com/ConnerKT/CodeCrew-Leetcode/issues) or submit a [pull request](https://github.com/ConnerKT/CodeCrew-Leetcode/pulls).
 
+### Contributing Setup
+
+If you want to contribute to the LeetCode Meetup Assistant, please follow these instructions to setup the repository. (If setup doesn't work, please submit an issue)
+
+If you want to contribute to the frontend, please npm install inside the webapp folder.
+
+For the backend, please npm install in the server folder.
+
+You should have a MongoDB URL that you can set in a .env file, with the name of **mongoDBUrl**
+
+Example: mongoDBUrl = 'thehehtehtehth'
+
+Once done the console should say 
+    Connected to the MongoDB database
+
+If done right, you are ready to develop, your data will be saved in a Leetcode folder.
 
 ## Contact
 
