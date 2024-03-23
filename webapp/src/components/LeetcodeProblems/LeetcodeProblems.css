@@ -28,5 +28,6 @@
   
   #problemName {
     text-align: center; /* Center the text within #problemName */
+    font-size: 2em;
   }
   

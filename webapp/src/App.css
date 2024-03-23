@@ -1,0 +1,29 @@
+.App{
+    height: 100vh;
+}
+
+#ContentSidebar {
+    min-width: 45px;
+    height: 100%;
+    background-color: #f1f1f1;
+    overflow-x: hidden;
+    display: inline-flex;
+    align-items: start;
+    justify-content: center;
+    vertical-align: top;
+}
+
+#toggleButton {
+    margin-top: 10px;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    width: 35px;
+    border-radius: 5px;
+}
+
+#toggleButton:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adjust the values as needed */
+    cursor: pointer;
+
+}
