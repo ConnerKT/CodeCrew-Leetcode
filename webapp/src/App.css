@@ -2,28 +2,110 @@
     height: 100vh;
 }
 
-#ContentSidebar {
-    min-width: 45px;
-    height: 100%;
-    background-color: #f1f1f1;
-    overflow-x: hidden;
-    display: inline-flex;
-    align-items: start;
-    justify-content: center;
-    vertical-align: top;
+#content {
+    width: 100%; 
+    display: flex; 
+    background-color: rgb(35, 56, 91);
+    align-items: center;
+    flex-direction: column;
+    min-height: 85vh;
 }
 
-#toggleButton {
-    margin-top: 10px;
+#challengeOptionContainer {
+    margin: 3%;
+    width: 80%;
+    height: 10%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+
+.challengeOption {
+    width: 30%;
+    display: flex;
     justify-content: center;
+    align-items: center;
+    background-color: white;
+    border: 3px solid white;
+    color: rgb(35, 56, 91);
+}
+
+.challengeOption h1 {
+    display: inline-block;
+    margin: 0;
+}
+
+.challengeOption:hover{
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.7); /* Adjust the values as needed */
+    cursor: pointer;
+}
+
+#challengeDetailsContainer{
+    width: 90%;
+    height: 100%;
+    display: flex;
+    padding: 3%;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+}
+
+
+#detailsSubContainer {
+    border: 3px solid white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    
+}
+
+
+.challengeDescription {
+    width: 100%;
+    border: 3px solid white ;
     display: flex;
     align-items: center;
-    width: 35px;
-    border-radius: 5px;
+    padding: 1%;
+    flex-direction: column;
+
 }
 
-#toggleButton:hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Adjust the values as needed */
-    cursor: pointer;
+.challengeDescription h1 {
+    margin: 0;
+    font-size: 2.3em;
+}
+.challengeDescription:nth-child(1) p {
+    text-align: left;
+    width: 90%;
+    font-size: 1.3em;
+    line-height: 2;
+    margin-top: 4%;
+}
 
+.challengeDescription:nth-child(2) p {
+    text-align: center;
+    font-size: 1.3em;
+
+}
+
+#challengeTitle {
+    font-size: 3.5em;
+    border-bottom: 3px solid white;
+    margin: 0;
+    margin-bottom: 2%;
+}
+
+.example {
+    margin-top: 4%;
+    width: 100%;
+    display: flex;
+}
+.example h2 {
+    margin: 0;
+}
+
+.exampleInput {
+    border: 3px solid white;
+    width: 50%;
+    padding: 1%;
 }

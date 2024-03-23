@@ -2,8 +2,8 @@
     display: flex;
     justify-content: center; /* Center the content horizontally */
     align-items: center; /* Center the content vertically */
-    height: 15%; /* Set a fixed height */
-    border-bottom: 2px solid black;
+    height: 15vh; /* Set a fixed height */
+    border-bottom: 4px solid rgb(0, 0, 0);
   }
   
   .logo {
