@@ -1,11 +1,12 @@
-import './App.css';
-import Header from "./components/Header/Header"
-import LeetcodeProblems from "./components/LeetcodeProblems/LeetcodeProblems"
+import React, { useState } from "react";
+import Header from "./components/Header/Header";
+import Content from "./components/Content";
+
 function App() {
   return (
     <div className="App">
-      <Header></Header>
-      <LeetcodeProblems></LeetcodeProblems>
+      <Header />
+      <Content />
     </div>
   );
 }

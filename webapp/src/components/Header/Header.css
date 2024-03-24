@@ -2,11 +2,12 @@
     display: flex;
     justify-content: center; /* Center the content horizontally */
     align-items: center; /* Center the content vertically */
-    height: 100px; /* Set a fixed height */
-    border-bottom: 2px solid black;
+    height: 15vh; /* Set a fixed height */
+    border-bottom: 4px solid rgb(0, 0, 0);
   }
   
   .logo {
-    width: 500px; /* Set width as desired */
+    width: 50%; /* Set width as desired */
+
     height: auto; /* Maintain aspect ratio */
   }
