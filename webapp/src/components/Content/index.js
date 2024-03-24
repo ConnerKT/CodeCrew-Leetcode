@@ -1,7 +1,8 @@
 import ChallengeDetailsView from "./ChallengeDetailsView";
 import { useEffect, useState } from "react";
 import data from "../../leetcode_challenges.json"
-import "./index.css"
+import "./Content.css"
+import ChallengeOptions from "./ChallengeOptions";
 function Content() {
   const [challenges, setChallenges] = useState(data);
   const [focusedChallengeIndex, setFocusedChallengeIndex] = useState(null);
@@ -14,13 +15,7 @@ function Content() {
   return (
     <div id="content">
       {challenges.length != 0 ? <>
-                                    <div id="challengeOptionContainer">
-                                        {challenges.map((challenge, index) => {
-                                            return <div className={focusedChallengeIndex == index ? "focusedChallengeOption": "challengeOption"} onClick={()=>{setFocusedChallengeIndex(index)}}>
-                                                        <h1>Challenge {index+1}</h1>
-                                                    </div>
-                                        })}
-                                    </div>
+                                    <ChallengeOptions challenges={challenges} focusedChallengeIndex={focusedChallengeIndex} setFocusedChallengeIndex={setFocusedChallengeIndex}/>
                                     {focusedChallengeIndex != null ? <ChallengeDetailsView challenge={challenges[focusedChallengeIndex]} /> : null}
                                 </> 
       : null}

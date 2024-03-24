@@ -1,4 +1,5 @@
 import Paper from "@mui/material/Paper";
+import "./ChallengeDetailsView.css"
 
 function ChallengeDetailsView({challenge}){
     return <Paper id="challengeDetailsContainer">
@@ -6,7 +7,7 @@ function ChallengeDetailsView({challenge}){
                 <div id="detailsSubContainer">
                     <div className="challengeDescription">
                         <h1>Description</h1>
-                        <p>{challenge.description}</p>
+                        <p dangerouslySetInnerHTML={{"__html": challenge.description}}></p>
                     </div>
                     <div className="challengeDescription">
                         <h1>Example Input/Output</h1>
