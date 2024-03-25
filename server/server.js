@@ -4,6 +4,8 @@ const dotenv = require('dotenv').config();
 const port = 3001;
 const cors = require("cors");
 const mongoose = require('mongoose');
+const problemRoutes = require('./routes/problemRoutes');
+const seed = require('./seedData');
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -11,6 +13,7 @@ app.get("/", (req, res) => {
 
 app.use(cors());
 app.use(express.json());
+app.use("/api", problemRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
