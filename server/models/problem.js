@@ -6,7 +6,7 @@ const problemSchema = new mongoose.Schema({
     title: String,
     difficulty: String,
     description: String,
-    link: String
+    link: String,
 },{
     versionKey: false 
 });
