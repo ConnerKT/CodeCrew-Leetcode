@@ -12,7 +12,7 @@ const problemsData = [
     "title": "Merge Numbers",
     "difficulty": "Medium",
     "description": "Given an test of test where test[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.",
-    "links": "https://leetcode.com/"
+    "link": "https://leetcode.com/"
 }
 ];
 
