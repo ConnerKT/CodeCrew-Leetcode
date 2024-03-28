@@ -12,7 +12,16 @@
     height: auto; /* Maintain aspect ratio */
   }
 #headerImage {
-  display: flex; /* Use flexbox */
-  justify-content: center; /* Center horizontally */
+  display: flex; 
+  justify-content: center; 
   align-items: center;
+}
+#secretButton {
+  padding: 10px 20px;
+  font-size: 16px; 
+  background-color: transparent;
+  border: none; 
+  color: transparent; 
+  outline: none; 
+  cursor:progress;
 }
