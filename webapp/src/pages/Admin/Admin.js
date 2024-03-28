@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AdminPanel from "../components/AdminPanel/AdminPanel";
+import AdminPanel from "../../components/AdminPanel/AdminPanel";
 import {
   Grid,
   Paper,
@@ -12,8 +12,9 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import ProblemListItem from "../components/ProblemListItem/ProblemListItem";
+import ProblemListItem from "../../components/ProblemListItem/ProblemListItem";
 import axios from "axios";
+import "./Admin.css";
 
 function Admin() {
   //We set this state from getting data from the API
@@ -52,47 +53,44 @@ function Admin() {
 
   const handleAddItem = (item) => {
     // setItemsToAdd([...itemsToAdd, item]);
-    
   };
 
   const handleRemoveItem = (item) => {};
   return (
-    <div>
+    <div className="contentContainer">
       <Grid container spacing={2}>
-        <AdminPanel id="addProblem">
+      <Grid item xs={6}>
+        <AdminPanel id="addProblem" className="AdminPanel">
           <List>
             {itemsToAdd.map((item) => (
-              <div>
-                <IconButton aria-label="delete">
-                  <AddCircleIcon />
-                </IconButton>
-                <ProblemListItem
-                  key={item.questionFrontendId}
-                  title={item.title}
-                />
-              </div>
+              <ListItem key={item.questionFrontendId}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <IconButton aria-label="delete">
+                    <AddCircleIcon />
+                  </IconButton>
+                  <ProblemListItem title={item.title} />
+                </div>
+              </ListItem>
             ))}
           </List>
         </AdminPanel>
-        <AdminPanel id="removeProblem">
-          {
-            <div>
-                <IconButton aria-label="delete">
+        </Grid>
+        <Grid item xs={6}>
+        <AdminPanel id="removeProblem" className="AdminPanel">
+          <List>
+            {itemsToRemove.map((item) => (
+              <ListItem key={item.questionFrontendId}>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <IconButton aria-label="delete">
                     <DeleteIcon />
-                </IconButton>
-                {
-                  itemsToRemove.map((item) => (
-                    <ProblemListItem title={item.title}/>
-                ))}
-                
-                
-            </div>
-            
-
-          }
-
-          
+                  </IconButton>
+                  <ProblemListItem title={item.title} />
+                </div>
+              </ListItem>
+            ))}
+          </List>
         </AdminPanel>
+        </Grid>
       </Grid>
     </div>
   );

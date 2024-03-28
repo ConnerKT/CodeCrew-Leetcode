@@ -1,0 +1,17 @@
+.contentContainer {
+    max-width: 1200px; /* Adjust this value based on your layout */
+    margin: 0 auto; /* Center the container horizontally */
+    padding-top: 20px; /* Adjust this value based on your header height */
+  }
+  
+  .AdminPanel {
+    width: calc(50% - 16px); /* Set the width to 50% minus some padding */
+    margin-right:20px;
+  }
+  
+  @media (max-width: 600px) {
+    .AdminPanel {
+      width: calc(100% - 16px); /* On smaller screens, set the width to 100% minus padding */
+      margin: 0 8px; /* Add some margin for spacing */
+    }
+  }
