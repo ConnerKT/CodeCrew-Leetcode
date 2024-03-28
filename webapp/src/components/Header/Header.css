@@ -4,10 +4,15 @@
     align-items: center; /* Center the content vertically */
     height: 15vh; /* Set a fixed height */
     border-bottom: 4px solid rgb(0, 0, 0);
+    cursor:pointer; 
   }
   
   .logo {
     width: 50%; /* Set width as desired */
-
     height: auto; /* Maintain aspect ratio */
   }
+#headerImage {
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Center horizontally */
+  align-items: center;
+}
