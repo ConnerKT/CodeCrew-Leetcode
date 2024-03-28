@@ -57,6 +57,7 @@ function Admin() {
 
   const handleRemoveItem = (item) => {};
   return (
+    <div className="adminPage">
     <div className="contentContainer">
       <Grid container spacing={2}>
       <Grid item xs={6}>
@@ -92,6 +93,7 @@ function Admin() {
         </AdminPanel>
         </Grid>
       </Grid>
+    </div>
     </div>
   );
 }
