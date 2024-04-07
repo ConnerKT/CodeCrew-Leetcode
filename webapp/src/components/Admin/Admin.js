@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AdminPanel from "../../components/AdminPanel/AdminPanel";
+import AdminPanel from "../AdminPanel/AdminPanel";
 import {
   Grid,
   Paper,
@@ -12,7 +12,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import ProblemListItem from "../../components/ProblemListItem/ProblemListItem";
+import ProblemListItem from "../ProblemListItem/ProblemListItem";
 import axios from "axios";
 import "./Admin.css";
 

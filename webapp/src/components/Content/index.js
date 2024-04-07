@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import data from "../../leetcode_challenges.json"
 import "./Content.css"
 import ChallengeOptions from "./ChallengeOptions";
+const { io } = require("socket.io-client");
+
 function Content() {
   const [challenges, setChallenges] = useState(data);
   const [focusedChallengeIndex, setFocusedChallengeIndex] = useState(null);
