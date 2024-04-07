@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import AdminPanel from "../AdminPanel/AdminPanel";
+import AdminPanel from "./AdminPanel";
 import {
   Grid,
   Paper,
@@ -12,11 +12,11 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-import ProblemListItem from "../ProblemListItem/ProblemListItem";
+import ProblemListItem from "./ProblemListItem";
 import axios from "axios";
 import "./Admin.css";
 
-function Admin() {
+function AdminView() {
   //We set this state from getting data from the API
   const [itemsToAdd, setItemsToAdd] = useState([]);
   //We set this state when one of the items in the list changes (removing from DB)
@@ -98,4 +98,4 @@ function Admin() {
   );
 }
 
-export default Admin;
+export default AdminView;

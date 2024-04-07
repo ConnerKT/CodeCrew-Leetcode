@@ -5,7 +5,7 @@ import "./Content.css"
 import ChallengeOptions from "./ChallengeOptions";
 const { io } = require("socket.io-client");
 
-function Content() {
+function UserView() {
   const [challenges, setChallenges] = useState(data);
   const [focusedChallengeIndex, setFocusedChallengeIndex] = useState(null);
 
@@ -25,4 +25,4 @@ function Content() {
   );
 }
 
-export default Content;
+export default UserView;

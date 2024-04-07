@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import Header from "./components/Header/Header";
-import Content from "./components/Content/index";
-import Admin from './components/Admin/Admin'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import UserView from "./components/UserView";
+import AdminView from "./components/AdminView";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 function App() {
   return (
@@ -10,9 +10,8 @@ function App() {
       <div>
         <Header />
         <Routes>
-          <Route path="/admin" element={<Admin/>}></Route>
-          <Route path="/" element={<Content/>}>
-          </Route>
+          <Route path="/admin" element={<AdminView />}></Route>
+          <Route path="/" element={<UserView />}></Route>
         </Routes>
       </div>
     </Router>
