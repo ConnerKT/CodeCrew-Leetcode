@@ -6,6 +6,7 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 const problemRoutes = require('./routes/problemRoutes');
 const seed = require('./seedData');
+const scrapeSeed = require('./scraperSeedData');
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -31,3 +32,6 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
   console.log("Connected to the MongoDB database");
 });
+
+// seed
+scrapeSeed
