@@ -18,6 +18,10 @@ async function seedProblems() {
         link: problemData.link
       });
 
+      if (!newProblem.id) {
+        throw new Error('Problem id must be provided');
+      }
+      // await newProblem.validate();
       await newProblem.save();
       console.log(`Problem ${i + 1} seeded successfully`);
     }
@@ -30,4 +34,4 @@ async function seedProblems() {
   }
 }
 
-seedProblems();
+// seedProblems();

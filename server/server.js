@@ -14,7 +14,7 @@ app.get("/", (req, res) => {
 
 app.use(cors());
 app.use(express.json());
-app.use("/api", problemRoutes);
+app.use("/", problemRoutes);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
@@ -34,4 +34,4 @@ db.once("open", () => {
 });
 
 // seed
-scrapeSeed
+// scrapeSeed
