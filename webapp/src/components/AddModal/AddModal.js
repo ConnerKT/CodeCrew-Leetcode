@@ -39,31 +39,37 @@ const handleDifficultyChange = (event) => {
 const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
 };
-const handleSubmit = () => {
-
+const handleSubmit = async () => {
   console.log("Problem Name:", problemName);
   console.log("Difficulty:", difficulty);
   console.log("Description:", description);
-  postProblemToServer(problemName, difficulty, description); //
-  setProblemName("");
-  setDifficulty("");
-  setDescription("");
 
-  props.handleClose();
+  try {
+
+    const response = await postProblemToServer(problemName, difficulty, description);
+    props.setItemsToAdd(response.data.allProblems);
+    console.log(response.data, "this data")
+    props.handleClose(); 
+  } catch (error) {
+    console.error('Error posting problem:', error);
+
+  }
 };
 const postProblemToServer = async (name, difficulty, description) => {
- try{
-  const response = await axios.post(
-    "https://codecrew-leetcode-api.onrender.com/problems"
-  );
-  
- }
- catch(error){
-  console.log(error);
-
- }
-}
-
+  try {
+    const response = await axios.post(
+      "https://codecrew-leetcode-api.onrender.com/problems",
+      {
+        title: name,
+        difficulty,
+        description
+      }
+    );
+    return response;
+  } catch (error) {
+    throw new Error('Failed to post problem:', error);
+  }
+};
 
   return (
     <div>
@@ -97,9 +103,9 @@ const postProblemToServer = async (name, difficulty, description) => {
                   label="Difficulty"
                   onChange={handleDifficultyChange}
                 >
-                  <MenuItem value={10}>Easy</MenuItem>
-                  <MenuItem value={20}>Medium</MenuItem>
-                  <MenuItem value={30}>Hard</MenuItem>
+                  <MenuItem value={'Easy'}>Easy</MenuItem>
+                  <MenuItem value={'Medium'}>Medium</MenuItem>
+                  <MenuItem value={'Hard'}>Hard</MenuItem>
                 </Select>
               </FormControl>
             </Box>

@@ -92,6 +92,7 @@ function Admin() {
               open={open}
               handleOpen={handleAddItem}
               handleClose={handleClose}
+              setItemsToAdd={setItemsToAdd}
             />
             <WarningModal
               open={openWarning}
