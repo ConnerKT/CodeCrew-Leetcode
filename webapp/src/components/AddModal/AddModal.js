@@ -9,7 +9,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SendIcon from "@mui/icons-material/Send";
-import Stack from "@mui/material/Stack";
+import axios from "axios";
+
 
 const style = {
   position: "absolute",
@@ -24,11 +25,45 @@ const style = {
 };
 
 function AddModal(props) {
+  const [problemName, setProblemName] = useState("");
   const [difficulty, setDifficulty] = useState("");
+  const [description, setDescription] = useState("");
 
-  const handleChange = (event) => {
+const handleProblemNameChange = (event) => {
+    setProblemName(event.target.value); // Update the problemName state with the entered value
+};
+const handleDifficultyChange = (event) => {
     setDifficulty(event.target.value);
-  };
+};
+
+const handleDescriptionChange = (event) => {
+    setDescription(event.target.value);
+};
+const handleSubmit = () => {
+
+  console.log("Problem Name:", problemName);
+  console.log("Difficulty:", difficulty);
+  console.log("Description:", description);
+  postProblemToServer(problemName, difficulty, description); //
+  setProblemName("");
+  setDifficulty("");
+  setDescription("");
+
+  props.handleClose();
+};
+const postProblemToServer = async (name, difficulty, description) => {
+ try{
+  const response = await axios.post(
+    "https://codecrew-leetcode-api.onrender.com/problems"
+  );
+  
+ }
+ catch(error){
+  console.log(error);
+
+ }
+}
+
 
   return (
     <div>
@@ -48,6 +83,7 @@ function AddModal(props) {
               id="outlined-required"
               label="Problem Name"
               defaultValue="Two Sum"
+              onChange={handleProblemNameChange}
             />
             <Box sx={{ minWidth: 120, mt: 2 }}>
               <FormControl sx={{ minWidth: 224 }}>
@@ -59,7 +95,7 @@ function AddModal(props) {
                   id="demo-simple-select"
                   value={difficulty}
                   label="Difficulty"
-                  onChange={handleChange}
+                  onChange={handleDifficultyChange}
                 >
                   <MenuItem value={10}>Easy</MenuItem>
                   <MenuItem value={20}>Medium</MenuItem>
@@ -67,15 +103,19 @@ function AddModal(props) {
                 </Select>
               </FormControl>
             </Box>
+           
             <TextField
               required
-              id="outlined-required"
-              label="Problem Description"
-              defaultValue="Given an array of integers nums and"
-              sx={{ mt: 2 }}
+              minRows={2} 
+              maxRows={10}
+              aria-label="minimum height"
+              style={{ width: "100%", resize: "vertical", marginTop: 8 }}
+              placeholder="Enter problem description..."
+              value={description}
+              onChange={handleDescriptionChange}
             />
           </Typography>
-          <Button sx={{ mt: 2 }} variant="contained" endIcon={<SendIcon />}>
+          <Button onClick={handleSubmit} sx={{ mt: 2 }} variant="contained" endIcon={<SendIcon />}>
             Submit
           </Button>
         </Box>

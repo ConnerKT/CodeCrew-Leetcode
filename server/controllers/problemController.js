@@ -31,7 +31,13 @@ exports.createProblem = async (req, res) => {
       link
     });
     const savedProblem = await newProblem.save();
-    res.status(201).json(savedProblem);
+    const problems = await Problem.find();
+
+    // sending all problems so I don't have to recall the GET every time a post is made
+    res.status(201).json({
+      newProblem: savedProblem,
+      allProblems: problems
+    });
 
   }catch (err) {
     console.error(err);

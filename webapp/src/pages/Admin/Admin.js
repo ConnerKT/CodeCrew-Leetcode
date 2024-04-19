@@ -77,7 +77,9 @@ function Admin() {
       <div className="contentContainer">
         {loading ? ( 
           <div className="loadingContainer">
-            <CircularProgress color="inherit" />
+            <div className="spinnerWrapper">
+              <CircularProgress size="100px"/>
+            </div>
           </div>
         ) : (
           <>

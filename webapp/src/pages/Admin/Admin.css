@@ -45,3 +45,14 @@
 .deleteIcon:hover {
   transform: rotate(-10deg) scale(1.2);
 }
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; 
+}
+
+.spinnerWrapper {
+  width: 100px; 
+  height: 100px; 
+}
