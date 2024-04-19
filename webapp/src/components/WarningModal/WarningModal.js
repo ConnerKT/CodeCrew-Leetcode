@@ -17,7 +17,11 @@ const style = {
   p: 4,
 };
 
-function WarningModal({ open, handleClose, handleConfirm }) {
+const handleRemoveItem = (item) => {
+    
+};
+
+function WarningModal({ open, handleClose }) {
   return (
     <Modal
       open={open}
@@ -32,7 +36,7 @@ function WarningModal({ open, handleClose, handleConfirm }) {
         <p id="modal-modal-description">Are you sure you want to delete this item?</p>
         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
         <Stack direction="row" spacing={2}>
-        <Button variant="outlined" color="success">
+        <Button variant="outlined" color="success" onClick={handleClose}>
             Go Back 🔙
           </Button>
           <Button variant="outlined" color="error">
