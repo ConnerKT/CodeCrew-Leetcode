@@ -4,6 +4,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from '@mui/material/Stack';
+import axios from "axios";
+
 
 const style = {
   position: "absolute",
@@ -17,11 +19,25 @@ const style = {
   p: 4,
 };
 
-const handleRemoveItem = (item) => {
-    
-};
+function WarningModal({ open, handleClose, itemToRemove, setItemsToAdd}) {
 
-function WarningModal({ open, handleClose }) {
+  const handleRemoveItem = async () => {
+    try {
+      const response = await axios.delete(
+        `https://codecrew-leetcode-api.onrender.com/problems/${itemToRemove._id}`,
+       
+      );
+      // const updatedProblems = response.data.allProblems;
+      console.log(response);
+    // if (setItemsToAdd) {
+    //   setItemsToAdd(updatedProblems);
+    // }
+    handleClose();
+    } catch (error) {
+      console.error('Failed to delete problem:', error)
+      throw new Error('Failed to delete problem:', error);
+    }
+};
   return (
     <Modal
       open={open}
@@ -39,7 +55,7 @@ function WarningModal({ open, handleClose }) {
         <Button variant="outlined" color="success" onClick={handleClose}>
             Go Back 🔙
           </Button>
-          <Button variant="outlined" color="error">
+          <Button onClick={handleRemoveItem}variant="outlined" color="error">
             Yes ✅
           </Button>
           </Stack>

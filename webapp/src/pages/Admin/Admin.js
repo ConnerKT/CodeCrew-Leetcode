@@ -56,12 +56,14 @@ function Admin() {
   const handleRemoveItem = (item) => {
 
   };
+  // Set open state to true to show the modal
   const handleAddItem = () => {
-    setOpen(true); // Set open state to true to show the modal
+    setOpen(true); 
   };
 
+  // Set open state to false to hide the modal
   const handleClose = () => {
-    setOpen(false); // Set open state to false to hide the modal
+    setOpen(false); 
   };
   const handleWarningPopup = (item) => {
     setItemToRemove(item); // Set the item to remove
@@ -97,6 +99,8 @@ function Admin() {
             <WarningModal
               open={openWarning}
               handleClose={handleCloseWarningModal}
+              itemToRemove={itemToRemove}
+              setItemsToAdd={setItemsToAdd}
             />
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -119,8 +123,8 @@ function Admin() {
                             </IconButton>
                             <ProblemListItem title={item.title} />
                           </div>
-                          {/* Delete icon on the right */}
                           <IconButton
+                            className="deleteIcon"
                             aria-label="delete"
                             onClick={() => handleWarningPopup(item)}
                           >

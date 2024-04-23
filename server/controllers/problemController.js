@@ -46,17 +46,25 @@ exports.createProblem = async (req, res) => {
 }
 exports.deleteProblem = async (req, res) => {
   const problemId = req.params.id;
-  console.log(problemId);
+
+  // console.log(problemId);
+
   try {
     const deletedProblem = await Problem.findByIdAndDelete(problemId);
-    console.error(deletedProblem);
+    
     if (!deletedProblem) {
-      return res.status(404).json({ message: 'Problem not found' });
-    }
+          return res.status(404).json({ message: 'Problem not found' });
+        }
+    const problems = await Problem.find();
 
-    res.json({ message: 'Problem deleted successfully', deletedProblem });
-  }catch(err){
-    res.status(500).json({ message: error.message });
-    console.error(err);
+    res.status(200).json({
+      message: 'Problem deleted successfully',
+      deletedProblem,
+      allProblems: problems
+    });
+  } catch (error) {
+    console.error('Error deleting problem:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
+  
 }
