@@ -18,7 +18,8 @@ import "./Admin.css";
 import data from "../../leetcode_challenges.json";
 import AddModal from "../../components/AddModal/AddModal";
 import WarningModal from "../../components/WarningModal/WarningModal";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
+import EditIcon from "@mui/icons-material/Edit";
 
 function Admin() {
   //We set this state from getting data from the API
@@ -32,7 +33,7 @@ function Admin() {
 
   const [itemToRemove, setItemToRemove] = useState(null);
 
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,33 +42,35 @@ function Admin() {
           "https://codecrew-leetcode-api.onrender.com/problems"
         );
         setItemsToAdd(response.data);
-        setLoading(false); 
+        setLoading(false);
       } catch (error) {
         console.log(error);
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, []);
 
   console.log("itemsToAdd:", itemsToAdd);
 
-  const handleRemoveItem = (item) => {
-
-  };
+  const handleRemoveItem = (item) => {};
   // Set open state to true to show the modal
   const handleAddItem = () => {
-    setOpen(true); 
+    setOpen(true);
   };
 
   // Set open state to false to hide the modal
   const handleClose = () => {
-    setOpen(false); 
+    setOpen(false);
   };
   const handleWarningPopup = (item) => {
     setItemToRemove(item); // Set the item to remove
     setOpenWarning(true); // Open the warning modal
+  };
+
+  const handleEditPopup = (item) => {
+
   };
 
   const handleCloseWarningModal = () => {
@@ -77,10 +80,10 @@ function Admin() {
   return (
     <div className="adminPage">
       <div className="contentContainer">
-        {loading ? ( 
+        {loading ? (
           <div className="loadingContainer">
             <div className="spinnerWrapper">
-              <CircularProgress size="100px"/>
+              <CircularProgress size="100px" />
             </div>
           </div>
         ) : (
@@ -116,20 +119,32 @@ function Admin() {
                             width: "100%",
                           }}
                         >
-                         
-                          <div style={{ display: "flex", alignItems: "center" }}>
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
+                          >
                             <IconButton aria-label="add">
                               <AddCircleIcon />
                             </IconButton>
                             <ProblemListItem title={item.title} />
                           </div>
-                          <IconButton
-                            className="deleteIcon"
-                            aria-label="delete"
-                            onClick={() => handleWarningPopup(item)}
+                          <div
+                            style={{ display: "flex", alignItems: "center" }}
                           >
-                            <DeleteIcon />
-                          </IconButton>
+                            <IconButton
+                              className="editIcon"
+                              aria-label="edit"
+                              onClick={() => handleEditPopup(item)}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton
+                              className="deleteIcon"
+                              aria-label="delete"
+                              onClick={() => handleWarningPopup(item)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </div>
                         </div>
                       </ListItem>
                     ))}

@@ -27,11 +27,11 @@ function WarningModal({ open, handleClose, itemToRemove, setItemsToAdd}) {
         `https://codecrew-leetcode-api.onrender.com/problems/${itemToRemove._id}`,
        
       );
-      // const updatedProblems = response.data.allProblems;
-      console.log(response);
-    // if (setItemsToAdd) {
-    //   setItemsToAdd(updatedProblems);
-    // }
+      const updatedProblems = response.data.allProblems;
+
+    if (setItemsToAdd) {
+      setItemsToAdd(updatedProblems);
+    }
     handleClose();
     } catch (error) {
       console.error('Failed to delete problem:', error)

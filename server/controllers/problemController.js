@@ -1,10 +1,12 @@
-const mongoose = require('mongoose');
-const Problem = require('../models/problem');
-const dotenv = require('dotenv').config();
-const getNextSequenceValue = require('../utils/sequenceGenerator');
+const mongoose = require("mongoose");
+const Problem = require("../models/problem");
+const dotenv = require("dotenv").config();
+const getNextSequenceValue = require("../utils/sequenceGenerator");
 
-mongoose.connect(process.env.mongoDBUrl, { useNewUrlParser: true, useUnifiedTopology: true });
-
+mongoose.connect(process.env.mongoDBUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 exports.getAllProblems = async (req, res) => {
   try {
@@ -12,7 +14,7 @@ exports.getAllProblems = async (req, res) => {
     res.json(problems);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 exports.createProblem = async (req, res) => {
@@ -28,7 +30,7 @@ exports.createProblem = async (req, res) => {
       title,
       difficulty,
       description,
-      link
+      link,
     });
     const savedProblem = await newProblem.save();
     const problems = await Problem.find();
@@ -36,14 +38,13 @@ exports.createProblem = async (req, res) => {
     // sending all problems so I don't have to recall the GET every time a post is made
     res.status(201).json({
       newProblem: savedProblem,
-      allProblems: problems
+      allProblems: problems,
     });
-
-  }catch (err) {
+  } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 exports.deleteProblem = async (req, res) => {
   const problemId = req.params.id;
 
@@ -51,20 +52,34 @@ exports.deleteProblem = async (req, res) => {
 
   try {
     const deletedProblem = await Problem.findByIdAndDelete(problemId);
-    
+
     if (!deletedProblem) {
-          return res.status(404).json({ message: 'Problem not found' });
-        }
+      return res.status(404).json({ message: "Problem not found" });
+    }
     const problems = await Problem.find();
 
     res.status(200).json({
-      message: 'Problem deleted successfully',
+      message: "Problem deleted successfully",
       deletedProblem,
-      allProblems: problems
+      allProblems: problems,
     });
   } catch (error) {
-    console.error('Error deleting problem:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    console.error("Error deleting problem:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
-  
-}
+};
+exports.updateProblem = async (req, res) => {
+  try {
+    //Grab Id and set it to a variable
+    let problemId = req.params.id;
+    //Find ID, if not found, return status code 404
+    const problem = await Problem.findByIdAndUpdate(problemId);
+    if (!problem) {
+      return res.status(404).json({ message: "Problem not found" });
+    }
+    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
