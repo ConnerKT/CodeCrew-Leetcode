@@ -72,12 +72,18 @@ exports.updateProblem = async (req, res) => {
   try {
     //Grab Id and set it to a variable
     let problemId = req.params.id;
+    const updateData = req.body; 
     //Find ID, if not found, return status code 404
-    const problem = await Problem.findByIdAndUpdate(problemId);
-    if (!problem) {
+    const updatedProblem = await Problem.findByIdAndUpdate(problemId, updateData);
+    if (!updatedProblem) {
       return res.status(404).json({ message: "Problem not found" });
     }
-    
+    const problems = await Problem.find();
+    res.status(200).json({
+      message: "Problem deleted successfully",
+      updatedProblem: updatedProblem,
+      allProblems: problems,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Internal server error" });

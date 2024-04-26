@@ -20,6 +20,7 @@ import AddModal from "../../components/AddModal/AddModal";
 import WarningModal from "../../components/WarningModal/WarningModal";
 import CircularProgress from "@mui/material/CircularProgress";
 import EditIcon from "@mui/icons-material/Edit";
+import EditModal from '../../components/EditModal/EditModal'
 
 function Admin() {
   //We set this state from getting data from the API
@@ -31,9 +32,13 @@ function Admin() {
 
   const [openWarning, setOpenWarning] = useState(false); // State to manage modal open/close
 
+  const [openEdit, setOpenEdit] = useState(false); 
+
   const [itemToRemove, setItemToRemove] = useState(null);
 
   const [loading, setLoading] = useState(true);
+
+  const [currentItem, setCurrentItem] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -70,9 +75,13 @@ function Admin() {
   };
 
   const handleEditPopup = (item) => {
+    setOpenEdit(true);
+    setCurrentItem(item); // Set the current item
 
   };
-
+  const handleCloseEditModal = () => {
+    setOpenEdit(false);
+  }
   const handleCloseWarningModal = () => {
     setOpenWarning(false);
   };
@@ -105,6 +114,13 @@ function Admin() {
               itemToRemove={itemToRemove}
               setItemsToAdd={setItemsToAdd}
             />
+            <EditModal
+            open={openEdit}
+            handleClose={handleCloseEditModal}
+            setItemsToAdd={setItemsToAdd}
+            currentItem={currentItem}
+            >
+            </EditModal>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <AdminPanel id="addProblem" className="AdminPanel">

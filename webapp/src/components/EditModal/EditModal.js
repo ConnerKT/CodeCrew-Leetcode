@@ -30,7 +30,7 @@ function EditModal(props) {
   const [description, setDescription] = useState("");
 
 const handleProblemNameChange = (event) => {
-    setProblemName(event.target.value); // Update the problemName state with the entered value
+    setProblemName(event.target.value); 
 };
 const handleDifficultyChange = (event) => {
     setDifficulty(event.target.value);
@@ -60,13 +60,15 @@ const handleSubmit = async () => {
 const editProblemInServer = async (name, difficulty, description) => {
   try {
     const response = await axios.put(
-      "https://codecrew-leetcode-api.onrender.com/problems",
+      `https://codecrew-leetcode-api.onrender.com/problems/${props.currentItem._id}`,
       {
         title: name,
         difficulty,
         description
       }
     );
+    console.log(response);
+
     return response;
   } catch (error) {
     throw new Error('Failed to post problem:', error);
@@ -83,14 +85,14 @@ const editProblemInServer = async (name, difficulty, description) => {
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Add a Leetcode Problem
+            Edit Problem
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <TextField
               required
               id="outlined-required"
               label="Problem Name"
-              defaultValue="Two Sum"
+              defaultValue={props.currentItem.title}
               onChange={handleProblemNameChange}
             />
             <Box sx={{ minWidth: 120, mt: 2 }}>
@@ -102,7 +104,8 @@ const editProblemInServer = async (name, difficulty, description) => {
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={difficulty}
-                  label="Difficulty"
+                  defaultValue={props.currentItem.difficulty}
+                  label={props.currentItem.difficulty}
                   onChange={handleDifficultyChange}
                 >
                   <MenuItem value={'Easy'}>Easy</MenuItem>
@@ -120,6 +123,7 @@ const editProblemInServer = async (name, difficulty, description) => {
               style={{ width: "100%", resize: "vertical", marginTop: 8 }}
               placeholder="Enter problem description..."
               value={description}
+              defaultValue={props.currentItem.description}
               onChange={handleDescriptionChange}
             />
           </Typography>
