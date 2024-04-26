@@ -16,11 +16,11 @@ import ProblemListItem from "./ProblemListItem";
 import axios from "axios";
 import "./Admin.css";
 import data from "../../leetcode_challenges.json";
-import AddModal from "../../components/AddModal/AddModal";
-import WarningModal from "../../components/WarningModal/WarningModal";
+import AddModal from "./AddModal/AddModal";
+import WarningModal from "./WarningModal/WarningModal";
 import CircularProgress from "@mui/material/CircularProgress";
 import EditIcon from "@mui/icons-material/Edit";
-import EditModal from '../../components/EditModal/EditModal'
+import EditModal from './EditModal/EditModal'
 
 function AdminView() {
   //We set this state from getting data from the API

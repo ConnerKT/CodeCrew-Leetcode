@@ -1,7 +1,10 @@
 import Paper from "@mui/material/Paper";
 import "./ChallengeDetailsView.css"
-
+import { useLogin } from "../../../contexts/LoginContext";
 function ChallengeDetailsView({challenge}){
+    const { isLoggedIn, user, gameRoom, login, logout } = useLogin();
+
+
     return <Paper id="challengeDetailsContainer">
                 <h1 id="challengeTitle">{challenge.title}</h1>
                 <div id="detailsSubContainer">

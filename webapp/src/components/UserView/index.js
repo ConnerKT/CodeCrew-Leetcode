@@ -14,7 +14,7 @@ function UserView() {
   useEffect(() => {
     setFocusedChallengeIndex(0);
   }, []);
-
+  console.log({gameRoom})
   console.log({user})
   let content = <div id="joinForm" style={{display: "flex", justifyContent: "center", flexDirection: "column"}}>
                   <form onSubmit={function(event){
@@ -30,6 +30,7 @@ function UserView() {
 
   if (user != null) {
     content = <>
+                <h1>gameRoom: {gameRoom.gameroomId}</h1>
                 <ChallengeOptions challenges={challenges} focusedChallengeIndex={focusedChallengeIndex} setFocusedChallengeIndex={setFocusedChallengeIndex}/>
                 <ChallengeDetailsView challenge={challenges[focusedChallengeIndex]} /> 
               </> 
