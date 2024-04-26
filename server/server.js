@@ -37,6 +37,8 @@ const sessionMiddleware = session({
   secret: sessionSecret,
   cookie: { secure: false, httpOnly: false, sameSite: "lax"},
 });
+const seed = require('./seedData');
+const scrapeSeed = require('./scraperSeedData');
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -178,3 +180,6 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 db.once("open", () => {
   console.log("Connected to the MongoDB database");
 });
+
+// seed
+// scrapeSeed
