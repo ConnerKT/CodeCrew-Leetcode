@@ -30,6 +30,7 @@ function UserView() {
 
   if (user != null) {
     content = <>
+                <h1>Current user: {user.username}</h1>
                 <h1>gameRoom: {gameRoom.gameroomId}</h1>
                 <ChallengeOptions challenges={challenges} focusedChallengeIndex={focusedChallengeIndex} setFocusedChallengeIndex={setFocusedChallengeIndex}/>
                 <ChallengeDetailsView challenge={challenges[focusedChallengeIndex]} /> 

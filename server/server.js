@@ -81,6 +81,8 @@ io.use(socketMiddleware);
 
 app.use("/api", problemRoutes);
 
+
+//api endpoint for creating a game room
 app.post("/gameroom", async (req, res) => {
   const { gameroomId, problems } = req.body;
 
