@@ -11,7 +11,7 @@ export const LoginProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [gameRoom, setGameRoom] = useState(null);
     if(isLoggedIn != true){
-        cosnol
+        
     let socket = io("http://localhost:3001", {
         withCredentials: true
       });
