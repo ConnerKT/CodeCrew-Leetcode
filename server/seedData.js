@@ -22,7 +22,7 @@ async function seedProblems() {
     // Insert new problems
     await Problem.insertMany(problemsData);
 
-    console.log('Problems seeded successfully');
+    console.log('Problem seeded successfully');
   } catch (err) {
     console.error('Error seeding problems:', err);
   } finally {
@@ -34,3 +34,4 @@ async function seedProblems() {
 // Run the seed function
 
 // seedProblems();
+

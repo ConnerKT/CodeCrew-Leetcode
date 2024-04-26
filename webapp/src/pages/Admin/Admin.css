@@ -18,3 +18,41 @@
   background-color: rgb(35, 56, 91);
 
 }
+.addProblemButton {
+  width: 30%;
+  padding: 0.5%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(35, 56, 91);
+  border: 3px solid white;
+  color: white;
+}
+.addProblemButtonContainer {
+    margin-bottom: 2%;
+    display: flex;
+    justify-content: center
+}
+.addProblemButton:hover {
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.7); /* Adjust the values as needed */
+  cursor: pointer;
+}
+
+.deleteIcon {
+  transition: transform 0.2s;
+}
+
+.deleteIcon:hover {
+  transform: rotate(-10deg) scale(1.2);
+}
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; 
+}
+
+.spinnerWrapper {
+  width: 100px; 
+  height: 100px; 
+}
