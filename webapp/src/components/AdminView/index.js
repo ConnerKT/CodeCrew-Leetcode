@@ -21,6 +21,8 @@ import WarningModal from "./WarningModal/WarningModal";
 import CircularProgress from "@mui/material/CircularProgress";
 import EditIcon from "@mui/icons-material/Edit";
 import EditModal from './EditModal/EditModal'
+import SportsEsportsTwoToneIcon from '@mui/icons-material/SportsEsportsTwoTone';
+import SessionAddModal from "./SessionAddModal/SessionAddModal";
 
 function AdminView() {
   //We set this state from getting data from the API
@@ -39,6 +41,11 @@ function AdminView() {
   const [loading, setLoading] = useState(true);
 
   const [currentItem, setCurrentItem] = useState('');
+
+  const [openSessionAddModal, setOpenSessionAddModal] = React.useState(false);
+
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,6 +92,12 @@ function AdminView() {
   const handleCloseWarningModal = () => {
     setOpenWarning(false);
   };
+  const handleSessionAddModal = () => {
+    setOpenSessionAddModal(true);
+  }
+  const handleSessionAddModalClose = () => {
+    setOpenSessionAddModal(false);
+  }
 
   return (
     <div className="adminPage">
@@ -100,6 +113,9 @@ function AdminView() {
             <div className="addProblemButtonContainer">
               <button onClick={handleAddItem} className="addProblemButton">
                 <h1>Add Problem</h1>
+              </button>
+              <button onClick={handleSessionAddModal} className='sessionModalButton'>
+                <SportsEsportsTwoToneIcon></SportsEsportsTwoToneIcon>
               </button>
             </div>
             <AddModal
@@ -121,6 +137,11 @@ function AdminView() {
             currentItem={currentItem}
             >
             </EditModal>
+            <SessionAddModal
+            open={openSessionAddModal}
+            handleClose={handleSessionAddModalClose}
+            >
+            </SessionAddModal>
             <Grid container spacing={2}>
               <Grid item xs={6}>
                 <AdminPanel id="addProblem" className="AdminPanel">
