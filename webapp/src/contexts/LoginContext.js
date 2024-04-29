@@ -47,9 +47,18 @@ export const LoginProvider = ({ children }) => {
                                                 body: JSON.stringify({ username, gameroomId }),
                                             })
         .then((res) => {
+          if (res.ok) {
+            console.log("Made it here")
             setIsLoggedIn(true);
             setUser({ username });
             setGameRoom({ gameroomId });
+          }
+          else {
+            throw new Error('Error login in');
+          }
+        })
+        .catch((err)=>{
+          console.log("err", err)
         });
 
         // You can also handle the Socket.IO connection here or in a useEffect within this provider

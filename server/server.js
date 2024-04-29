@@ -113,7 +113,7 @@ app.post("/gameroom", async (req, res) => {
 });
 
 
-app.post("/login", sessionMiddleware, async (req, res) => {
+app.post("/login", async (req, res) => {
   const { username, gameroomId } = req.body;
 
   if (!username || !gameroomId) {
