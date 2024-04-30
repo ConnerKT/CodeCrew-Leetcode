@@ -42,15 +42,11 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
     }
   };
 
-  const postSession = async (sessionName, problems) => {
+  const postSession = async (session, problemsList) => {
     try {
       const response = await axios.post(
-        `https://codecrew-leetcode-api.onrender.com/gameroom/${}`,
-        {
-          title: name,
-          difficulty,
-          description
-        }
+        `https://codecrew-leetcode-api.onrender.com/gameroom/${session}`,
+        problemsList
       );
       
       console.log(response);
@@ -61,7 +57,7 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
     }
   };
 
-  const handleProblemSelect = (problemId) => {
+  const handleProblemSelect = async (problemId) => {
     if (selectedProblems.includes(problemId)) {
 
       setSelectedProblems(selectedProblems.filter((id) => id !== problemId));
@@ -69,7 +65,13 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
 
       setSelectedProblems([...selectedProblems, problemId]);
     }
-
+    try {
+        const response = await postSession(sessionName,selectedProblems)
+        console.log(response);
+        
+    }catch(err){
+        console.log(err);
+    }
    
   };
   const handleModalClose = () => {
