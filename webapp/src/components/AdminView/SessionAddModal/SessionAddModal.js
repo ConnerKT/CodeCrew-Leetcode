@@ -44,9 +44,8 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
 
   const postSession = async (session, problemsList) => {
     try {
-      console.log(process.env.REACT_APP_GAMEROOM_API_URL, "URL GO BRRRRRRR")
   
-      const response = await axios.post(process.env.REACT_APP_GAMEROOM_API_URL, {
+      const response = await axios.post(process.env.REACT_APP_API_URL+"/gameroom", {
         gameroomId: session,
         problems: problemsList
       
