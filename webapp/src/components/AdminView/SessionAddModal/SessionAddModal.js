@@ -44,16 +44,17 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
 
   const postSession = async (session, problemsList) => {
     try {
-      const response = await axios.post(
-        `https://codecrew-leetcode-api.onrender.com/gameroom/`,
-        { 
-          gameroomId: session,
-          problems: problemsList }
-      );
+      console.log(process.env.REACT_APP_GAMEROOM_API_URL, "URL GO BRRRRRRR")
+  
+      const response = await axios.post(process.env.REACT_APP_GAMEROOM_API_URL, {
+        gameroomId: session,
+        problems: problemsList
+      
+      });
       
       console.log(response);
   
-      return response;
+      return response.data;
     } catch (error) {
    
       if (error.response) {
