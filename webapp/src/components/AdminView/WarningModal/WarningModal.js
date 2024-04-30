@@ -24,7 +24,7 @@ function WarningModal({ open, handleClose, itemToRemove, setItemsToAdd}) {
   const handleRemoveItem = async () => {
     try {
       const response = await axios.delete(
-        `https://codecrew-leetcode-api.onrender.com/problems/${itemToRemove._id}`,
+        `https://codecrew-leetcode-api.onrender.com/api/problems/${itemToRemove._id}`,
        
       );
       const updatedProblems = response.data.allProblems;
