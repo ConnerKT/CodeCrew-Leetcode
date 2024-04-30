@@ -12,7 +12,7 @@ export const LoginProvider = ({ children }) => {
     const [gameRoom, setGameRoom] = useState(null);
     if(isLoggedIn != true){
         
-    let socket = io("http://localhost:3001", {
+    let socket = io(process.env.REACT_APP_API_URL, {
         withCredentials: true
       });
       socket.on("connect_error", (err) => {
@@ -38,7 +38,7 @@ export const LoginProvider = ({ children }) => {
         // Perform login logic, update state
         // For example:
 
-        fetch("http://localhost:3001/login",{
+        fetch(process.env.REACT_APP_API_URL+"/login",{
                                                 method: "POST",
                                                 credentials: "include",
                                                 headers: {
