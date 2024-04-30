@@ -35,7 +35,7 @@ const sessionMiddleware = session({
   resave: false,
   saveUninitialized: true,
   secret: sessionSecret,
-  cookie: { secure: false, httpOnly: false, sameSite: "lax"},
+  cookie: { secure: process.env.ENVIRONMENT == "PRODUCTION", httpOnly: false, sameSite: "lax"},
 });
 const seed = require('./seedData');
 const scrapeSeed = require('./scraperSeedData');
