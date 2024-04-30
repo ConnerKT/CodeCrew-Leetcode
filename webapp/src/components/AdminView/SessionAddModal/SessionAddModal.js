@@ -44,15 +44,30 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
 
   const postSession = async (session, problemsList) => {
     try {
-      const response = await axios.post(
-        `https://codecrew-leetcode-api.onrender.com/gameroom/${session}`,
-        problemsList
-      );
+      console.log(process.env.REACT_APP_GAMEROOM_API_URL, "URL GO BRRRRRRR")
+  
+      const response = await axios.post(process.env.REACT_APP_GAMEROOM_API_URL, {
+        gameroomId: session,
+        problems: problemsList
+      
+      });
       
       console.log(response);
   
-      return response;
+      return response.data;
     } catch (error) {
+   
+      if (error.response) {
+        
+        console.error('Server responded with error:', error.response.data);
+      } else if (error.request) {
+     
+        console.error('No response received from server:', error.request);
+      } else {
+       
+        console.error('Error setting up request:', error.message);
+      }
+  
       throw new Error('Failed to post problem:', error);
     }
   };
@@ -65,13 +80,7 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
 
       setSelectedProblems([...selectedProblems, problemId]);
     }
-    try {
-        const response = await postSession(sessionName,selectedProblems)
-        console.log(response);
-        
-    }catch(err){
-        console.log(err);
-    }
+    
    
   };
   const handleModalClose = () => {
@@ -82,7 +91,7 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
     handleClose(); // Close the modal
   };
 
-  const handleSubmission = () => {
+  const handleSubmission = async () => {
     if (selectedProblems.length === 3) {
 
       const selectedProblemNames = selectedProblems.map((_id) => {
@@ -94,6 +103,13 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
     } else {
       console.error("Please select exactly 3 problems");
     }
+    try {
+      const response = await postSession(sessionName ,selectedProblems)
+      console.log(response);
+      
+  }catch(err){
+      console.log(err);
+  }
   };
 
   return (

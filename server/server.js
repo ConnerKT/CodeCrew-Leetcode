@@ -8,14 +8,14 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 const Redis = require("ioredis");
-const redis = new Redis();
+const redis = new Redis(process.env.REDIS);
 const cookie = require('cookie');
 const signature = require('cookie-signature');
 const port = 3001;
 
 const app = express();
 app.use(cors({
-  origin: ["http://localhost:5500", "http://localhost:3000"],
+  origin: ["http://localhost:5500", "http://localhost:3000","https://codecrew-leetcode.onrender.com"],
   credentials: true
 }));
 
@@ -23,7 +23,7 @@ app.use(express.json())
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:5500", "http://localhost:3000"],
+    origin: ["http://localhost:5500", "http://localhost:3000", "https://codecrew-leetcode.onrender.com"],
     credentials: true
   }
 });
