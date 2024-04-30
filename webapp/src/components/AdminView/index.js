@@ -51,7 +51,7 @@ function AdminView() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          "https://codecrew-leetcode-api.onrender.com/problems"
+          "https://codecrew-leetcode-api.onrender.com/api/problems"
         );
         setItemsToAdd(response.data);
         setLoading(false);

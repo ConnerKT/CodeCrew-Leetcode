@@ -60,7 +60,7 @@ const handleSubmit = async () => {
 const editProblemInServer = async (name, difficulty, description) => {
   try {
     const response = await axios.put(
-      `https://codecrew-leetcode-api.onrender.com/problems/${props.currentItem._id}`,
+      `https://codecrew-leetcode-api.onrender.com/api/problems/${props.currentItem._id}`,
       {
         title: name,
         difficulty,
