@@ -140,6 +140,7 @@ function AdminView() {
             <SessionAddModal
             open={openSessionAddModal}
             handleClose={handleSessionAddModalClose}
+            allItems={itemsToAdd}
             >
             </SessionAddModal>
             <Grid container spacing={2}>
