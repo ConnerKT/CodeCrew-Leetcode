@@ -1,21 +1,21 @@
 import ChallengeDetailsView from "./ChallengeDetailsView";
 import { useEffect, useState } from "react";
-import data from "../../leetcode_challenges.json";
 import "./Content.css";
 import ChallengeOptions from "./ChallengeOptions";
 import { useLogin } from "../../contexts/LoginContext";
+import { Button } from "@mui/material";
 const { io } = require("socket.io-client");
 
 function UserView() {
-  const [challenges, setChallenges] = useState(data);
+  const [challenges, setChallenges] = useState([]);
   const [focusedChallengeIndex, setFocusedChallengeIndex] = useState(null);
   const { isLoggedIn, user, gameRoom, login, logout } = useLogin();
 
   useEffect(() => {
     setFocusedChallengeIndex(0);
   }, []);
-  console.log({gameRoom})
-  console.log({user})
+
+
   let content = <div id="joinForm" style={{display: "flex", justifyContent: "center", flexDirection: "column"}}>
                   <form onSubmit={function(event){
                     event.preventDefault();
@@ -31,7 +31,8 @@ function UserView() {
   if (user != null) {
     content = <>
                 <h1>Current user: {user.username}</h1>
-                <h1>gameRoom: {gameRoom.gameroomId}</h1>
+                {/* <h1>gameRoom: {gameRoom.gameroomId}</h1> */}
+                <Button variant="contained" onClick={()=>{logout()}}>Logout</Button>
                 <ChallengeOptions challenges={challenges} focusedChallengeIndex={focusedChallengeIndex} setFocusedChallengeIndex={setFocusedChallengeIndex}/>
                 <ChallengeDetailsView challenge={challenges[focusedChallengeIndex]} /> 
               </> 

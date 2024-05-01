@@ -1,6 +1,7 @@
 // LoginContext.js
-import React, { createContext, useContext, useState } from 'react';
-const { io } = require("socket.io-client");
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { login, logout as apiLogout } from '../api';
+import { io } from 'socket.io-client';
 
 const LoginContext = createContext();
 
@@ -10,70 +11,50 @@ export const LoginProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
     const [gameRoom, setGameRoom] = useState(null);
-    if(isLoggedIn != true){
-        
-    let socket = io("http://localhost:3001", {
-        withCredentials: true
-      });
-      socket.on("connect_error", (err) => {
-        console.error(err.message);
-      });
-      socket.on("connect", () => {
-        console.log("Connected to Socket.IO server");
-        // You can emit an event here if needed
-  
-      });
-  
-      socket.on("session_data", (session) => {
-        console.log("Session Data:", session);
-        setUser({ username: session.username });
-        setGameRoom({ gameroomId: session.gameroomId });
-        setIsLoggedIn(true);
 
-      });
-    }
-    
 
-    const login = (username, gameroomId) => {
-        // Perform login logic, update state
-        // For example:
+    useEffect(() => {
+        let socketconn = io(process.env.REACT_APP_API_URL, { withCredentials: true , autoConnect: false})
+                            .on("connect", (socket) => {
+                                console.log({socket})
+                            })
+                            .on("connect_error", (err) => {
+                                console.error(err.message)
+                            })
+                            .on("sessionData", (sessionData) => {
+                                setUser({ username: sessionData.username, gameRoomId: sessionData.gameRoomId });
+                                setIsLoggedIn(true);
+                            })
+                            .on("roomData", (roomData) => {
+                                console.log(roomData)
+                                setGameRoom(roomData)
+                            })
+                            socketconn.connect()
 
-        fetch("http://localhost:3001/login",{
-                                                method: "POST",
-                                                credentials: "include",
-                                                headers: {
-                                                    "Content-Type": "application/json",
-                                                },
-                                                body: JSON.stringify({ username, gameroomId }),
-                                            })
-        .then((res) => {
-          if (res.ok) {
-            console.log("Made it here")
+
+        return () => {
+            if (socketconn) socketconn.close();
+        };
+    }, []);
+
+    const handleLogin = async (username, gameroomId) => {
+        const result = await login(username, gameroomId);
+        if (result.isSuccess) {
             setIsLoggedIn(true);
-            setUser({ username });
-            setGameRoom({ gameroomId });
-          }
-          else {
-            throw new Error('Error login in');
-          }
-        })
-        .catch((err)=>{
-          console.log("err", err)
-        });
-
-        // You can also handle the Socket.IO connection here or in a useEffect within this provider
+            setUser({ username: result.username });
+            setGameRoom({ gameroomId: result.gameroomId });
+        }
     };
 
-    const logout = () => {
-        // Perform logout logic, clear state
+    const handleLogout = () => {
+        apiLogout();
         setIsLoggedIn(false);
         setUser(null);
         setGameRoom(null);
-        // Disconnect from Socket.IO if needed
     };
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, user, gameRoom, login, logout }}>
+        <LoginContext.Provider value={{ isLoggedIn, user, gameRoom, login: handleLogin, logout: handleLogout }}>
             {children}
         </LoginContext.Provider>
     );

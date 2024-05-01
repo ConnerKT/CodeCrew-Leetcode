@@ -58,7 +58,7 @@ const handleSubmit = async () => {
 const postProblemToServer = async (name, difficulty, description) => {
   try {
     const response = await axios.post(
-      "https://codecrew-leetcode-api.onrender.com/problems",
+      "https://codecrew-leetcode-api.onrender.com/api/problems",
       {
         title: name,
         difficulty,

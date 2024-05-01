@@ -8,9 +8,20 @@ mongoose.connect(process.env.mongoDBUrl, {
   useUnifiedTopology: true,
 });
 
-exports.getAllProblems = async (req, res) => {
+exports.getProblems = async (req, res) => {
   try {
     const problems = await Problem.find({});
+    res.json(problems);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.getProblemsById = async (req, res) => {
+  try {
+    let query = {"_id": {"$in":req.body.ids}} || {}
+    const problems = await Problem.find(query);
     res.json(problems);
   } catch (err) {
     console.error(err);

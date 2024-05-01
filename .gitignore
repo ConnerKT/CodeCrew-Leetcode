@@ -1,3 +1,6 @@
 .vscode
 design
 vscode_extension
+
+webapp/.env
+redisadaptertest.js
