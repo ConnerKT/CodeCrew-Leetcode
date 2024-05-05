@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Box, Select, MenuItem } from '@mui/material';
-import { AppBar, Toolbar, Fab } from '@mui/material';
+import { AppBar, Toolbar, Fab, Stack  } from '@mui/material';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import './CodeEditor.css';
 import PublishIcon from '@mui/icons-material/Publish';
@@ -37,6 +37,7 @@ const CodeEditor = ({ functionSignatures }) => {
                   });
               });
           }
+          
       }
   }, [monaco, isEditorReady, language, editorContents]);
   
@@ -86,14 +87,25 @@ const CodeEditor = ({ functionSignatures }) => {
                     lineNumbers: "on",
                     scrollBeyondLastLine: false,
                     readOnly: false,
-                    minimap: { enabled: false }
+                    minimap: { enabled: false },
+                    contrastBorder: '#6fc3df',
+
                 }}
             />
-            <Fab color="primary" variant='extended' aria-label="add" sx={{ position: 'absolute', bottom: 16, right: 16 }} onClick={handleSubmit}>
-              <div>Submit</div>
-
-                <PublishIcon /> 
+            <Fab color="primary" variant='extended' aria-label="submit" sx={{
+                position: 'absolute', bottom: 34, right: 34,
+                backgroundColor: 'rgb(35, 56, 91)', // Dark blue
+                color: 'white', // Icon and text color
+                '&:hover': {
+                    backgroundColor: 'rgb(25, 46, 81)' // Darker blue on hover
+                }
+            }} onClick={handleSubmit}>
+                <Stack direction="column" alignItems="center" spacing={-0.3}>
+                    <PublishIcon />
+                    <div>Submit</div>
+                </Stack>
             </Fab>
+
         </Box>
     );
 };
