@@ -14,58 +14,50 @@ const CodeEditor = ({ functionSignatures }) => {
     const [language, setLanguage] = useState(languages[0]);
     let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${functionSignatures[lang]}\n` }), {})
     const [editorContentsStore, setEditorContentsStore] = useState(editorContents);
+    
 
     useEffect(() => {
         let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${functionSignatures[lang]}\n` }), {})
         setEditorContentsStore(editorContents);
     }, [functionSignatures]);
 
-    console.log("editorContentsStore", editorContentsStore)
-
 
     useEffect(() => {
       if (editorRef.current && monaco && isEditorReady) {
-        console.log("setting this...")
 
           const model = editorRef.current.getModel();
           if (model) {
-              // Setup read-only decorations
               const decorations = editorRef.current.deltaDecorations([], [
                   { range: new monaco.Range(1, 1, 3, Infinity), options: { isWholeLine: true, className: 'readOnly' } }
               ]);
-  
               // Prevent modification on read-only lines
-              // editorRef.current.onKeyDown(e => {
-              //     let position = editorRef.current.getPosition();
-              //     decorations.forEach(decoration => {
-              //         let range = model.getDecorationRange(decoration);
-              //         if (range && range.containsPosition(position)) {
-              //             e.preventDefault();
-              //         }
-              //     });
-              // });
+              editorRef.current.onKeyDown(e => {
+                  let position = editorRef.current.getPosition();
+                  decorations.forEach(decoration => {
+                      let range = model.getDecorationRange(decoration);
+                      if (range && range.containsPosition(position)) {
+                          e.preventDefault();
+                      }
+                  });
+              });
           }
-          
       }
   }, [monaco, isEditorReady]);
-  
+
+  const handleLanguageChangeTriggered = useRef(false)
   const handleLanguageChange = (event) => {
+    handleLanguageChangeTriggered.current = true
     const newLanguage = event.target.value;
     setEditorContentsStore(prev => {
-      console.log("prev", prev)
-      console.log("updating contents store for language", language, "to", editorRef.current.getValue())
-
       return { ...prev, [language]: editorRef.current.getValue() }
     });
-
-    // console.log("editorContentsStore",editorContentsStore)
-    console.log("awwa")
     setLanguage(newLanguage);
+
 };
 
     const handleSubmit = () => {
       console.log("editorContentsStore", editorContentsStore)
-      console.log('Submit:', editorContentsStore[language]);
+      console.log('Submit:', editorRef.current.getValue());
   };
     // console.log("editorContentsStore",editorContentsStore)
     return (
@@ -90,12 +82,8 @@ const CodeEditor = ({ functionSignatures }) => {
             </AppBar>
             <Editor
                 onMount={(editor) => {
-                    editorRef.current = editor;
-                    setEditorReady(true);
-                    // editorRef.current.onDidChangeModelContent(() => {
-                    //   // console.log("a change has been made", editorRef.current.getValue())
-                    //   setEditorContentsStore(prev => ({ ...prev, [language]: editorRef.current.getValue() }));
-                    // });
+                  editorRef.current = editor;
+                  setEditorReady(true);
                 }}
                 language={language}
                 value={editorContentsStore[language]}
@@ -113,7 +101,7 @@ const CodeEditor = ({ functionSignatures }) => {
                 backgroundColor: 'rgb(35, 56, 91)', // Dark blue
                 color: 'white', // Icon and text color
                 '&:hover': {
-                    backgroundColor: 'rgb(25, 46, 81)' // Darker blue on hover
+                  backgroundColor: 'rgb(35, 66, 101)' // Lighter blue on hover
                 }
             }} onClick={handleSubmit}>
                 <Stack direction="column" alignItems="center" spacing={-0.3}>
