@@ -1,0 +1,4 @@
+.readOnly {
+    background-color: #f0f0f0; /* Light grey background for read-only lines */
+    color: #d0d0d0; /* Dim text color to indicate non-editability */
+}

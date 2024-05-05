@@ -24,17 +24,17 @@ function MainContent() {
 
     return <>
             <h1>Current user: {user.username}</h1>
-            {/* <h1>gameRoom: {gameRoom.gameroomId}</h1> */}
            { isPending ? 
-          <div className="loadingContainer">
-            <div className="spinnerWrapper">
-              <CircularProgress size="100px" />
-            </div>
-          </div> : <>
-            <Button variant="contained" onClick={()=>{logout()}}>Logout</Button>
-            <ChallengeOptions challenges={challenges} focusedChallengeIndex={focusedChallengeIndex} setFocusedChallengeIndex={setFocusedChallengeIndex}/>
-            <ChallengeDetailsView challenge={challenges[focusedChallengeIndex]} /> 
-            </>
+                    <div className="loadingContainer">
+                        <div className="spinnerWrapper">
+                        <   CircularProgress size="100px" />
+                        </div>
+                    </div> 
+                  : <>
+                        <Button variant="contained" onClick={logout}>Logout</Button>
+                        <ChallengeOptions challenges={challenges} focusedChallengeIndex={focusedChallengeIndex} setFocusedChallengeIndex={setFocusedChallengeIndex}/>
+                        <ChallengeDetailsView challenge={challenges[focusedChallengeIndex]} /> 
+                    </>
         }
         </> 
   
