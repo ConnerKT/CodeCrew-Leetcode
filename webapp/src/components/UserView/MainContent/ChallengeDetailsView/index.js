@@ -2,14 +2,13 @@ import Paper from "@mui/material/Paper";
 import "./ChallengeDetailsView.css";
 import { useLogin } from "../../../../contexts/LoginContext";
 import CodeEditor from "./CodeEditor";
+import { extractInputOutput } from "./utils";
 function ChallengeDetailsView({ challenge }) {
-    const { isLoggedIn, user, gameRoom, login, logout } = useLogin();
     const createMarkup = (htmlContent) => {
-        // Ideally, sanitize HTML content here to prevent XSS
         return { __html: htmlContent };
     };
+    let sampleInputOutput = extractInputOutput(challenge.description);
 
-    console.log("challenge", challenge);
 
     return (
         <Paper id="challengeDetailsContainer">
@@ -19,7 +18,8 @@ function ChallengeDetailsView({ challenge }) {
                     <h1>Description</h1>
                     <p dangerouslySetInnerHTML={createMarkup(challenge.description)}></p>
                 </div>
-                <CodeEditor challenge={challenge}/>
+                
+                <CodeEditor sampleInputOutput={sampleInputOutput} functionSignatures={challenge.functionSignatures}/>
 
             </div>
             <h1 id="linkToLeetcode">

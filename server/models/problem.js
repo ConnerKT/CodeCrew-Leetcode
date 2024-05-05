@@ -41,6 +41,6 @@ problemSchema.pre('save', async function(next) {
     next();
   });
 
-const Problem = mongoose.model('Problem', problemSchema);
+const Problem = mongoose.model('Challenge', problemSchema);
 
 module.exports = Problem;

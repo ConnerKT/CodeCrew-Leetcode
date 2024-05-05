@@ -2,15 +2,17 @@ import React, { useRef, useEffect, useState } from 'react';
 import Editor, { useMonaco } from '@monaco-editor/react';
 // import './CodeEditor.css';
 
-const CodeEditor = () => {
+const CodeEditor = ({functionSignatures, sampleInputOutput}) => {
     const editorRef = useRef(null);
     const monaco = useMonaco();
     const [isEditorReady, setEditorReady] = useState(false); // State to track editor readiness
-    const defaultValue = `
-// Function to solve the challenge
-function solve() {
-    // Your code goes here
-}`;
+    const defaultValue = 
+`
+
+${functionSignatures.javascript}
+
+
+`
 
     useEffect(() => {
         if (editorRef.current && monaco && isEditorReady) {
