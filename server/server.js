@@ -17,6 +17,7 @@ const port = 3001;
 redis.connect()
   .then(() => console.log('Redis Client Connected'))
   .catch('error', err => console.log('Redis Client Error', err))
+
 const sessionSecret = "keyboard cat";
 const redisStore = new RedisStore({ 
   client: redis,
@@ -32,7 +33,6 @@ const sessionMiddleware = session({
   cookie: { secure: process.env.ENVIRONMENT == "PRODUCTION", httpOnly: false, sameSite: "lax", maxAge: 1000 * 60 * 60 * 24},
   unset: "destroy",
   maxAge: 1000 * 60 * 60 * 24,
-  //this function is triggered when a app receives POST request fore some reason??
   genid: (req) => {
     return req.body?.username;
   }
@@ -100,7 +100,7 @@ app.post("/login", async (req, res) => {
 });
 
 //change this to a a get endpoint because post requests generate new sessions for some reason
-app.get("/logout", (req, res) => {
+app.post("/logout", (req, res) => {
 
     if (req.session) {
       // Destroy the session
@@ -169,8 +169,6 @@ io.on("connection", async (socket) => {
   // Automatically join the user to the room stored in their session
   const room = socket.request.session.gameroomId;
   console.log(`User ${socket.request.session.username} connected and joined room ${room}`);
-
-
 
   let roomData = await redis.json.get(`gameroom:${room}`)
 

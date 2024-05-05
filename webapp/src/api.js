@@ -15,10 +15,20 @@ export const login = async (username, gameroomId) => {
 
 export const logout = async () => {
     try {
-        await axios.get(`${process.env.REACT_APP_API_URL}/logout`, { withCredentials: true });
+        await axios.post(`${process.env.REACT_APP_API_URL}/logout`, {}, { withCredentials: true });
         console.log("Logout successful");
     } catch (error) {
         console.error("Error logging out:", error);
+    }
+};
+
+export const getChallenges = async () => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/challenges`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error("Error getting challenges:", error);
+        return [];
     }
 };
 

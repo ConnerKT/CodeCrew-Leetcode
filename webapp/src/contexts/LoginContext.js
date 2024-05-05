@@ -8,7 +8,7 @@ const LoginContext = createContext();
 export const useLogin = () => useContext(LoginContext);
 
 export const LoginProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(null);
     const [gameRoom, setGameRoom] = useState(null);
     const [user, setUser] = useState(null);
 
@@ -24,6 +24,10 @@ export const LoginProvider = ({ children }) => {
         
         gameRoom.connection.on("disconnect", (data) => {
             console.log("Disconnected from server");
+            setIsLoggedIn(false);
+        });
+        gameRoom.connection.on("connect_error", (error) => {
+            console.error("Error connecting to server:", error);
             setIsLoggedIn(false);
         });
         gameRoom.connect()
