@@ -9,13 +9,13 @@ const { io } = require("socket.io-client");
 function UserView() {
   const [challenges, setChallenges] = useState([]);
   const [focusedChallengeIndex, setFocusedChallengeIndex] = useState(null);
-  const { isLoggedIn, user, gameRoom, login, logout } = useLogin();
+  const { isLoggedIn, user, gameRoomConnection, login, logout } = useLogin();
 
   useEffect(() => {
     setFocusedChallengeIndex(0);
   }, []);
-
-
+console.log("user", user)
+console.log("isLoggedIn", isLoggedIn)
   let content = <div id="joinForm" style={{display: "flex", justifyContent: "center", flexDirection: "column"}}>
                   <form onSubmit={function(event){
                     event.preventDefault();

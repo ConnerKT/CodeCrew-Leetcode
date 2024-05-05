@@ -1,7 +1,7 @@
 // LoginContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { login, logout as apiLogout } from '../api';
-import { io } from 'socket.io-client';
+import { GameRoom, login, logout as apiLogout } from '../api';
+
 
 const LoginContext = createContext();
 
@@ -9,40 +9,34 @@ export const useLogin = () => useContext(LoginContext);
 
 export const LoginProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState(null);
     const [gameRoom, setGameRoom] = useState(null);
-
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
-        let socketconn = io(process.env.REACT_APP_API_URL, { withCredentials: true , autoConnect: false})
-                            .on("connect", (socket) => {
-                                console.log({socket})
-                            })
-                            .on("connect_error", (err) => {
-                                console.error(err.message)
-                            })
-                            .on("sessionData", (sessionData) => {
-                                setUser({ username: sessionData.username, gameRoomId: sessionData.gameRoomId });
-                                setIsLoggedIn(true);
-                            })
-                            .on("roomData", (roomData) => {
-                                console.log(roomData)
-                                setGameRoom(roomData)
-                            })
-                            socketconn.connect()
-
-
+        let gameRoom = new GameRoom()
+        gameRoom.connection.on("sessionData", (data) => {
+            console.log("Session data received:", data);
+            gameRoom.roomData = data.roomData;
+            gameRoom.user = data.user;
+            setUser(data.user);
+            setIsLoggedIn(true);
+        });
+        
+        gameRoom.connection.on("disconnect", (data) => {
+            console.log("Disconnected from server");
+            setIsLoggedIn(false);
+        });
+        gameRoom.connect()
+        setGameRoom(gameRoom)
         return () => {
-            if (socketconn) socketconn.close();
+            if (gameRoom) gameRoom.disconnect();
         };
     }, []);
 
     const handleLogin = async (username, gameroomId) => {
         const result = await login(username, gameroomId);
         if (result.isSuccess) {
-            setIsLoggedIn(true);
-            setUser({ username: result.username });
-            setGameRoom({ gameroomId: result.gameroomId });
+            gameRoom.connect();
         }
     };
 
@@ -50,11 +44,13 @@ export const LoginProvider = ({ children }) => {
         apiLogout();
         setIsLoggedIn(false);
         setUser(null);
-        setGameRoom(null);
+        if(gameRoom.connection.connected) {
+            gameRoom.disconnect();
+        }
     };
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, user, gameRoom, login: handleLogin, logout: handleLogout }}>
+        <LoginContext.Provider value={{ isLoggedIn, user: user, gameRoom, login: handleLogin, logout: handleLogout }}>
             {children}
         </LoginContext.Provider>
     );

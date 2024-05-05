@@ -6,14 +6,39 @@ const RedisStore = require("connect-redis").default;
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
-const Redis = require("ioredis");
-const redis = new Redis(process.env.REDIS);
+const createClient = require("redis").createClient;
+const redis = createClient(process.env.REDIS_URL);
 const { createAdapter } = require("@socket.io/redis-adapter");
 const { request } = require("https");
 const subClient = redis.duplicate();
 const router = require("./routes/problemRoutes")
 const port = 3001;
 
+redis.connect()
+  .then(() => console.log('Redis Client Connected'))
+  .catch('error', err => console.log('Redis Client Error', err))
+const sessionSecret = "keyboard cat";
+const redisStore = new RedisStore({ 
+  client: redis,
+  prefix: "sess:",
+  ttl: 86400,
+})
+  
+const sessionMiddleware = session({
+  store: redisStore,
+  resave: false,
+  saveUninitialized: false,
+  secret: sessionSecret,
+  cookie: { secure: process.env.ENVIRONMENT == "PRODUCTION", httpOnly: false, sameSite: "lax", maxAge: 1000 * 60 * 60 * 24},
+  unset: "destroy",
+  maxAge: 1000 * 60 * 60 * 24,
+  //this function is triggered when a app receives POST request fore some reason??
+  genid: (req) => {
+    return req.body?.username;
+  }
+  
+});
+  
 const app = express();
 app.use(cors({
   origin: ["http://localhost:5500", "http://localhost:3000", "https://codecrew-leetcode.onrender.com"],
@@ -21,6 +46,10 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(function(req, res, next) {
+  sessionMiddleware(req, res, next);
+})
+
 app.use(router)
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -31,22 +60,11 @@ const io = new Server(server, {
   }
 });
 
-const sessionSecret = "keyboard cat";
-const redisStore = new RedisStore({ client: redis, prefix: "myapp:" })
-const sessionMiddleware = session({
-  // store: redisStore,
-  resave: false,
-  saveUninitialized: false,
-  secret: sessionSecret,
-  cookie: { secure: process.env.ENVIRONMENT == "PRODUCTION", httpOnly: false, sameSite: "lax"},
-  unset: "destroy"
-});
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.use(sessionMiddleware);
 
 app.post("/login", async (req, res) => {
   const { username, gameroomId } = req.body;
@@ -54,49 +72,52 @@ app.post("/login", async (req, res) => {
     return res.status(400).send("Username and room are required");
   }
 
-  // Retrieve the game room from Redis
-  const gameRoomDataString = await redis.get(`gameroom:${gameroomId}`);
-  if (!gameRoomDataString) {
-      return res.status(404).send("Game room not found");
+  // Transaction that checks if the game room exists 
+  const exists = await redis.exists(`gameroom:${gameroomId}`)
+  if (!exists) {
+    return res.status(404).send("Game room does not exist");
   }
 
-  // Parse the game room data
-  const gameRoomData = JSON.parse(gameRoomDataString);
+  let userExists = await redis.json.arrIndex(`gameroom:${gameroomId}`, ".users", username)
+                    .then((data)=>{return data != -1})
 
-  // Add the user to the game room's list of users, avoiding duplicates
-  if (!gameRoomData.users.includes(username)) {
-      gameRoomData.users.push(username);
-
-      // Save the updated game room data back to Redis
-      await redis.set(`gameroom:${gameroomId}`, JSON.stringify(gameRoomData));
+  // // Transaction that checks if the user is already in the game room
+  if (userExists) {
+    // check if there is a session in redis for the user
+    let sessionExists = await redis.exists(`sess:${username}`)
+    if (sessionExists) {
+      return res.status(400).send("User already exists in the game room");
+    }
+  }else{
+      // Add the user to the game room
+      await redis.json.arrAppend(`gameroom:${gameroomId}`, ".users", username)
   }
+    
   // Set session information for the user and their chosen room
   req.session.username = username;
   req.session.gameroomId = gameroomId;
   res.status(200).send(`User ${username} logged in and will join room ${gameroomId}`);
 });
 
-app.post("/logout", async (req, res) => {
-  if (req.session) {
-    req.cookies
-    req.session.cookie
-    req.headers.cookie
-    // redisStore.destroy(req.session.id)
+//change this to a a get endpoint because post requests generate new sessions for some reason
+app.get("/logout", (req, res) => {
 
-    // Destroy the session
-    req.session.destroy((err) => {
-      if (err) {
-        console.error("Error destroying session:", err);
-        return res.status(500).send("Internal server error");
-      }
-      // Optionally clear the client-side cookie if set
-      res.clearCookie('connect.sid'); // Adjust 'connect.sid' based on your cookie name
-      res.status(200).send("Logged out successfully");
-    });
-  } else {
-    // No session found, possibly already logged out or never logged in
-    res.status(400).send("No session found");
-  }
+    if (req.session) {
+      // Destroy the session
+      req.session.destroy((err) => {
+        if (err) {
+          console.error("Error destroying session:", err);
+          return res.status(500).send("Internal server error");
+        }
+        // Optionally clear the client-side cookie if set
+        // res.clearCookie('connect.sid'); // Adjust 'connect.sid' based on your cookie name
+        redisStore.destroy(req.sessionID)
+        res.status(200).send("Logged out successfully");
+      });
+    } else{
+      res.status(400).send("No session found");
+    }
+
 });
 
 
@@ -119,13 +140,13 @@ app.post("/gameroom", async (req, res) => {
   };
 
   // Check if the game room already exists
-  const exists = await redis.get(`gameroom:${gameroomId}`);
+  const exists = await redis.exists(`gameroom:${gameroomId}`)
   if (exists) {
       return res.status(400).send("Game room already exists");
   }
 
   // Save the game room data to Redis
-  await redis.set(`gameroom:${gameroomId}`, JSON.stringify(gameRoomData));
+  await redis.json.set(`gameroom:${gameroomId}`, "$",gameRoomData);
 
   res.status(201).send(`Game room ${gameroomId} created with specified problems.`);
 });
@@ -136,7 +157,7 @@ app.post("/gameroom", async (req, res) => {
 io.use((socket, next) => {
   const request = socket.request;
   sessionMiddleware(request, {}, () => {
-    if (request.session.username && request.session.gameroomId) {
+    if (request.session?.username && request.session?.gameroomId) {
       next();
     } else {
       next(new Error("Authentication error"));
@@ -151,10 +172,10 @@ io.on("connection", async (socket) => {
 
 
 
-  socket.emit("sessionData", socket.request.session)
+  let roomData = await redis.json.get(`gameroom:${room}`)
 
-  let roomData = await redis.get(`gameroom:${room}`)
-  socket.emit("roomData", JSON.parse(roomData))
+  socket.emit("sessionData", {user: socket.request.session, roomData: roomData})
+
 });
 
 server.listen(port, () => {
