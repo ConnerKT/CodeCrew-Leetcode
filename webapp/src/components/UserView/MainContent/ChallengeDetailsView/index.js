@@ -8,7 +8,7 @@ function ChallengeDetailsView({ challenge }) {
         return { __html: htmlContent };
     };
     let sampleInputOutput = extractInputOutput(challenge.description);
-
+    console.log(challenge)
 
     return (
         <Paper id="challengeDetailsContainer">

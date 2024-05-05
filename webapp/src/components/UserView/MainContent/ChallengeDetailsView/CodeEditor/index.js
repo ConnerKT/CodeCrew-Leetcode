@@ -11,14 +11,22 @@ const CodeEditor = ({ functionSignatures }) => {
     const monaco = useMonaco();
     const [isEditorReady, setEditorReady] = useState(false);
     const languages = Object.keys(functionSignatures);
-    const [language, setLanguage] = useState('javascript');
+    const [language, setLanguage] = useState(languages[0]);
     let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${functionSignatures[lang]}\n` }), {})
     const [editorContentsStore, setEditorContentsStore] = useState(editorContents);
 
     useEffect(() => {
-      if (editorRef.current && monaco && isEditorReady) {
+        let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${functionSignatures[lang]}\n` }), {})
+        setEditorContentsStore(editorContents);
+    }, [functionSignatures]);
 
-  
+    console.log("editorContentsStore", editorContentsStore)
+
+
+    useEffect(() => {
+      if (editorRef.current && monaco && isEditorReady) {
+        console.log("setting this...")
+
           const model = editorRef.current.getModel();
           if (model) {
               // Setup read-only decorations
@@ -27,31 +35,39 @@ const CodeEditor = ({ functionSignatures }) => {
               ]);
   
               // Prevent modification on read-only lines
-              editorRef.current.onKeyDown(e => {
-                  let position = editorRef.current.getPosition();
-                  decorations.forEach(decoration => {
-                      let range = model.getDecorationRange(decoration);
-                      if (range && range.containsPosition(position)) {
-                          e.preventDefault();
-                      }
-                  });
-              });
+              // editorRef.current.onKeyDown(e => {
+              //     let position = editorRef.current.getPosition();
+              //     decorations.forEach(decoration => {
+              //         let range = model.getDecorationRange(decoration);
+              //         if (range && range.containsPosition(position)) {
+              //             e.preventDefault();
+              //         }
+              //     });
+              // });
           }
           
       }
-  }, [monaco, isEditorReady, language, editorContents]);
+  }, [monaco, isEditorReady]);
   
+  const handleLanguageChange = (event) => {
+    const newLanguage = event.target.value;
+    setEditorContentsStore(prev => {
+      console.log("prev", prev)
+      console.log("updating contents store for language", language, "to", editorRef.current.getValue())
 
-    const handleLanguageChange = (event) => {
-        const newLanguage = event.target.value;
-        setEditorContentsStore({...editorContentsStore, [language]: editorRef.current.getValue()});
-        setLanguage(newLanguage);
-    };
+      return { ...prev, [language]: editorRef.current.getValue() }
+    });
+
+    // console.log("editorContentsStore",editorContentsStore)
+    console.log("awwa")
+    setLanguage(newLanguage);
+};
 
     const handleSubmit = () => {
+      console.log("editorContentsStore", editorContentsStore)
       console.log('Submit:', editorContentsStore[language]);
   };
-
+    // console.log("editorContentsStore",editorContentsStore)
     return (
         <Box className="editor" position={"relative"}>
             <AppBar position="static" color="default" elevation={1}>
@@ -62,11 +78,8 @@ const CodeEditor = ({ functionSignatures }) => {
                         inputProps={{ 'aria-label': 'Without label' }}
                         sx={{ ml: 'auto', borderColor: 'rgb(255, 255, 255)', color: 'common.white',
                         backgroundColor: 'rgb(35, 56, 91)', // Dark blue
-
                         padding: '0px 0px',
                         height: '30px', // Set a fixed height for the button to ensure it is smaller
-                        
-                          
                         }} // Styling to fit AppBar aesthetics
                     >
                         {languages.map(lang => (
@@ -79,6 +92,10 @@ const CodeEditor = ({ functionSignatures }) => {
                 onMount={(editor) => {
                     editorRef.current = editor;
                     setEditorReady(true);
+                    // editorRef.current.onDidChangeModelContent(() => {
+                    //   // console.log("a change has been made", editorRef.current.getValue())
+                    //   setEditorContentsStore(prev => ({ ...prev, [language]: editorRef.current.getValue() }));
+                    // });
                 }}
                 language={language}
                 value={editorContentsStore[language]}
@@ -88,8 +105,7 @@ const CodeEditor = ({ functionSignatures }) => {
                     scrollBeyondLastLine: false,
                     readOnly: false,
                     minimap: { enabled: false },
-                    contrastBorder: '#6fc3df',
-
+                    contrastBorder: '#6fc3df'
                 }}
             />
             <Fab color="primary" variant='extended' aria-label="submit" sx={{
