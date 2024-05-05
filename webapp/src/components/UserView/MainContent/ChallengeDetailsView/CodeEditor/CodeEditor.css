@@ -1,4 +1,12 @@
-.readOnly {
-    background-color: #f0f0f0; /* Light grey background for read-only lines */
-    color: #d0d0d0; /* Dim text color to indicate non-editability */
+
+.editor {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    /* color: rgb(35, 56, 91); */
+    border: 3px solid rgb(35, 56, 91);
+    border-left:1.5px solid rgb(35, 56, 91);
+    min-height: 100%;
+    /* position: absolute; */
 }

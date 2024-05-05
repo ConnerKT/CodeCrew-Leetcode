@@ -28,19 +28,12 @@
     flex-direction: column;
     color: rgb(35, 56, 91);
     border: 3px solid rgb(35, 56, 91);
+    border-right: 1.5px solid rgb(35, 56, 91);
+    ;
     min-height: 100%;
 
 }
-.editor {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    color: rgb(35, 56, 91);
-    border: 3px solid rgb(35, 56, 91);
-    min-height: 100%;
 
-}
 
 .challengeDescription h1 {
     margin: 0;

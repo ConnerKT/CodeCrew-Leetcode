@@ -1,63 +1,100 @@
 import React, { useRef, useEffect, useState } from 'react';
+import { Box, Select, MenuItem } from '@mui/material';
+import { AppBar, Toolbar, Fab } from '@mui/material';
 import Editor, { useMonaco } from '@monaco-editor/react';
-// import './CodeEditor.css';
+import './CodeEditor.css';
+import PublishIcon from '@mui/icons-material/Publish';
 
-const CodeEditor = ({functionSignatures, sampleInputOutput}) => {
+
+const CodeEditor = ({ functionSignatures }) => {
     const editorRef = useRef(null);
     const monaco = useMonaco();
-    const [isEditorReady, setEditorReady] = useState(false); // State to track editor readiness
-    const defaultValue = 
-`
-
-${functionSignatures.javascript}
-
-
-`
+    const [isEditorReady, setEditorReady] = useState(false);
+    const languages = Object.keys(functionSignatures);
+    const [language, setLanguage] = useState('javascript');
+    let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${functionSignatures[lang]}\n` }), {})
+    const [editorContentsStore, setEditorContentsStore] = useState(editorContents);
 
     useEffect(() => {
-        if (editorRef.current && monaco && isEditorReady) {
-            const model = editorRef.current.getModel();
+      if (editorRef.current && monaco && isEditorReady) {
 
-            // Set up the first line as read-only
-            const decorations = editorRef.current.deltaDecorations([], [
-                {
-                    range: new monaco.Range(1, 1, 1, Infinity),  // Only the first line
-                    options: { isWholeLine: true, className: 'readOnly' }
-                }
-            ]);
+  
+          const model = editorRef.current.getModel();
+          if (model) {
+              // Setup read-only decorations
+              const decorations = editorRef.current.deltaDecorations([], [
+                  { range: new monaco.Range(1, 1, 3, Infinity), options: { isWholeLine: true, className: 'readOnly' } }
+              ]);
+  
+              // Prevent modification on read-only lines
+              editorRef.current.onKeyDown(e => {
+                  let position = editorRef.current.getPosition();
+                  decorations.forEach(decoration => {
+                      let range = model.getDecorationRange(decoration);
+                      if (range && range.containsPosition(position)) {
+                          e.preventDefault();
+                      }
+                  });
+              });
+          }
+      }
+  }, [monaco, isEditorReady, language, editorContents]);
+  
 
-            // Event listener to prevent modifications in the read-only area
-            editorRef.current.onKeyDown(e => {
-              console.log("Keydown event", e);
-              let position = editorRef.current.getPosition();
-              
-                if (decorations.some(decoration =>
-                    model.getDecorationRange(decoration).containsPosition(position))) {
-                      console.log("Preventing default");
-                    e.preventDefault();
-                }
-            });
-        }
-    }, [monaco, isEditorReady]);  // Update useEffect dependency
+    const handleLanguageChange = (event) => {
+        const newLanguage = event.target.value;
+        setEditorContentsStore({...editorContentsStore, [language]: editorRef.current.getValue()});
+        setLanguage(newLanguage);
+    };
+
+    const handleSubmit = () => {
+      console.log('Submit:', editorContentsStore[language]);
+  };
 
     return (
-        <div className="editor">
+        <Box className="editor" position={"relative"}>
+            <AppBar position="static" color="default" elevation={1}>
+                <Toolbar variant="dense" sx={{backgroundColor: "rgb(60, 60, 61)"}}>
+                    <Select
+                        value={language}
+                        onChange={handleLanguageChange}
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        sx={{ ml: 'auto', borderColor: 'rgb(255, 255, 255)', color: 'common.white',
+                        backgroundColor: 'rgb(35, 56, 91)', // Dark blue
+
+                        padding: '0px 0px',
+                        height: '30px', // Set a fixed height for the button to ensure it is smaller
+                        
+                          
+                        }} // Styling to fit AppBar aesthetics
+                    >
+                        {languages.map(lang => (
+                            <MenuItem key={lang} value={lang}>{lang}</MenuItem>
+                        ))}
+                    </Select>
+                </Toolbar>
+            </AppBar>
             <Editor
                 onMount={(editor) => {
                     editorRef.current = editor;
-                    setEditorReady(true); // Set the editor ready state to true when mounted
-                    console.log("Editor mounted!");
+                    setEditorReady(true);
                 }}
-                defaultLanguage="javascript"
-                defaultValue={defaultValue}
+                language={language}
+                value={editorContentsStore[language]}
                 theme="vs-dark"
                 options={{
                     lineNumbers: "on",
                     scrollBeyondLastLine: false,
                     readOnly: false,
+                    minimap: { enabled: false }
                 }}
             />
-        </div>
+            <Fab color="primary" variant='extended' aria-label="add" sx={{ position: 'absolute', bottom: 16, right: 16 }} onClick={handleSubmit}>
+              <div>Submit</div>
+
+                <PublishIcon /> 
+            </Fab>
+        </Box>
     );
 };
 
