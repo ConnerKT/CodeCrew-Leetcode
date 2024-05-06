@@ -1,7 +1,7 @@
 // models/problem.js
-const mongoose = require('mongoose');
+const mongo = require('../config/mongoConfig');
 
-const challenge = new mongoose.Schema({
+const challenge = new mongo.Schema({
   id: {
     type: Number,
     unique: true,
@@ -29,6 +29,6 @@ const challenge = new mongoose.Schema({
 
 
 
-const Challenge = mongoose.model('Challenge', challenge);
+const Challenge = mongo.model('Challenge', challenge);
 
 module.exports = Challenge;

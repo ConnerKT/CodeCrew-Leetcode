@@ -1,6 +1,7 @@
+const appConfig = require("../config/appConfig");
 const session = require("express-session");
 const RedisStore = require("connect-redis").default;
-const redis = require("./redisConfig");
+const redis = require("../config/redisConfig");
 
 const sessionSecret = "keyboard cat";
 const store = new RedisStore({
@@ -15,11 +16,11 @@ const sessionMiddleware = session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.ENVIRONMENT === "PRODUCTION",
+    secure: appConfig.ENVIRONMENT === "PRODUCTION",
     httpOnly: false,
     sameSite: "lax",
     maxAge: 1000 * 60 * 60 * 24
   }
 });
 
-module.exports = { sessionMiddleware };
+module.exports = sessionMiddleware

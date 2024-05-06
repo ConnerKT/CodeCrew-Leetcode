@@ -1,12 +1,12 @@
+const appConfig = require("./config/appConfig");
 const express = require("express");
 const cors = require("cors");
-const session = require("express-session");
-const { sessionMiddleware } = require("./config/sessionConfig");
 const problemsRouter = require("./routes/problemRoutes");
 const gameRoomRouter = require("./routes/gameRoomRoutes");
+const sessionMiddleware = require("./middleware/sessionMiddleware");
 const app = express();
 app.use(cors({
-  origin: ["http://localhost:5500", "http://localhost:3000", "https://codecrew-leetcode.onrender.com"],
+  origin: appConfig.CORS_URLS,
   credentials: true
 }));
 

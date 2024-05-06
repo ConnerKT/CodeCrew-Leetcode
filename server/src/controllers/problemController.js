@@ -1,6 +1,4 @@
-const mongoose = require("mongoose");
 const Challenge = require("../models/challenge");
-const dotenv = require("dotenv").config();
 
 exports.getProblems = async (req, res) => {
   try {

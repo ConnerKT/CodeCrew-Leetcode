@@ -1,18 +1,33 @@
+const appConfig = require("./config/appConfig");
+
 const http = require("http");
 const app = require("./app");
-const setupSocket = require("./socketConfig");
-const mongoose = require('mongoose');
-const dotenv = require('dotenv').config();
-const port = process.env.PORT || 3001;
+const appSocket = require("./appSocket");
+const redis = require("./config/redisConfig");
+const mongo = require("./config/mongoConfig");
 
-const server = http.createServer(app);
-setupSocket(server);
+const httpServer = http.createServer(app);
+appSocket.attach(httpServer);
 
-server.listen(port, () => {
+//ensure that required environment variables are set using dotenv.config output
+
+
+
+let port = appConfig.PORT;
+
+httpServer.listen(port, () => {
   console.log(`Server listening on port ${port}`);
-  mongoose.connect(process.env.mongoDBUrl, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }).then(() => console.log("Connected to MongoDB database"))
-    .catch(err => console.error("Could not connect to MongoDB:", err));
+    mongo.connect(appConfig.MONGO_CONNECTION_STRING)
+      .then(() => console.log("Connected to MongoDB database"))
+      .catch(err => {
+        console.error("Could not connect to MongoDB:", err)
+        process.exit(1);
+      });
+
+    redis.connect()
+      .then(() => console.log('Redis Client Connected'))
+      .catch(err => {
+        console.error('Redis Client Error', err)
+        process.exit(1);
+      });
 });
