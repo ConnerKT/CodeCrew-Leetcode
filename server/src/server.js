@@ -17,7 +17,7 @@ let port = appConfig.PORT;
 
 httpServer.listen(port, () => {
   console.log(`Server listening on port ${port}`);
-    mongo.connect(appConfig.MONGO_CONNECTION_STRING)
+    mongo.connect()
       .then(() => console.log("Connected to MongoDB database"))
       .catch(err => {
         console.error("Could not connect to MongoDB:", err)
