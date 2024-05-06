@@ -8,28 +8,23 @@ import { useLogin } from '../../../../../contexts/LoginContext';
 
 
 const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) => {
-    const editorRef = useRef(null);
     const monaco = useMonaco();
     const [isEditorReady, setEditorReady] = useState(false);
     const languages = Object.keys(challenge.functionSignatures);
-    const [language, setLanguage] = useState(languages[0]);
+    const [language, setLanguage] = useState("javascript");
+    const languageRef = useRef(language); // Ref to track the current language
+    useEffect(() => {
+        languageRef.current = language;
+    }, [language]);
     const {user} = useLogin()
-    // console.log("gameRoom",gameRoom.user)
+    const editorRef = useRef(null);
+
     let challengeSolutions = user.challengeSolutionsStore[challenge._id]
     if (!challengeSolutions) {
       user.challengeSolutionsStore[challenge._id] = {}
     }
-    // console.log("user",user)
     
-    // let editorContents = languages.reduce((acc, lang) => ({ ...acc,  [lang]: `\n\n${challenge.functionSignatures[lang]}\n` }), {})
-    // const [editorContentsStore, setEditorContentsStore] = useState(editorContents);
-    // console.log(challenge._id)
-    // console.log("editorContentsStore",editorContentsStore)
 
-    // useEffect(() => {
-    //     let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${challenge.functionSignatures[lang]}\n` }), {})
-    //     setEditorContentsStore(editorContents);
-    // }, [challenge]);
 
 
     useEffect(() => {
@@ -42,6 +37,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
               ]);
               // Prevent modification on read-only lines
               editorRef.current.onKeyDown(e => {
+                console.log("language",language)
                   let position = editorRef.current.getPosition();
                   decorations.forEach(decoration => {
                       let range = model.getDecorationRange(decoration);
@@ -50,26 +46,30 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
                       }
                   });
               });
+
+              editorRef.current.onDidChangeModelContent(() => {
+                setEditorContentsStore(prev => {
+                    return { ...prev, [languageRef.current]: editorRef.current.getValue() }
+                });
+            });   
           }
       }
-  }, [monaco, isEditorReady]);
+    }, [monaco, isEditorReady]);
 
-  const handleLanguageChangeTriggered = useRef(false)
-  const handleLanguageChange = (event) => {
-    handleLanguageChangeTriggered.current = true
-    const newLanguage = event.target.value;
-    setEditorContentsStore(prev => {
-      return { ...prev, [language]: editorRef.current.getValue() }
-    });
-    setLanguage(newLanguage);
+    const handleLanguageChangeTriggered = useRef(false)
+    const handleLanguageChange = (event) => {
+        handleLanguageChangeTriggered.current = true
+        const newLanguage = event.target.value;
+        setEditorContentsStore(prev => {
+        return { ...prev, [language]: editorRef.current.getValue() }
+        });
+        setLanguage(newLanguage);
 
-};
+    };
 
     const handleSubmit = () => {
-    //   console.log("editorContentsStore", editorContentsStore)
-    //   console.log('Submit:', editorRef.current.getValue());
-  };
-    // console.log("editorContentsStore",editorContentsStore)
+      console.log('Submit:', editorRef.current.getValue());
+    };
     return (
         <Box className="editor" position={"relative"}>
             <AppBar position="static" color="default" elevation={1}>
@@ -94,12 +94,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
                 onMount={(editor) => {
                   editorRef.current = editor;
                   setEditorReady(true);
-                  editorRef.current.onDidChangeModelContent(() => {
-                setEditorContentsStore(prev => {
-                    return { ...prev, [language]: editorRef.current.getValue() }
-                  });
-                });                  
-
+               
                 }}
                 language={language}
                 value={editorContentsStore[language]}

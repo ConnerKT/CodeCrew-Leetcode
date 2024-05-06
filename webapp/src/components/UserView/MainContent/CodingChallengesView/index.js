@@ -39,6 +39,7 @@ function CodingChallengesView() {
             let languages = Object.keys(challenge.functionSignatures);
             let editorContents = globalEditorContentsStore.current[challenge._id]
             if (!editorContents) {
+
                 editorContents = languages.reduce((acc, lang) => ({ ...acc,  [lang]: `\n\n${challenge.functionSignatures[lang]}\n` }), {})
             }
             setEditorContentsStore(editorContents)
