@@ -1,5 +1,5 @@
 
-#challengeOptionContainer {
+#ChallengeSelectMenuContainer {
     margin: 3%;
     width: 80%;
     height: 10%;
@@ -8,7 +8,7 @@
 }
 
 
-.challengeOption {
+.ChallengeSelectMenu {
     width: 30%;
     padding: 0.5%;
     display: flex;
@@ -19,18 +19,18 @@
     color: white;
 }
 
-.challengeOption h1 {
+.ChallengeSelectMenu h1 {
     display: inline-block;
     margin: 0;
 }
 
-.challengeOption:hover{
+.ChallengeSelectMenu:hover{
     box-shadow: 0 0 16px rgba(0, 0, 0, 0.7); /* Adjust the values as needed */
     cursor: pointer;
 }
 
 
-.focusedChallengeOption {
+.focusedChallengeSelectMenu {
     width: 30%;
     padding: 0.5%;
     display: flex;
@@ -43,12 +43,12 @@
     transform: scale(1.1);
 }
 
-.focusedChallengeOption h1 {
+.focusedChallengeSelectMenu h1 {
     display: inline-block;
     margin: 0;
 }
 
-.focusedChallengeOption:hover{
+.focusedChallengeSelectMenu:hover{
     box-shadow: 0 0 16px rgba(0, 0, 0, 0.7); /* Adjust the values as needed */
     cursor: pointer;
 }

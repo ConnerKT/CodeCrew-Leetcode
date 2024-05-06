@@ -4,22 +4,32 @@ import { AppBar, Toolbar, Fab, Stack  } from '@mui/material';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import './CodeEditor.css';
 import PublishIcon from '@mui/icons-material/Publish';
+import { useLogin } from '../../../../../contexts/LoginContext';
 
 
-const CodeEditor = ({ functionSignatures }) => {
+const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) => {
     const editorRef = useRef(null);
     const monaco = useMonaco();
     const [isEditorReady, setEditorReady] = useState(false);
-    const languages = Object.keys(functionSignatures);
+    const languages = Object.keys(challenge.functionSignatures);
     const [language, setLanguage] = useState(languages[0]);
-    let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${functionSignatures[lang]}\n` }), {})
-    const [editorContentsStore, setEditorContentsStore] = useState(editorContents);
+    const {user} = useLogin()
+    // console.log("gameRoom",gameRoom.user)
+    let challengeSolutions = user.challengeSolutionsStore[challenge._id]
+    if (!challengeSolutions) {
+      user.challengeSolutionsStore[challenge._id] = {}
+    }
+    // console.log("user",user)
     
+    // let editorContents = languages.reduce((acc, lang) => ({ ...acc,  [lang]: `\n\n${challenge.functionSignatures[lang]}\n` }), {})
+    // const [editorContentsStore, setEditorContentsStore] = useState(editorContents);
+    // console.log(challenge._id)
+    // console.log("editorContentsStore",editorContentsStore)
 
-    useEffect(() => {
-        let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${functionSignatures[lang]}\n` }), {})
-        setEditorContentsStore(editorContents);
-    }, [functionSignatures]);
+    // useEffect(() => {
+    //     let editorContents = languages.reduce((acc, lang) => ({ ...acc, [lang]: `\n\n${challenge.functionSignatures[lang]}\n` }), {})
+    //     setEditorContentsStore(editorContents);
+    // }, [challenge]);
 
 
     useEffect(() => {
@@ -56,8 +66,8 @@ const CodeEditor = ({ functionSignatures }) => {
 };
 
     const handleSubmit = () => {
-      console.log("editorContentsStore", editorContentsStore)
-      console.log('Submit:', editorRef.current.getValue());
+    //   console.log("editorContentsStore", editorContentsStore)
+    //   console.log('Submit:', editorRef.current.getValue());
   };
     // console.log("editorContentsStore",editorContentsStore)
     return (
@@ -84,6 +94,12 @@ const CodeEditor = ({ functionSignatures }) => {
                 onMount={(editor) => {
                   editorRef.current = editor;
                   setEditorReady(true);
+                  editorRef.current.onDidChangeModelContent(() => {
+                setEditorContentsStore(prev => {
+                    return { ...prev, [language]: editorRef.current.getValue() }
+                  });
+                });                  
+
                 }}
                 language={language}
                 value={editorContentsStore[language]}
@@ -93,7 +109,8 @@ const CodeEditor = ({ functionSignatures }) => {
                     scrollBeyondLastLine: false,
                     readOnly: false,
                     minimap: { enabled: false },
-                    contrastBorder: '#6fc3df'
+                    contrastBorder: '#6fc3df',
+                    wordWrap: 'on'
                 }}
             />
             <Fab color="primary" variant='extended' aria-label="submit" sx={{

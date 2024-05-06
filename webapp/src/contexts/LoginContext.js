@@ -18,7 +18,7 @@ export const LoginProvider = ({ children }) => {
             console.log("Session data received:", data);
             gameRoom.roomData = data.roomData;
             gameRoom.user = data.user;
-            setUser(data.user);
+            setUser({...data.user, challengeSolutionsStore: {}});
             setIsLoggedIn(true);
         });
         
