@@ -6,7 +6,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
 
 import ChallengeSelectMenu from './ChallengeSelectMenu';
-import ChallengeDetailsView from './ChallengeDetailsView';
 import CodeEditor from './CodeEditor';
 import ChallengeDescription from './ChallengeDescription';
 import './ChallengeDetailsView.css';
