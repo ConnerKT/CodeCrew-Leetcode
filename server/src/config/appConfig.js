@@ -9,7 +9,7 @@ class AppConfig {
         this.ENVIRONMENT = process.env.ENVIRONMENT || 'TEST';
         console.log(`Running in ${this.ENVIRONMENT} environment`);
         this.PORT = process.env.PORT || 3001;
-        this.CORS_URLS = process.env.CORS_URLS?.split(",") || ["http://localhost:5500", "http://localhost:3000", "https://codecrew-leetcode.onrender.com"]
+        this.CORS_URLS = process.env.CORS_URLS?.split(",") || ["http://localhost:5500", "http://localhost:3000", "https://codecrew-leetcode.onrender.com"] //sample env value: "http://localhost:5500","http://localhost:3000","https://codecrew-leetcode.onrender.com"
         this.REDIS_CONNECTION_STRING = process.env.REDIS_CONNECTION_STRING;
         this.MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
