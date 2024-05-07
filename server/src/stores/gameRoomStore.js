@@ -4,7 +4,8 @@ class GameRoomStore {
     }
 
     async gameRoomExists(gameroomId) {
-        return await this.redisClient.exists(`gameroom:${gameroomId}`);
+        let result = await this.redisClient.exists(`gameroom:${gameroomId}`);
+        return result
     }
 
     async createGameRoom(gameroomId, gameRoomData) {

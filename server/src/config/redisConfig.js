@@ -1,6 +1,5 @@
 const appConfig = require("./appConfig");
-const { createClient } = require("redis");
-const redis = createClient(appConfig.REDIS_CONNECTION_STRING);
+const redis = require("redis");
+const redisClient = redis.createClient(appConfig.REDIS_CONNECTION_STRING);
 
-
-module.exports = redis;
+module.exports = redisClient;

@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@binwus-org/redis-mock": "github:hgarcia-binwus/redis-mock",
     "@redis/json": "^1.0.6",
     "@socket.io/redis-adapter": "^8.3.0",
     "@socket.io/redis-emitter": "^5.1.0",
@@ -20,19 +21,23 @@
     "express": "^4.19.1",
     "express-session": "^1.18.0",
     "ioredis": "^5.3.2",
+    "ioredis-mock": "^8.9.0",
     "mongodb": "^6.6.0",
     "mongoose": "^8.2.3",
     "redis": "^4.6.13",
+    "redis-mock": "^0.56.3",
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",
-    "redis-mock": "^0.56.3",
     "socket.io-client": "^4.7.5",
     "supertest": "^7.0.0"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupFilesAfterEnv": [
+      "./tests/jest.setup.js"
+    ]
   }
 }
