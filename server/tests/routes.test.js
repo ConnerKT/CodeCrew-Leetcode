@@ -1,5 +1,8 @@
 const request = require('supertest');
 const app = require('../src/app');  // Adjust the path according to your project structure
+const { MongoClient } = require('mongodb');
+
+
 jest.mock('redis', () => {
   const mockRedis = {
     connect: jest.fn().mockResolvedValue(undefined),
@@ -24,6 +27,21 @@ jest.mock('redis', () => {
     createClient: () => mockRedis
   };
 });
+
+jest.mock('mongodb', () => {
+    const mockMongoClient = {
+      connect: jest.fn(),
+      db: jest.fn().mockReturnValue({
+        collection: jest.fn()
+      }),
+      close: jest.fn()
+    };
+  
+    return {
+      MongoClient: jest.fn(() => mockMongoClient),
+    };
+  });
+  
 
 describe('User Login Tests', () => {
   it('should fail without username and gameroomId', async () => {

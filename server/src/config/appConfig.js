@@ -6,10 +6,10 @@ require('dotenv').config(); // Load environment variables from .env file
 
 class AppConfig {
     constructor() {
-        this.ENVIRONMENT = process.env.ENVIRONMENT || 'LOCAL';
+        this.ENVIRONMENT = process.env.ENVIRONMENT || 'TEST';
         console.log(`Running in ${this.ENVIRONMENT} environment`);
         this.PORT = process.env.PORT || 3001;
-        this.CORS_URLS = process.env.CORS_URLS?.split(",") || ["http://localhost:5500", "http://localhost:3000", "https://codecrew-leetcode.onrender.com"]
+        this.CORS_URLS = process.env.CORS_URLS?.split(",") || ["http://localhost:5500", "http://localhost:3000", "https://codecrew-leetcode.onrender.com"] //sample env value: "http://localhost:5500","http://localhost:3000","https://codecrew-leetcode.onrender.com"
         this.REDIS_CONNECTION_STRING = process.env.REDIS_CONNECTION_STRING;
         this.MONGO_CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING;
 
@@ -24,8 +24,8 @@ class AppConfig {
         if (!this.MONGO_CONNECTION_STRING) {
             missingProperties.push('MONGO_CONNECTION_STRING');
         }
-
-        if (missingProperties.length > 0) {
+        console.log("environment",process.env.ENVIRONMENT)
+        if (missingProperties.length > 0 && process.env.ENVIRONMENT != "TEST") {
             throw new Error(`Missing required environment variables : ${missingProperties.join(', ')}`);
         }
     }
