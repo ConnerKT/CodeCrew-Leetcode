@@ -24,8 +24,8 @@ class AppConfig {
         if (!this.MONGO_CONNECTION_STRING) {
             missingProperties.push('MONGO_CONNECTION_STRING');
         }
-        console.log("environment",process.env.ENVIRONMENT)
-        if (missingProperties.length > 0 && process.env.ENVIRONMENT != "TEST") {
+
+        if (missingProperties.length > 0 && this.ENVIRONMENT !== "TEST") {
             throw new Error(`Missing required environment variables : ${missingProperties.join(', ')}`);
         }
     }
