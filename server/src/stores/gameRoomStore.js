@@ -1,3 +1,5 @@
+const redis = require("../config/redisConfig");
+
 class GameRoomStore {
     constructor(redisClient) {
         this.redisClient = redisClient;
@@ -33,7 +35,6 @@ class GameRoomStore {
         await this.redisClient.del(`sess:${sessionId}`);
     }
 }
-const redis = require("../config/redisConfig");
 const gameroomStore = new GameRoomStore(redis);
 
 module.exports = gameroomStore

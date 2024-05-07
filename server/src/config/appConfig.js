@@ -7,7 +7,6 @@ require('dotenv').config(); // Load environment variables from .env file
 class AppConfig {
     constructor() {
         this.ENVIRONMENT = process.env.ENVIRONMENT || 'TEST';
-        console.log(`Running in ${this.ENVIRONMENT} environment`);
         this.PORT = process.env.PORT || 3001;
         this.CORS_URLS = process.env.CORS_URLS?.split(",") || ["http://localhost:5500", "http://localhost:3000", "https://codecrew-leetcode.onrender.com"] //sample env value: "http://localhost:5500","http://localhost:3000","https://codecrew-leetcode.onrender.com"
         this.REDIS_CONNECTION_STRING = process.env.REDIS_CONNECTION_STRING;
@@ -28,6 +27,8 @@ class AppConfig {
         if (missingProperties.length > 0 && this.ENVIRONMENT !== "TEST") {
             throw new Error(`Missing required environment variables : ${missingProperties.join(', ')}`);
         }
+        
+        console.log(`Running in ${this.ENVIRONMENT} environment`);
     }
 }
 const appConfig = new AppConfig();
