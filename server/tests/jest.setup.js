@@ -1,9 +1,9 @@
-// jest.setup.js
-// jest.mock('redis', () => jest.requireActual('redis-mock'));
+const util = require('util');
 
 // Mock appConfig.js to use a fake Redis connection string
 jest.mock('../src/config/appConfig', () => ({
-  REDIS_CONNECTION_STRING: 'redis://localhost:6379'
+  REDIS_CONNECTION_STRING: 'redis://localhost:6379',
+  MONGO_CONNECTION_STRING: 'mongodb://1234@cluster0.nnbdzbq.mongodb.net/leetcode'
 }));
 
 // Mock the redisConfig.js to use the mocked Redis client

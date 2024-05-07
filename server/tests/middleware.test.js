@@ -39,24 +39,3 @@ describe('socketMiddleware', () => {
   });
 });
 
-
-
-// describe('Redis Mock Test', () => {
-//   it('should perform basic operations with mocked Redis', async () => {
-//     let rees = await global.redisMock.set('testKey', 'testValue');
-//     const value = await global.redisMock.get('testKey');
-//     expect(value).toBe('testValue');
-//   });
-
-//   it('should handle keys expiration', async () => {
-//     await global.redisMock.setex('expireKey', 10, 'willExpire');
-//     const valueBefore = await global.redisMock.get('expireKey');
-//     expect(valueBefore).toBe('willExpire');
-
-//     // Simulating timeout (redis-mock may not support real-time expiration so this is hypothetical)
-//     setTimeout(async () => {
-//       const valueAfter = await global.redisMock.get('expireKey');
-//       expect(valueAfter).toBeNull();
-//     }, 11000);  // Longer than the expiration time
-//   });
-// });

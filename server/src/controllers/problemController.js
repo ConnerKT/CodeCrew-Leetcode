@@ -1,4 +1,6 @@
 const challengeStore = require("../stores/challengeStore");
+
+
 exports.getProblems = async (req, res) => {
   try {
     const problems = await challengeStore.getAllChallenges();
@@ -8,6 +10,8 @@ exports.getProblems = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
 
 exports.getProblemsById = async (req, res) => {
   try {
@@ -37,11 +41,13 @@ exports.deleteProblem = async (req, res) => {
       deletedProblem,
       allProblems,
     });
-  } catch (error) {
-    console.error("Error deleting problem:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
+    } catch (error) {
+      console.error("Error deleting problem:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+
+
 
 exports.updateProblem = async (req, res) => {
   try {

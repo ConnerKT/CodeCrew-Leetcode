@@ -5,26 +5,11 @@ const redisClient = require('../src/config/redisConfig');
 
 
 describe('Game Room Management', () => {
-  beforeAll(async () => {
-    // Preload Redis with a game room entry
-
-    await redisClient
-      .multi()
-      .set('session:adyd876gdga', JSON.stringify({ username: 'testuser', gameroomId: '1234' }))
-      .exec((err, replies) => {
-        expect(err).toBeNull();
-      });
-
-    await redisClient
-      .multi()
-      .set('gameroom:1234', JSON.stringify({ users: [], problems: ['1212', '9917261', '1241652'] }))
-      .exec((err, replies) => {
-        expect(err).toBeNull();
-      });
+  beforeAll((done) => {
+    redisClient.set('session:adyd876gdga', JSON.stringify({ username: 'testuser', gameroomId: '1234' }))
+    redisClient.set('gameroom:1234', JSON.stringify({ users: [], problems: ['1212', '9917261', '1241652'] }))
 
 
-      let resp = await redisClient.get('gameroom:1234');
-      console.log(resp);
   });
 
   afterAll(async () => {
@@ -38,6 +23,7 @@ describe('Game Room Management', () => {
 
   it('should successfully log in the user to an existing room', async () => {
     const response = await request(app).post('/login').send({ username: 'testuser', gameroomId: '1234' });
+    let resp = await redisClient.get('gameroom:1234')
     expect(response.statusCode).toBe(200);
     // Additional check for the response body or session data can be done here
   });
