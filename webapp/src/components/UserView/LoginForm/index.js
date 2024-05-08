@@ -1,19 +1,130 @@
+import React, { useState } from "react";
 import { useLogin } from "../../../contexts/LoginContext";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import { Box, Button, Card, CardContent, Typography, TextField } from "@mui/material";
+import { styled } from "@mui/system";
+
+// Styled component for card hover effect
+const StyledCard = styled(Card)(({ theme }) => ({
+    marginTop: "8px",
+    cursor: "pointer",
+    transition: "0.3s",
+    "&:hover": {
+        transform: "scale(1.02)",
+        boxShadow: "0 4px 8px 0 rgba(0,0,0,0.2)",
+    },
+}));
 
 function LoginForm() {
-    const { isLoggedIn, user, gameRoom, login, logout } = useLogin();
+    const [username, setUsername] = useState("");
+    const [gameroomId, setGameroomId] = useState("");
+    const { login } = useLogin();
 
-    return <div id="joinForm" style={{display: "flex", justifyContent: "center", flexDirection: "column"}}>
-                <form onSubmit={function(event){
-                    event.preventDefault();
-                    login(document.getElementById('username').value, document.getElementById('gameroomId').value);
-                }}>
-                    <h1 style={{textAlign: "center"}}>Join a session</h1>
-                    <input type="text" id="username" placeholder="Username" />
-                    <input type="text" id="gameroomId" placeholder="Game Room ID" />
-                    <button>Join</button>
-                </form>
-            </div>
+    const { isLoading, isError, data: rooms } = useQuery({
+        queryKey: ["rooms"],
+        queryFn: async () => {
+            const response = await axios.get(
+                `${process.env.REACT_APP_API_URL}/gameroom`,
+                { withCredentials: true }
+            );
+            return response.data;
+        },
+    });
+
+    const handleRoomSelect = (roomId) => {
+        setGameroomId(roomId);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        if (username.trim() === "" || gameroomId.trim() === "") {
+            alert("Please enter a username and select a game room.");
+            return;
+        }
+        login(username, gameroomId);
+    };
+
+    console.log(rooms)
+
+    return (
+        <Box
+            id="joinForm"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            sx={{
+                width: "100%",
+                maxWidth: "500px",
+                margin: "0 auto",
+                padding: "16px",
+                boxShadow: 3,
+                borderRadius: "8px",
+                backgroundColor: "background.paper",
+            }}
+        >
+            <form onSubmit={handleSubmit} aria-labelledby="join-form-title">
+                <Typography
+                    id="join-form-title"
+                    variant="h4"
+                    textAlign="center"
+                    gutterBottom
+                >
+                    Select a session to join
+                </Typography>
+
+                {rooms && (
+                    <Box mt={2} mb={2}>
+                        {rooms.map((room) => (
+                            <StyledCard
+                                key={room.id}
+                                variant="outlined"
+                                sx={{
+                                    backgroundColor: gameroomId === room.id ? "primary.light" : "background.paper",
+                                }}
+                                onClick={() => handleRoomSelect(room.id)}
+                            >
+                                <CardContent sx={{display: "flex", flexDirection: "column", textAlign: "center"}} >
+                                    <Typography variant="h6">{room.id}</Typography>
+
+                                </CardContent>
+                            </StyledCard>
+                        ))}
+                    </Box>
+                )}
+                
+                <TextField
+                    label="Username"
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your username"
+                    required
+                    fullWidth
+                    margin="normal"
+                />
+
+                {isLoading && <Typography mt={2}>Loading game rooms...</Typography>}
+                {isError && (
+                    <Typography color="error" mt={2}>
+                        Error loading game rooms. Please try again later.
+                    </Typography>
+                )}
+
+                <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    disabled={isLoading}
+                    sx={{ mt: 2 }}
+                >
+                    Join
+                </Button>
+            </form>
+        </Box>
+    );
 }
 
 export default LoginForm;

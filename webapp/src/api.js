@@ -22,6 +22,16 @@ export const logout = async () => {
     }
 };
 
+export const getAllGameRooms = async () => {
+    try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/gameroom`, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error("Error getting game rooms:", error);
+        return [];
+    }
+}
+
 export const getChallenges = async () => {
     try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/challenges`, { withCredentials: true });

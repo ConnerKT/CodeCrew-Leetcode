@@ -38,7 +38,7 @@ exports.createGameRoom = async (req, res) => {
     }
 
     try {
-        const gameRoomData = { users: ["rerff"], challenges: challenges }; // Renamed problems to challenges to match the store
+        const gameRoomData = { users: [], challenges: challenges }; // Renamed problems to challenges to match the store
         await gameRoomStore.createGameRoom(gameroomId, gameRoomData);
         res.status(201).send(`Game room ${gameroomId} created.`);
     } catch (error) {
