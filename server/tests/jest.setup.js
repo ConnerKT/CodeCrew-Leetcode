@@ -1,16 +1,24 @@
 const util = require('util');
 
-// Mock appConfig.js to use a fake Redis connection string
+// Mock appConfig.js to use a fake Redis and MongoDB connection string
 jest.mock('../src/config/appConfig', () => ({
   REDIS_CONNECTION_STRING: 'redis://localhost:6379',
   MONGO_CONNECTION_STRING: 'mongodb://1234@cluster0.nnbdzbq.mongodb.net/leetcode'
 }));
 
-// Mock the redisConfig.js to use the mocked Redis client
+// Import the async-redis library to wrap the Redis client for asynchronous operations
+
+// Mock the redisConfig.js to use the mocked Redis client with async support
 jest.mock('../src/config/redisConfig', () => {
+  const asyncRedis = require('async-redis');
+
   const redisMock = require('redis-mock');
   const client = redisMock.createClient();
-  return client;
+
+  // Wrap the redis-mock client with async-redis to enable async methods
+  const asyncClient = asyncRedis.decorate(client);
+
+  return asyncClient;
 });
 
 jest.mock('mongodb', () => {

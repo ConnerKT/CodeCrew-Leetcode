@@ -9,7 +9,6 @@ const mongo = require("./config/mongoConfig");
 const httpServer = http.createServer(app);
 appSocket.attach(httpServer);
 
-//ensure that required environment variables are set using dotenv.config output
 
 
 

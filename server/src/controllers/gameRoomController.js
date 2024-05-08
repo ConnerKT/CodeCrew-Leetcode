@@ -1,5 +1,19 @@
 const gameRoomStore = require("../stores/gameRoomStore");
 
+// endpoint for getting a room's data
+
+exports.getGameRoomData = async (req, res) => {
+    const { roomId } = req.query;
+    try {
+        const gameRoomData = await gameRoomStore.getGameRoomData(roomId);
+        res.status(200).json(gameRoomData);
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
+};
+
+
+
 exports.createGameRoom = async (req, res) => {
     const { gameroomId, problems } = req.body;
     
@@ -12,7 +26,7 @@ exports.createGameRoom = async (req, res) => {
     }
 
     try {
-        const gameRoomData = { users: [], problems };
+        const gameRoomData = { users: ["etss"], challenges: problems }; // Renamed problems to challenges to match the store
         await gameRoomStore.createGameRoom(gameroomId, gameRoomData);
         res.status(201).send(`Game room ${gameroomId} created.`);
     } catch (error) {
@@ -25,7 +39,7 @@ exports.login = async (req, res) => {
     
     try {
         if (!username || !gameroomId) {
-            throw new Error("Username and room are required");
+            throw new Error("Username and room ID are required");
         }
         
         const exists = await gameRoomStore.gameRoomExists(gameroomId);
@@ -34,10 +48,9 @@ exports.login = async (req, res) => {
         }
 
         await gameRoomStore.addUserToGameRoom(gameroomId, username);
-
         req.session.username = username;
         req.session.gameroomId = gameroomId;
-        res.status(200).send(`User ${username} logged in and will join room ${gameroomId}`);
+        res.status(200).send(`User ${username} logged in and added to room ${gameroomId}`);
     } catch (error) {
         res.status(400).send(error.message);
     }
