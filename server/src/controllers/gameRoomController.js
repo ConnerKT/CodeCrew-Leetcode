@@ -3,8 +3,20 @@ const gameRoomStore = require("../stores/gameRoomStore");
 // endpoint for getting a room's data
 
 exports.getGameRoomData = async (req, res) => {
-    const { roomId } = req.query;
+    const { roomId } = req.params;
+
+    if (!roomId) {
+        return res.status(400).send("Game room ID is required");
+    }
+
+
     try {
+
+        const exists = await gameRoomStore.gameRoomExists(roomId);
+        if (!exists) {
+            throw new Error("Game room does not exist");
+        }
+        
         const gameRoomData = await gameRoomStore.getGameRoomData(roomId);
         res.status(200).json(gameRoomData);
     } catch (error) {
@@ -26,7 +38,7 @@ exports.createGameRoom = async (req, res) => {
     }
 
     try {
-        const gameRoomData = { users: [], challenges: challenges }; // Renamed problems to challenges to match the store
+        const gameRoomData = { users: ["rerff"], challenges: challenges }; // Renamed problems to challenges to match the store
         await gameRoomStore.createGameRoom(gameroomId, gameRoomData);
         res.status(201).send(`Game room ${gameroomId} created.`);
     } catch (error) {
@@ -63,15 +75,26 @@ exports.logout = async (req, res) => {
         }
 
         // Make sure to pass the session ID correctly to the destroy session method.
-        await gameRoomStore.destroySession(req.sessionID);
-
+        const gameRoomId = req.session.gameroomId;
+        const username = req.session.username;
         // Destroy the Express session
         req.session.destroy((err) => {
             if (err) {
                 throw new Error('Failed to destroy the session');
             }
-            res.status(200).send("Logged out successfully");
+            gameRoomStore.removeUserFromGameRoom(gameRoomId, username).then(() => {
+                res.status(200).send("User logged out and removed from game room");
+            });
         });
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+exports.getAllGameRooms = async (req, res) => {
+    try {
+        const gameRooms = await gameRoomStore.getAllGameRooms();
+        res.status(200).json(gameRooms);
     } catch (error) {
         res.status(500).send(error.message);
     }

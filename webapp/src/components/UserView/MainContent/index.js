@@ -7,8 +7,8 @@ function MainContent() {
     const { logout } = useLogin();
 
     return <>
-
-                <Button variant="contained" onClick={logout}>Logout</Button>
+                
+                <Button variant="contained" onClick={logout}>Leave</Button>
                 <CodingChallengesView/> 
             
             </> 

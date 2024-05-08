@@ -8,12 +8,18 @@ describe('Game Room Management', () => {
       // Preload Redis with necessary data for testing
       await redisClient.set('sess:adyd876gdga', JSON.stringify({ username: 'testuser', gameroomId: '1234' }));
       await redisClient.pipeline()
-        .hset('gameroom1234', 'id', '1234')
-        .sadd('gameroom1234:users', ['user1', 'user2'])
-        .sadd('gameroom1234:challenges', ['challenge1', 'challenge2'])
+        .hset('room:1234', '1234')
+        .sadd('room:1234:users', ['user1', 'user2'])
+        .sadd('room:1234:challenges', ['challenge1', 'challenge2'])
         .exec();
-    });
   
+    await redisClient.pipeline()
+    .set('room:1234', '1234')
+    .sadd('room:1234:users', ['user1', 'user2'])
+    .sadd('room:1234:challenges', ['challenge1', 'challenge2'])
+    .exec();
+});
+
     afterAll(async () => {
       // Clean up Redis
       await redisClient.flushall();
@@ -22,24 +28,23 @@ describe('Game Room Management', () => {
     // Existing tests...
   
     it('should retrieve game room data successfully', async () => {
-      const response = await request(app).get('/gameroom').query({ roomId: 'gameroom1234' });
+      const response = await request(app).get('/gameroom/1234');
       expect(response.statusCode).toBe(200);
-      expect(response.body.id).toEqual('1234');
+      // expect(response.body.id).toEqual('1234');
       expect(response.body.users).toContain('user1');
       expect(response.body.challenges).toContain('challenge1');
     });
   
     it('should return null for non-existing game room', async () => {
-      const response = await request(app).get('/gameroom').query({ roomId: 'nonexistent' });
-      expect(response.statusCode).toBe(200);
-      expect(response.body).toBeNull();
+      const response = await request(app).get('/gameroom/nonexistent');
+      expect(response.statusCode).toBe(400);
     });
   
     it('should successfully add a new user to an existing game room', async () => {
-      const response = await request(app).post('/login').send({ username: 'newuser', gameroomId: 'gameroom1234' });
+      const response = await request(app).post('/login').send({ username: 'newuser', gameroomId: '1234' });
       expect(response.statusCode).toBe(200);
   
-      const users = await redisClient.smembers('gameroom1234:users');
+      const users = await redisClient.smembers('room:1234:users');
       expect(users).toContain('newuser');
     });
   
@@ -49,6 +54,13 @@ describe('Game Room Management', () => {
       expect(response.text).toContain('Game room does not exist');
     });
   
+    it('should retrieve game room data successfully', async () => {
+      const response = await request(app).get('/gameroom/1234');
+      expect(response.statusCode).toBe(200);
+      expect(response.body.id).toEqual('1234');
+      expect(response.body.users).toContain('user1');
+      expect(response.body.challenges).toContain('challenge1');
+    });
   
   });
   
