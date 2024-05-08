@@ -4,9 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { useLogin } from '../../../../contexts/LoginContext';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
-
+import Button from '@mui/material/Button';
+import ScienceIcon from '@mui/icons-material/Science';
 import ChallengeSelectMenu from './ChallengeSelectMenu';
 import CodeEditor from './CodeEditor';
+import Typography from '@mui/material/Typography';
 import ChallengeDescription from './ChallengeDescription';
 import './ChallengeDetailsView.css';
 
@@ -16,6 +18,8 @@ function CodingChallengesView() {
     const [focusedChallenge, setFocusedChallenge] = useState(null);
     const [editorContentsStore, setEditorContentsStore] = useState({});
     const globalEditorContentsStore = useRef({});
+    const [showEditor, setShowEditor] = useState(false); // Toggle state for the editor
+
     const { isPending, data: challenges } = useQuery({
         queryKey: ['challenges', gameRoom.roomData.problems],
         queryFn: async () => {
@@ -29,25 +33,22 @@ function CodingChallengesView() {
 
     useEffect(() => {
         if (focusedChallengeIndex !== null) {
-            // console.log("focusedChallengeIndex", focusedChallengeIndex)
-            if (focusedChallenge!=null) {
-                // console.log("currentStore", editorContentsStore)
+            if (focusedChallenge != null) {
                 globalEditorContentsStore.current[focusedChallenge._id] = editorContentsStore;
             }
             let challenge = challenges[focusedChallengeIndex];
             let languages = Object.keys(challenge.functionSignatures);
-            let editorContents = globalEditorContentsStore.current[challenge._id]
+            let editorContents = globalEditorContentsStore.current[challenge._id];
             if (!editorContents) {
-
-                editorContents = languages.reduce((acc, lang) => ({ ...acc,  [lang]: `\n\n${challenge.functionSignatures[lang]}\n` }), {})
+                editorContents = languages.reduce(
+                    (acc, lang) => ({ ...acc, [lang]: `\n\n${challenge.functionSignatures[lang]}\n` }),
+                    {}
+                );
             }
-            setEditorContentsStore(editorContents)
+            setEditorContentsStore(editorContents);
             setFocusedChallenge(challenge);
-            console.log("globalEditorContentsStore.current", globalEditorContentsStore.current)
         }
     }, [focusedChallengeIndex]);
-
-    // console.log("editorContentsStore", editorContentsStore)
 
     return (
         <>
@@ -67,12 +68,41 @@ function CodingChallengesView() {
                     {focusedChallenge && (
                         <Paper id="challengeDetailsContainer">
                             <h1 id="challengeTitle">{focusedChallenge.title}</h1>
+
                             <div id="detailsSubContainer">
+                                <div style={{width: "100%", display: "flex", marginBottom: "6px " , justifyContent: "right"}}>
+                                    <div style={{display: 'flex', flexDirection: "column"}}>
+                                    <div style={{display: 'flex', alignItems: "center"}}>
+                                         Experimental feature <ScienceIcon SX={{display: "inline-block"}}/>
+                                    </div>
+                                        <Button
+                                                variant="contained"
+                                                color="primary"
+                                                onClick={() => setShowEditor(!showEditor)}>
+                                            {showEditor ? "Close" : "Submit a solution"}
+                                        </Button>
+
+
+                                    </div>
+                                </div>
+                                <div id="detailsSubContainer2">
                                 <ChallengeDescription challenge={focusedChallenge} />
-                                <CodeEditor challenge={focusedChallenge} editorContentsStore={editorContentsStore} setEditorContentsStore={setEditorContentsStore} />
+
+                                {showEditor && (
+                                    <CodeEditor
+                                        challenge={focusedChallenge}
+                                        editorContentsStore={editorContentsStore}
+                                        setEditorContentsStore={setEditorContentsStore}
+                                    />
+                                )}
+                                </div>
                             </div>
                             <h1 id="linkToLeetcode">
-                                <a href={`https://leetcode.com/problems/${focusedChallenge.title.toLowerCase().replace(/\s+/g, '-')}/`}>
+                                <a
+                                    href={`https://leetcode.com/problems/${focusedChallenge.title
+                                        .toLowerCase()
+                                        .replace(/\s+/g, '-')}/`}
+                                >
                                     View it on Leetcode
                                 </a>
                             </h1>

@@ -15,18 +15,18 @@ exports.getGameRoomData = async (req, res) => {
 
 
 exports.createGameRoom = async (req, res) => {
-    const { gameroomId, problems } = req.body;
+    const { gameroomId, challenges } = req.body;
     
     if (!gameroomId) {
         return res.status(400).send("Game room ID is required");
     }
     
-    if (!Array.isArray(problems)) {
+    if (!Array.isArray(challenges)) {
         return res.status(400).send("Problems must be an array");
     }
 
     try {
-        const gameRoomData = { users: ["etss"], challenges: problems }; // Renamed problems to challenges to match the store
+        const gameRoomData = { users: [], challenges: challenges }; // Renamed problems to challenges to match the store
         await gameRoomStore.createGameRoom(gameroomId, gameRoomData);
         res.status(201).send(`Game room ${gameroomId} created.`);
     } catch (error) {
@@ -58,13 +58,20 @@ exports.login = async (req, res) => {
 
 exports.logout = async (req, res) => {
     try {
-        if (!req.session) {
+        if (!req.session || !req.sessionID) {
             throw new Error("No session found");
         }
 
+        // Make sure to pass the session ID correctly to the destroy session method.
         await gameRoomStore.destroySession(req.sessionID);
-        req.session.destroy();
-        res.status(200).send("Logged out successfully");
+
+        // Destroy the Express session
+        req.session.destroy((err) => {
+            if (err) {
+                throw new Error('Failed to destroy the session');
+            }
+            res.status(200).send("Logged out successfully");
+        });
     } catch (error) {
         res.status(500).send(error.message);
     }

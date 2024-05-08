@@ -1,0 +1,47 @@
+
+.challengeDescription {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 1%;
+    flex-direction: column;
+    color: rgb(35, 56, 91);
+    border: 3px solid rgb(35, 56, 91);
+    border-right: 1.5px solid rgb(35, 56, 91);
+    min-height: 100%;
+
+}
+
+
+.challengeDescription h1 {
+    margin: 0;
+    font-size: 2.3em;
+    border-bottom: 3px solid rgb(35, 56, 91);
+
+}
+
+.challengeDescription:nth-child(1) {
+    overflow-y: scroll;
+    max-height: 70vh;
+
+
+}
+.challengeDescription:nth-child(1) p {
+    text-align: left;
+    width: 90%;
+    font-size: 1.3em;
+    line-height: 2;
+    margin-top: 4%;
+}
+
+.challengeDescription:nth-child(2) {
+    overflow-y: scroll;
+    max-height: 70vh;
+
+
+}
+.challengeDescription:nth-child(2) p {
+    text-align: center;
+    font-size: 1.4em;
+
+}

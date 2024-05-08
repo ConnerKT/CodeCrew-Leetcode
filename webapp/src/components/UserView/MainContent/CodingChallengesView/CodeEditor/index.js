@@ -56,6 +56,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
       }
     }, [monaco, isEditorReady]);
 
+
     const handleLanguageChangeTriggered = useRef(false)
     const handleLanguageChange = (event) => {
         handleLanguageChangeTriggered.current = true

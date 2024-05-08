@@ -16,7 +16,6 @@ class ChallengeStore {
 
     async getChallengesByIds(ids) {
         const objectIds = ids.map(id => new ObjectId(id));
-        console.log(objectIds)
         return await this.mongoClient.find({ _id: { $in: objectIds } }).toArray();
     }
 
