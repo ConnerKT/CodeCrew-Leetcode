@@ -1,15 +1,18 @@
 // Assuming sessionMiddleware is one directory up and then in the middleware folder
-jest.mock('../src/middleware/sessionMiddleware', () => {
-  return jest.fn((req, res, next) => {
+import sessionMiddleware from '../src/middleware/sessionMiddleware';
+import {test, expect, mock, describe, jest} from "bun:test";
+// Mock sessionMiddleware
+mock.module('../src/middleware/sessionMiddleware', () => {
+  return (req, res, next) => {
     req.session = req._testSession;  // Attach a custom session object
     next();
-  });
+  };
 });
 
-const socketMiddleware = require('../src/middleware/socketMiddleware'); // Adjust this path as needed
+import socketMiddleware from '../src/middleware/socketMiddleware'; // Adjust this path as needed
 
 describe('socketMiddleware', () => {
-  it('should allow connection if session has username and gameroomId', done => {
+  test('should allow connection if session has username and gameroomId', (done) => {
     const socket = {
       request: {
         _testSession: { username: 'testUser', gameroomId: '12345' }
@@ -23,7 +26,7 @@ describe('socketMiddleware', () => {
     }, 100);
   });
 
-  it('should return an error if session does not have required properties', done => {
+  test('should return an error if session does not have required properties', (done) => {
     const socket = {
       request: {
         _testSession: { username: 'testUser' }  // Missing gameroomId
@@ -38,4 +41,3 @@ describe('socketMiddleware', () => {
     }, 100);
   });
 });
-

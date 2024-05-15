@@ -1,7 +1,7 @@
 const appConfig = require("../config/appConfig");
 const session = require("express-session");
 const RedisStore = require("connect-redis").default;
-const redis = require("../config/redisConfig");
+import redis from "../config/redisConfig"
 
 const sessionSecret = "keyboard cat";
 const store = new RedisStore({
@@ -23,4 +23,4 @@ const sessionMiddleware = session({
   }
 });
 
-module.exports = sessionMiddleware
+export default sessionMiddleware;

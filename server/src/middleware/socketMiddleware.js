@@ -1,4 +1,4 @@
-const sessionMiddleware  = require("./sessionMiddleware");
+import sessionMiddleware from "./sessionMiddleware"
 
 
 const socketMiddleware = (socket, next) => {
@@ -12,4 +12,4 @@ const socketMiddleware = (socket, next) => {
     });
   }
 
-module.exports = socketMiddleware 
+export default socketMiddleware 

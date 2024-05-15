@@ -1,18 +1,17 @@
-const appConfig = require("./config/appConfig");
+import appConfig from "./config/appConfig"
 
 const http = require("http");
-const app = require("./app");
+import app from "./app"
 const appSocket = require("./appSocket");
-const redis = require("./config/redisConfig");
-const mongo = require("./config/mongoConfig");
-
+import redis from "./config/redisConfig";
+import mongo from "./config/mongoConfig";
 const httpServer = http.createServer(app);
 appSocket.attach(httpServer);
 
 
 
 
-let port = appConfig.PORT;
+let port= appConfig.PORT;
 
 httpServer.listen(port, () => {
   console.log(`Server listening on port ${port}`);
