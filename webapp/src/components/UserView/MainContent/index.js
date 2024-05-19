@@ -1,28 +1,39 @@
 import "./Content.css";
 import { useLogin } from "../../../contexts/LoginContext";
-import { Button } from "@mui/material";
+import { Button, Grid, Avatar, Typography, Box, Tooltip, unstable_composeClasses } from "@mui/material";
 
 import CodingChallengesView from "./CodingChallengesView";
+
 function MainContent() {
-    const { logout, gameRoom } = useLogin();
-
+    const { logout, gameRoom, user: thisUser } = useLogin();
+    
     let users = gameRoom.roomData.users;
-    console.log(users);
-    return <>
-                
-                <Button variant="contained" onClick={logout}>Leave</Button>
+    console.log("users", users);
+    console.log("user", thisUser)
+    return (
+        <>
+            <Box id="MainContentHeader" sx={{ width: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4, position: "relative"}}>
+                <Box>
 
-                <div>
-                    <h1>Users</h1>
-                    <ul>
-                        {users.map((user) => <li key={user.id}>{user}</li>)}
-                    </ul>
-                </div>
+                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                        {users.map((user) => {
+                            let avatarUrl = `https://ui-avatars.com/api/?name=${user.username}&background=random&rounded=true&size=128`;
+                            return (
+                                <Tooltip title={user.username} key={user.id}>
+                                    <Avatar src={avatarUrl} alt="avatar" sx={{ m: 2, border: thisUser.username == user.username ? "6px solid white": ""}} />
+                                </Tooltip>
+                            );
+                        })}
+                    </Box>
+                </Box>
+                <Button sx={{position: "absolute", right: "3%", top: "3%"}} variant="contained" color="primary" onClick={logout}>
+                    Leave
+                </Button>
+            </Box>
 
-                <CodingChallengesView/> 
-            
-            </> 
-  
+            <CodingChallengesView />
+        </>
+    );
 }
 
 export default MainContent;

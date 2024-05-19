@@ -24,7 +24,7 @@ function CodingChallengesView() {
         queryKey: ['challenges', gameRoom.roomData.problems],
         queryFn: async () => {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/problemsbyid`, {
-                ids: gameRoom.roomData.challenges
+                ids: gameRoom.roomData.challenges.map((challenge) => challenge.id),
             }, { withCredentials: true });
             setFocusedChallengeIndex(0); // Set the first challenge as focused when data is fetched
             return response.data;

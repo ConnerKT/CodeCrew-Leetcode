@@ -68,7 +68,6 @@ const editProblemInServer = async (name, difficulty, description) => {
       }
     );
     
-    (response);
 
     return response;
   } catch (error) {
