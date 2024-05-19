@@ -5,7 +5,7 @@ import problemsRouter from "./routes/problemRoutes"
 import gameRoomRouter from "./routes/gameRoomRoutes"
 import sessionMiddleware from "./middleware/sessionMiddleware"
 const app = express();
-app.set('trust proxy', 1) // trust first proxy
+appConfig.ENVIRONMENT === "PRODUCTION" && app.set('trust proxy', 1) // trust first proxy
 
 app.use(cors({
   origin: appConfig.CORS_URLS,

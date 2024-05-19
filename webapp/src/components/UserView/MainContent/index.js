@@ -23,10 +23,10 @@ function MainContent() {
                             );
                         })}
                     </Box>
-                </Box>
                 <Button sx={{position: "absolute", right: "3%", top: "3%"}} variant="contained" color="primary" onClick={logout}>
                     Leave
                 </Button>
+                </Box>
 
             <CodingChallengesView />
         </>

@@ -16,8 +16,6 @@ appSocket.use(socketMiddleware);
 
 
 
-
-
 appSocket.on("connection", async (socket: any) => {
     const roomId = socket.request.session.gameroomId;
     console.log(`User ${socket.request.session.username} connected and joined room ${roomId}`);
