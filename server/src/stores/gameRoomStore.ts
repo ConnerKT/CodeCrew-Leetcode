@@ -25,11 +25,9 @@ class GameRoomStore {
         if (exists) {
             throw new Error("Game room already exists");
         }
-        console.log("challengeIds", challengeIds);
         const challenges = await challengeStore.getChallengesByIds(challengeIds);
 
         const newGameRoom = new GameRoom(gameRoomId, challenges);
-        console.log("newGameRoom", newGameRoom);
         await this.redisClient.call('JSON.SET', `room:${gameRoomId}`, '$', JSON.stringify(newGameRoom));
         await this.redisClient.expire(`room:${gameRoomId}`, 86400); // Set expiration time to 86400 seconds (1 day)
     }
@@ -48,11 +46,9 @@ class GameRoomStore {
     }
 
     async getGameRoomUsers(gameroomId: string): Promise<User[]> {
-        const response = await this.redisClient.call('JSON.GET', `room:${gameroomId}`, '$.users') as string | null;
-        let users: User[] = [];
-        if (response != null) {
-            users = JSON.parse(response);
-        }
+        let gameRoom = await this.getGameRoomData(gameroomId)
+        let users: User[] = gameRoom ? gameRoom.users : [];
+
         return users;
     }
 
@@ -67,10 +63,8 @@ class GameRoomStore {
 
     async removeUserFromGameRoom(gameroomId: string, username: string): Promise<void> {
         const users = await this.getGameRoomUsers(gameroomId);
-        const updatedUsers = users.filter(function(user) {
-            return user.username !== username;
-        });
-        let response = await this.redisClient.call('JSON.SET', `room:${gameroomId}`, '$.users', JSON.stringify(updatedUsers));
+        let userToRemoveIndex = users.indexOf(users.find(user => user.username === username));
+        let response = await this.redisClient.call('JSON.ARRPOP', `room:${gameroomId}`, '$.users', userToRemoveIndex);
     }
 
     async getAllGameRooms(): Promise<GameRoom[]> {

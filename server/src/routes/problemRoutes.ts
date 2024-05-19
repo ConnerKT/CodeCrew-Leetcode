@@ -1,6 +1,6 @@
 const express = require('express');
 const problemsRouter = express.Router();
-const challengeStore = require("../stores/challengeStore");
+import challengeStore from "../stores/challengeStore"
 
 problemsRouter.get('/problems', async (req, res) => {
     try {
@@ -54,7 +54,7 @@ problemsRouter.put('/problems/:id', async (req, res) => {
         const problemId = req.params.id;
         const updateData = req.body;
 
-        const updatedProblem = await challengeStore.updateChallengeById(problemId, updateData);
+        const updatedProblem: any = await challengeStore.updateChallengeById(problemId, updateData);
 
         if (!updatedProblem.value) {
         return res.status(404).json({ message: "Problem not found" });
@@ -73,4 +73,4 @@ problemsRouter.put('/problems/:id', async (req, res) => {
     }
 });
 
-module.exports = problemsRouter;
+export default problemsRouter;

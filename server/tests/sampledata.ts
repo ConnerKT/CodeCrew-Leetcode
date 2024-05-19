@@ -15,7 +15,18 @@ const sampleGameState: GameRoom = {
     challenges: [
         {
             id: "challenge1",
-            numberOfTestCases: 2,
+            testCases: [
+                {
+                    id: "tc1",
+                    input: [1, 2],
+                    output: 3
+                },
+                {
+                    id: "tc2",
+                    input: [10, 20],
+                    output: 30
+                }
+            ],
             userSubmissions: [
                 {
                     userId: "user123",
@@ -38,7 +49,13 @@ const sampleGameState: GameRoom = {
         },
         {
             id: "challenge2",
-            numberOfTestCases: 2,
+            testCases: [
+                {
+                    id: "tc1",
+                    input: [1, 2],
+                    output: 3
+                }
+            ],
             userSubmissions: [
                 {
                     userId: "user123",
@@ -58,7 +75,7 @@ import { Challenge, TestCase } from '../src/models';
 
 const sampleChallenges: Challenge[] = [
     {
-        id: new ObjectId().toString(),
+        _id: new ObjectId().toString(),
         title: 'Sum of Two Numbers',
         difficulty: 'Easy',
         description: 'Write a function that returns the sum of two numbers.',
@@ -86,7 +103,7 @@ const sampleChallenges: Challenge[] = [
         ]
     },
     {
-        id: new ObjectId().toString(),
+        _id: new ObjectId().toString(),
         title: 'Reverse a String',
         difficulty: 'Medium',
         description: 'Write a function that reverses a string.',
@@ -114,7 +131,7 @@ const sampleChallenges: Challenge[] = [
         ]
     },
     {
-        id: new ObjectId().toString(),
+        _id: new ObjectId().toString(),
         title: 'Find Maximum Value',
         difficulty: 'Hard',
         description: 'Write a function that finds the maximum value in an array.',

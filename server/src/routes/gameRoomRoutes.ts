@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import gameRoomStore from '../stores/gameRoomStore';
-import { GameRoom } from '../models';
+import { GameRoom, User } from '../models';
 import { Express, Router } from 'express';
 import session from 'express-session';
 
@@ -33,8 +33,8 @@ gameRoomRouter.post('/login', async (req: Request, res: Response) => {
         if (!exists) {
             throw new Error("Game room does not exist");
         }
-
-        await gameRoomStore.addUserToGameRoom(gameroomId, username);
+        let user: User = {username: username, id: req.sessionID};
+        await gameRoomStore.addUserToGameRoom(gameroomId, user);
         req.session.username = username;
         req.session.gameroomId = gameroomId;
         res.status(200).send(`User ${username} logged in and added to room ${gameroomId}`);
@@ -61,8 +61,9 @@ gameRoomRouter.post('/logout', async (req: Request, res: Response) => {
             if (err) {
                 throw new Error('Failed to destroy the session');
             }
+
             gameRoomStore.removeUserFromGameRoom(gameRoomId, username).then(() => {
-                res.status(200).send("User logged out and removed from game room");
+
             }).catch((error) => {
                 throw new Error(error.message);
             });

@@ -3,6 +3,7 @@ import Redis from 'ioredis-mock';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import { sampleGameState, sampleChallenges } from './sampledata';
 import { MongoClient } from 'mongodb';
+import { Challenge } from '../src/models';
 
 
 mock.module('../src/config/redisConfig', () => {
@@ -26,7 +27,11 @@ mock.module('../src/config/redisConfig', () => {
         data[path].push(value);
         return redis.set(key, JSON.stringify(data));
     }
-
+    if (command === 'JSON.STRAPPEND') {
+      const data = JSON.parse(redis.get(key));
+      data[path].push(value);
+      return redis.set(key, JSON.stringify(data));
+  }
     if (command === 'JSON.ARRINDEX') {
         const data = JSON.parse(redis.get(key));
         return data[path].indexOf(value);
@@ -49,7 +54,7 @@ mock.module('../src/config/mongoConfig', async () => {
   await client.connect();
 
   //add test data
-  client.db("leetcode").collection('challenges').insertMany(sampleChallenges);
+  client.db("leetcode").collection<Challenge>('challenges').insertMany(sampleChallenges);
 
   return {
     default: client

@@ -16,7 +16,7 @@ describe('Game Room Management', () => {
         if (!expectedGameRoomDataJson) {
             throw new Error("No game room data found")
         }
-
+        
         let expectedGameRoomData: GameRoom | null = JSON.parse(expectedGameRoomDataJson)
 
         const response = await request(app).get(`/gameroom/${roomId}`);
@@ -35,7 +35,7 @@ describe('Game Room Management', () => {
 
     it('should create a new game room successfully', async () => {
         let roomId = "spicygrandma"
-        let challengeIds = sampleChallenges.map(challenge => challenge.id)
+        let challengeIds = sampleChallenges.map(challenge => challenge._id)
         const response = await request(app).post('/gameroom').send({gameRoomId: roomId, challengeIds});
 
 

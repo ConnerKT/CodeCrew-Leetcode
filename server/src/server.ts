@@ -1,7 +1,7 @@
 import appConfig from "./config/appConfig"
 import { createServer } from "http"
 import app from "./app"
-const appSocket = require("./appSocket");
+import  appSocket from "./appSocket"
 import redis from "./config/redisConfig";
 import mongo from "./config/mongoConfig";
 

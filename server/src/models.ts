@@ -22,7 +22,7 @@ class TestCase {
 }
 
 class Challenge {
-    id!: string;
+    _id!: string;
     title!: string;
     difficulty!: string;
     description!: string;
@@ -34,13 +34,13 @@ class Challenge {
 class GameRoom {
     id!: string;
     users!: User[];
-    challenges!: { id: string, numberOfTestCases: number, userSubmissions: UserSubmission[] }[];
+    challenges!: { id: string, testCases: TestCase[], userSubmissions: UserSubmission[] }[];
 
     constructor(id: string, challenges: Challenge[]) {
         this.id = id;
         this.challenges = challenges.map(challenge => ({
-            id: challenge.id,
-            numberOfTestCases: challenge.testCases.length,
+            id: challenge._id,
+            testCases: challenge.testCases,
             userSubmissions: []
         }));
         this.users = [];
