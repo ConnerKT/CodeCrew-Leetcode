@@ -16,7 +16,7 @@ const sessionMiddleware = session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: appConfig.ENVIRONMENT === "PRODUCTION",
+    secure: true,
     httpOnly: false,
     sameSite: "none",
   }
