@@ -9,7 +9,7 @@ export const useLogin = () => useContext(LoginContext);
 
 export const LoginProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(null);
-    const [gameRoom, setGameRoom] = useState(null);
+    const [gameRoomState, setGameRoomState] = useState(null);
     const [user, setUser] = useState(null);
 
     useEffect(() => {
@@ -30,8 +30,14 @@ export const LoginProvider = ({ children }) => {
             console.error("Error connecting to server:", error);
             setIsLoggedIn(false);
         });
+
+        gameRoom.connection.on("roomUpdate", (data) => {
+            console.log("Room update received:", data);
+            setGameRoomState({...gameRoomState, roomData: data});
+        }
+        );
         gameRoom.connect()
-        setGameRoom(gameRoom)
+        setGameRoomState(gameRoom)
         return () => {
             if (gameRoom) gameRoom.disconnect();
         };
@@ -40,7 +46,7 @@ export const LoginProvider = ({ children }) => {
     const handleLogin = async (username, gameroomId) => {
         const result = await login(username, gameroomId);
         if (result.isSuccess) {
-            gameRoom.connect();
+            gameRoomState.connect();
         }
     };
 
@@ -48,13 +54,13 @@ export const LoginProvider = ({ children }) => {
         apiLogout();
         setIsLoggedIn(false);
         setUser(null);
-        if(gameRoom.connection.connected) {
-            gameRoom.disconnect();
+        if(gameRoomState.connection.connected) {
+            gameRoomState.disconnect();
         }
     };
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, user: user, gameRoom, login: handleLogin, logout: handleLogout }}>
+        <LoginContext.Provider value={{ isLoggedIn, user: user, gameRoom: gameRoomState, login: handleLogin, logout: handleLogout }}>
             {children}
         </LoginContext.Provider>
     );

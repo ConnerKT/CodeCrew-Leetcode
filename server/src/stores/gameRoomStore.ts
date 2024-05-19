@@ -1,8 +1,7 @@
 import Redis from 'ioredis';
 import challengeStore from './challengeStore';
 import { GameRoom, User, Challenge } from "../models";
-import redisClient from "../config/redisConfig"
-
+import redisClient from "../config/redisConfig";
 
 class GameRoomStore {
     private redisClient: Redis;
@@ -30,6 +29,9 @@ class GameRoomStore {
         const newGameRoom = new GameRoom(gameRoomId, challenges);
         await this.redisClient.call('JSON.SET', `room:${gameRoomId}`, '$', JSON.stringify(newGameRoom));
         await this.redisClient.expire(`room:${gameRoomId}`, 86400); // Set expiration time to 86400 seconds (1 day)
+        
+        // Create a channel for the room
+        await this.redisClient.publish(`channel:room:${gameRoomId}`, JSON.stringify(newGameRoom));
     }
 
     async getGameRoomData(gameroomId: string): Promise<GameRoom | null> {
@@ -42,9 +44,12 @@ class GameRoomStore {
     }
 
     async addUserToGameRoom(gameroomId: string, user: User): Promise<void> {
-        let response = await this.redisClient.call('JSON.ARRAPPEND', `room:${gameroomId}`, '$.users', JSON.stringify(user));
+        await this.redisClient.call('JSON.ARRAPPEND', `room:${gameroomId}`, '$.users', JSON.stringify(user));
+        const gameRoomData = await this.getGameRoomData(gameroomId);
+        if (gameRoomData) {
+            await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
+        }
     }
-
     async getGameRoomUsers(gameroomId: string): Promise<User[]> {
         let gameRoom = await this.getGameRoomData(gameroomId)
         let users: User[] = gameRoom ? gameRoom.users : [];
@@ -52,19 +57,15 @@ class GameRoomStore {
         return users;
     }
 
-    async getGameRoomChallenges(gameroomId: string): Promise<Challenge[]> {
-        const response = await this.redisClient.call('JSON.GET', `room:${gameroomId}`, '$.challenges') as string | null;
-        let challenges: Challenge[] = [];
-        if (response != null) {
-            challenges = JSON.parse(response);
-        }
-        return challenges;
-    }
 
     async removeUserFromGameRoom(gameroomId: string, username: string): Promise<void> {
         const users = await this.getGameRoomUsers(gameroomId);
         let userToRemoveIndex = users.indexOf(users.find(user => user.username === username));
-        let response = await this.redisClient.call('JSON.ARRPOP', `room:${gameroomId}`, '$.users', userToRemoveIndex);
+        await this.redisClient.call('JSON.ARRPOP', `room:${gameroomId}`, '$.users', userToRemoveIndex);
+        const gameRoomData = await this.getGameRoomData(gameroomId);
+        if (gameRoomData) {
+            await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
+        }
     }
 
     async getAllGameRooms(): Promise<GameRoom[]> {
@@ -80,7 +81,6 @@ class GameRoomStore {
     }
 }
 
-// Example usage
 const gameRoomStore = new GameRoomStore(redisClient);
 
 export default gameRoomStore;
