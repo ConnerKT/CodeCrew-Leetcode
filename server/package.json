@@ -1,46 +1,32 @@
 {
   "name": "server",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "module": "src/server.ts",
+  "type": "module",
   "scripts": {
-    "test": "jest",
-    "start": "bun ./src/server.ts "
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@binwus-org/redis-mock": "github:hgarcia-binwus/redis-mock",
-    "@redis/json": "^1.0.6",
-    "@socket.io/redis-adapter": "^8.3.0",
-    "@socket.io/redis-emitter": "^5.1.0",
-    "connect-redis": "^7.1.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.1",
-    "express-session": "^1.18.0",
-    "ioredis": "^5.4.1",
-    "mongodb": "^6.6.0",
-    "mongoose": "^8.2.3",
-    "redis": "^4.6.13",
-    "redis-mock": "^0.56.3",
-    "socket.io": "^4.7.5"
+    "start": "bun run ./src/server.ts",
+    "test": "bun test --preload ./tests/preload"
   },
   "devDependencies": {
-    "@types/node": "^20.12.12",
-    "async-redis": "^2.0.0",
+    "@types/bun": "^1.1.2",
+    "@types/express-session": "^1.18.0",
+    "@types/supertest": "^6.0.2",
+    "bun-types": "^1.1.8",
     "ioredis-mock": "^8.9.0",
     "jest": "^29.7.0",
     "mongodb-memory-server": "^9.2.0",
-    "nodemon": "^3.1.0",
-    "socket.io-client": "^4.7.5",
     "supertest": "^7.0.0"
   },
-  "jest": {
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./tests/jest.setup.js"
-    ]
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "connect-redis": "^7.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "ioredis": "^5.4.1",
+    "mongodb": "^6.6.2",
+    "socket.io": "^4.7.5"
   }
 }

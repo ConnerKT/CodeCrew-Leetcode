@@ -1,43 +1,56 @@
-// models/problem.js
-import { MongoClient } from 'mongodb';
-import mongo from '../config/mongoConfig';
-const { ObjectId } = require('mongodb');
-
-
-
+import { MongoClient, ObjectId } from 'mongodb';
+import { Challenge } from '../models'; // Ensuring the import paths are correct
+import mongo from '../config/mongoConfig'; // Ensuring mongo configuration is correctly imported
 
 class ChallengeStore {
-    mongoClient: MongoClient
-    constructor(mongoClient) {
-        this.mongoClient = mongoClient
+    private mongoClient: MongoClient;
+
+    constructor(mongoClient: MongoClient) {
+        this.mongoClient = mongoClient;
     }
 
-    async getAllChallenges() {
-        return await this.mongoClient
+    async getAllChallenges(): Promise<Challenge[]> {
+        let response = await this.mongoClient
                         .db("leetcode")
-                        .collection("challenges")
-                        .find({}).toArray();
+                        .collection<Challenge>("challenges")
+                        .find({})
+                        .toArray();
+        return response;
     }
 
-    async getChallengesByIds(ids) {
+    async getChallengesByIds(ids: string[]): Promise<Challenge[]> {
+
         const objectIds = ids.map(id => new ObjectId(id));
-        return await this.mongoClient
+        let response = await this.mongoClient
                             .db("leetcode")
-                            .collection("challenges")
-                            .find({ _id: { $in: objectIds } }).toArray();
+                            .collection<Challenge>("challenges")
+                            .find({ _id: { $in: objectIds } })
+                            .toArray();
+
+
+        return response;
     }
 
-    async deleteChallengeById(id) {
-        return await this.mongoClient.db("leetcode").collection("challenges").deleteOne({ _id: id });
+    async deleteChallengeById(id: string): Promise<{ deletedCount: number }> {
+        const response = await this.mongoClient
+                                .db("leetcode")
+                                .collection("challenges")
+                                .deleteOne({ _id: new ObjectId(id) });
+        return { deletedCount: response.deletedCount };
     }
 
-    async updateChallengeById(id, updateData) {
-        return await this.mongoClient.db("leetcode").collection("challenges").findOneAndUpdate(
-            { _id: id },
-            { $set: updateData },
-            { returnDocument: 'after' }
-        );
+    async updateChallengeById(id: string, updateData: Partial<Challenge>): Promise<Challenge | null> {
+        const response: any = await this.mongoClient
+                                .db("leetcode")
+                                .collection("challenges")
+                                .findOneAndUpdate(
+                                    { _id: new ObjectId(id) },
+                                    { $set: updateData },
+                                    { returnDocument: 'after' }
+                                );
+        return response.value;
     }
+
 }
 
 const challengeStore = new ChallengeStore(mongo);
