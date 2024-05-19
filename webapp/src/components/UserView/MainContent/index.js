@@ -8,8 +8,7 @@ function MainContent() {
     const { logout, gameRoom, user: thisUser } = useLogin();
     
     let users = gameRoom.roomData.users;
-    console.log("users", users);
-    console.log("user", thisUser)
+
     return (
         <>
             <Box id="MainContentHeader" sx={{ width: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4, position: "relative"}}>

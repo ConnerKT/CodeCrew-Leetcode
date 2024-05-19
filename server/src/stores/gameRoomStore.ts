@@ -5,9 +5,13 @@ import redisClient from "../config/redisConfig";
 
 class GameRoomStore {
     private redisClient: Redis;
-
+    public subRedisClient: Redis;
     constructor(redisClient: Redis) {
         this.redisClient = redisClient;
+        this.redisClient.once("connect", () => {
+            this.subRedisClient = redisClient.duplicate();
+            this.subRedisClient.connect();
+        })
     }
 
     async gameRoomExists(gameroomId: string): Promise<boolean> {

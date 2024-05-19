@@ -16,7 +16,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
     useEffect(() => {
         languageRef.current = language;
     }, [language]);
-    const {user} = useLogin()
+    const {user, gameRoom} = useLogin()
     const editorRef = useRef(null);
 
     let challengeSolutions = user.challengeSolutionsStore[challenge._id]
@@ -37,7 +37,6 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
               ]);
               // Prevent modification on read-only lines
               editorRef.current.onKeyDown(e => {
-                console.log("language",language)
                   let position = editorRef.current.getPosition();
                   decorations.forEach(decoration => {
                       let range = model.getDecorationRange(decoration);
@@ -69,7 +68,12 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
     };
 
     const handleSubmit = () => {
-      console.log('Submit:', editorRef.current.getValue());
+      gameRoom.connection.emit("submission", {
+        challengeId: challenge._id,
+        submissionCode: editorRef.current.getValue(),
+        submissionLanguage: language,
+        userId: user.username
+    })
     };
     return (
         <Box className="editor" position={"relative"}>

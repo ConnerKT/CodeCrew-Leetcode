@@ -9,6 +9,7 @@ class User {
 }
 
 class UserSubmission {
+    challengeId!: string;
     userId!: string;
     testCasesPassed!: string[];
     submissionCode!: string;
