@@ -1,4 +1,4 @@
-import appConfig from "../config/appConfig"
+const appConfig = require("../config/appConfig");
 const session = require("express-session");
 const RedisStore = require("connect-redis").default;
 import redis from "../config/redisConfig"
@@ -16,10 +16,9 @@ const sessionMiddleware = session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: true,
+    secure: appConfig.ENVIRONMENT === "PRODUCTION",
     httpOnly: false,
-    sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 24
+    sameSite: "lax",
   }
 });
 

@@ -37,12 +37,6 @@ gameRoomRouter.post('/login', async (req: Request, res: Response) => {
         await gameRoomStore.addUserToGameRoom(gameroomId, user);
         req.session.username = username;
         req.session.gameroomId = gameroomId;
-        
-        //ensure Set-Cookie header is set
-        res.header('Set-Cookie', `connect.sid=s%3A${req.sessionID}; Path=/; Expires=Mon, 20 May 2024 14:41:01 GMT; SameSite=None; Secure`
-    );
-
-
         res.status(200).send(`User ${username} logged in and added to room ${gameroomId}`);
     } catch (error: any) {
         res.status(400).send(error.message);
