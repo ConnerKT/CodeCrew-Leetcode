@@ -12,9 +12,8 @@ function MainContent() {
     return (
         <>
             <Box id="MainContentHeader" sx={{ width: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4, position: "relative"}}>
-                <Box>
 
-                    <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
                         {users.map((user) => {
                             let avatarUrl = `https://ui-avatars.com/api/?name=${user.username}&background=random&rounded=true&size=128`;
                             return (
@@ -28,7 +27,6 @@ function MainContent() {
                 <Button sx={{position: "absolute", right: "3%", top: "3%"}} variant="contained" color="primary" onClick={logout}>
                     Leave
                 </Button>
-            </Box>
 
             <CodingChallengesView />
         </>
