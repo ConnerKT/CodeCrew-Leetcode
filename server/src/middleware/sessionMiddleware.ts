@@ -18,7 +18,7 @@ const sessionMiddleware = session({
   cookie: {
     secure: appConfig.ENVIRONMENT === "PRODUCTION",
     httpOnly: false,
-    sameSite: "lax",
+    sameSite: "none",
     maxAge: 1000 * 60 * 60 * 24
   }
 });
