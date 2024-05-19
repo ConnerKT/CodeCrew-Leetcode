@@ -1,4 +1,4 @@
-const appConfig = require("../config/appConfig");
+import appConfig from "../config/appConfig"
 const session = require("express-session");
 const RedisStore = require("connect-redis").default;
 import redis from "../config/redisConfig"
