@@ -36,6 +36,8 @@ class GameRoomStore {
         
         // Create a channel for the room
         await this.redisClient.publish(`channel:room:${gameRoomId}`, JSON.stringify(newGameRoom));
+        await this.subRedisClient.subscribe(`channel:room:${gameRoomId}`);
+
     }
 
     async getGameRoomData(gameroomId: string): Promise<GameRoom | null> {

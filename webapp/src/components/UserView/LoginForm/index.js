@@ -45,8 +45,6 @@ function LoginForm() {
         login(username, gameroomId);
     };
 
-    console.log(rooms)
-
     return (
         <Box
             id="joinForm"
@@ -81,13 +79,12 @@ function LoginForm() {
                                 key={room.id}
                                 variant="outlined"
                                 sx={{
-                                    backgroundColor: gameroomId === room.id ? "primary.light" : "background.paper",
+                                    border: gameroomId === room.id ? "3px solid rgb(25, 118, 210)" : "background.paper",
                                 }}
                                 onClick={() => handleRoomSelect(room.id)}
                             >
                                 <CardContent sx={{display: "flex", flexDirection: "column", textAlign: "center"}} >
                                     <Typography variant="h6">{room.id}</Typography>
-
                                 </CardContent>
                             </StyledCard>
                         ))}

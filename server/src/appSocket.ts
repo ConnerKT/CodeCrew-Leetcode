@@ -29,7 +29,6 @@ appSocket.on("connection", async (socket: any) => {
         console.log(submission);
     })
     
-    gameroomStore.subRedisClient.subscribe(`channel:room:${roomId}`);
     gameroomStore.subRedisClient.on('message', (channel, message) => {
         if (channel === `channel:room:${roomId}`) {
             socket.emit('roomUpdate', JSON.parse(message));

@@ -76,7 +76,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
     })
     };
     return (
-        <Box className="editor" position={"relative"}>
+        <>
             <AppBar position="static" color="default" elevation={1}>
                 <Toolbar variant="dense" sx={{backgroundColor: "rgb(60, 60, 61)"}}>
                     <Select
@@ -127,7 +127,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
                 </Stack>
             </Fab>
 
-        </Box>
+        </>
     );
 };
 

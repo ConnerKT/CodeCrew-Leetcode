@@ -4,12 +4,14 @@ import { useQuery } from '@tanstack/react-query';
 import { useLogin } from '../../../../contexts/LoginContext';
 import CircularProgress from '@mui/material/CircularProgress';
 import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import ScienceIcon from '@mui/icons-material/Science';
 import ChallengeSelectMenu from './ChallengeSelectMenu';
 import CodeEditor from './CodeEditor';
 import Typography from '@mui/material/Typography';
 import ChallengeDescription from './ChallengeDescription';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import './ChallengeDetailsView.css';
 
 function CodingChallengesView() {
@@ -49,7 +51,7 @@ function CodingChallengesView() {
             setFocusedChallenge(challenge);
         }
     }, [focusedChallengeIndex]);
-
+    console.log("focusedChallenge", focusedChallenge);
     return (
         <>
             {isPending ? (
@@ -86,15 +88,26 @@ function CodingChallengesView() {
                                     </div>
                                 </div>
                                 <div id="detailsSubContainer2">
-                                <ChallengeDescription challenge={focusedChallenge} />
+                                    <ChallengeDescription challenge={focusedChallenge} />
 
-                                {showEditor && (
-                                    <CodeEditor
-                                        challenge={focusedChallenge}
-                                        editorContentsStore={editorContentsStore}
-                                        setEditorContentsStore={setEditorContentsStore}
-                                    />
-                                )}
+                                    {showEditor && (<>
+                                                        <Box className="editor" position={"relative"}>
+                                                            <CodeEditor
+                                                                challenge={focusedChallenge}
+                                                                editorContentsStore={editorContentsStore}
+                                                                setEditorContentsStore={setEditorContentsStore}
+                                                            />
+                                                        </Box>
+                                                        <div style={{display: "flex", flexDirection: "column"}}>
+                                                            {focusedChallenge.testCases.map((testCase, index) => (
+                                                                <div key={index} style={{flex: 1, }}>
+                                                                    <CheckCircleOutlineIcon/>                                                                
+                                                                </div>))}
+                                                        </div>
+                                                    </>
+                                    )}
+                                                       
+
                                 </div>
                             </div>
                             <h1 id="linkToLeetcode">
