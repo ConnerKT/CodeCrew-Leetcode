@@ -39,11 +39,11 @@ function CodingChallengesView() {
                 globalEditorContentsStore.current[focusedChallenge._id] = editorContentsStore;
             }
             let challenge = challenges[focusedChallengeIndex];
-            let languages = Object.keys(challenge.functionSignatures);
+            let languages = challenge.functionSignatures.map((signature) => signature.language);
             let editorContents = globalEditorContentsStore.current[challenge._id];
             if (!editorContents) {
                 editorContents = languages.reduce(
-                    (acc, lang) => ({ ...acc, [lang]: `\n\n${challenge.functionSignatures[lang]}\n` }),
+                    (acc, lang, index) => ({ ...acc, [challenge.functionSignatures[index].language]: `\n\n${challenge.functionSignatures[index].value}\n` }),
                     {}
                 );
             }

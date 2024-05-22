@@ -10,7 +10,7 @@ import { useLogin } from '../../../../../contexts/LoginContext';
 const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) => {
     const monaco = useMonaco();
     const [isEditorReady, setEditorReady] = useState(false);
-    const languages = Object.keys(challenge.functionSignatures);
+    const languages = challenge.functionSignatures.map(signature => signature.language);
     const [language, setLanguage] = useState("javascript");
     const languageRef = useRef(language); // Ref to track the current language
     useEffect(() => {
@@ -68,11 +68,14 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
     };
 
     const handleSubmit = () => {
-      gameRoom.connection.emit("submission", {
-        challengeId: challenge._id,
-        submissionCode: editorRef.current.getValue(),
-        submissionLanguage: language,
-        userId: user.username
+      gameRoom.connection.emit("submission",{
+        challenge: challenge,
+        submission: {
+            challengeId: challenge._id,
+            submissionCode: editorRef.current.getValue(),
+            submissionLanguage: language,
+            userId: user.username
+        }
     })
     };
     return (

@@ -22,6 +22,12 @@ interface TestCase {
     output: any;
 }
 
+interface FunctionSignature {
+    name: string;
+    language: SubmissionLanguage;
+    value: string
+}
+
 
 interface Challenge {
     _id: string;
@@ -29,7 +35,7 @@ interface Challenge {
     difficulty: string;
     description: string;
     link: string;
-    functionSignatures: any;
+    functionSignatures: FunctionSignature[];
     testCases: TestCase[];
     sampleCorrectSolution: any
 }
