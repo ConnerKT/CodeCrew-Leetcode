@@ -8,15 +8,11 @@ class GameRoomStore {
     public subRedisClient: Redis;
     constructor(redisClient: Redis) {
         this.redisClient = redisClient;
-        this.redisClient.once("connect", () => {
+        this.redisClient.once("connect", async () => {
+            await redisClient.config('SET', 'notify-keyspace-events', 'KEn$sm');
+
             this.subRedisClient = redisClient.duplicate();
-            let gameRooms = this.getAllGameRooms();
-            gameRooms.then((rooms) => {
-                for (const room of rooms) {
-                    console.log(`Subscribing to channel:room:${room.id}`);
-                    this.subRedisClient.subscribe(`channel:room:${room.id}`);
-                }
-            })
+            await this.subRedisClient.psubscribe('__keyevent@*__:*');
         })
     }
 
@@ -42,8 +38,8 @@ class GameRoomStore {
         await this.redisClient.expire(`room:${gameRoomId}`, 86400); // Set expiration time to 86400 seconds (1 day)
 
         // Create a channel for the room
-        await this.redisClient.publish(`channel:room:${gameRoomId}`, JSON.stringify(newGameRoom));
-        await this.subRedisClient.subscribe(`channel:room:${gameRoomId}`);
+        // await this.redisClient.publish(`channel:room:${gameRoomId}`, JSON.stringify(newGameRoom));
+        // await this.subRedisClient.subscribe(`channel:room:${gameRoomId}`);
 
     }
 
@@ -61,7 +57,7 @@ class GameRoomStore {
         if (gameRoomData) {
             gameRoomData.users.push(user);
             await this.redisClient.set(`room:${gameroomId}`, JSON.stringify(gameRoomData));
-            await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
+            // await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
         }
     }
     async getGameRoomUsers(gameroomId: string): Promise<User[]> {
@@ -79,7 +75,7 @@ class GameRoomStore {
             if (userToRemoveIndex !== -1) {
                 gameRoomData.users.splice(userToRemoveIndex, 1);
                 await this.redisClient.set(`room:${gameroomId}`, JSON.stringify(gameRoomData));
-                await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
+                // await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
             }
         }
     }
