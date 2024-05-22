@@ -20,8 +20,9 @@ class GameRoomStore {
         })
     }
 
+
     async gameRoomExists(gameroomId: string): Promise<boolean> {
-        const exists = await this.redisClient.call('EXISTS', `room:${gameroomId}`);
+        const exists = await this.redisClient.exists(`room:${gameroomId}`);
         let result = false;
         if (exists === 1) {
             result = true;
@@ -37,9 +38,9 @@ class GameRoomStore {
         const challenges = await challengeStore.getChallengesByIds(challengeIds);
 
         const newGameRoom = new GameRoom(gameRoomId, challenges);
-        await this.redisClient.call('JSON.SET', `room:${gameRoomId}`, '$', JSON.stringify(newGameRoom));
+        await this.redisClient.set(`room:${gameRoomId}`, JSON.stringify(newGameRoom));
         await this.redisClient.expire(`room:${gameRoomId}`, 86400); // Set expiration time to 86400 seconds (1 day)
-        
+
         // Create a channel for the room
         await this.redisClient.publish(`channel:room:${gameRoomId}`, JSON.stringify(newGameRoom));
         await this.subRedisClient.subscribe(`channel:room:${gameRoomId}`);
@@ -47,7 +48,7 @@ class GameRoomStore {
     }
 
     async getGameRoomData(gameroomId: string): Promise<GameRoom | null> {
-        const response = await this.redisClient.call('JSON.GET', `room:${gameroomId}`) as string | null;
+        const response = await this.redisClient.get(`room:${gameroomId}`);
         let gameRoomData: GameRoom | null = null;
         if (response != null) {
             gameRoomData = JSON.parse(response);
@@ -56,9 +57,10 @@ class GameRoomStore {
     }
 
     async addUserToGameRoom(gameroomId: string, user: User): Promise<void> {
-        await this.redisClient.call('JSON.ARRAPPEND', `room:${gameroomId}`, '$.users', JSON.stringify(user));
         const gameRoomData = await this.getGameRoomData(gameroomId);
         if (gameRoomData) {
+            gameRoomData.users.push(user);
+            await this.redisClient.set(`room:${gameroomId}`, JSON.stringify(gameRoomData));
             await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
         }
     }
@@ -71,12 +73,14 @@ class GameRoomStore {
 
 
     async removeUserFromGameRoom(gameroomId: string, username: string): Promise<void> {
-        const users = await this.getGameRoomUsers(gameroomId);
-        let userToRemoveIndex = users.indexOf(users.find(user => user.username === username));
-        await this.redisClient.call('JSON.ARRPOP', `room:${gameroomId}`, '$.users', userToRemoveIndex);
         const gameRoomData = await this.getGameRoomData(gameroomId);
         if (gameRoomData) {
-            await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
+            const userToRemoveIndex = gameRoomData.users.findIndex(user => user.username === username);
+            if (userToRemoveIndex !== -1) {
+                gameRoomData.users.splice(userToRemoveIndex, 1);
+                await this.redisClient.set(`room:${gameroomId}`, JSON.stringify(gameRoomData));
+                await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
+            }
         }
     }
 
