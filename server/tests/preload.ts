@@ -40,7 +40,14 @@ mock.module('../src/config/redisConfig', () => {
     if (command === 'EXISTS') {
         return redis.exists(key);
     }
-});
+  });
+
+  redis.once = mock((event, callback) => {
+    if (event === 'connect') {
+        callback();
+    }
+  }
+  );
 
   return { default: redis };
 });

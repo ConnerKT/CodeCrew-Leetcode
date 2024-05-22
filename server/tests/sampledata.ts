@@ -29,6 +29,7 @@ const sampleGameState: GameRoom = {
             ],
             userSubmissions: [
                 {
+                    challengeId: "challenge1",
                     userId: "user123",
                     testCasesPassed: [
                         "tc1",
@@ -38,6 +39,7 @@ const sampleGameState: GameRoom = {
                     submissionLanguage: SubmissionLanguage.JavaScript
                 },
                 {
+                    challengeId: "challenge1",
                     userId: "user124",
                     testCasesPassed: [
                         "tc1"
@@ -58,6 +60,7 @@ const sampleGameState: GameRoom = {
             ],
             userSubmissions: [
                 {
+                    challengeId: "challenge2", // Add the 'challengeId' property
                     userId: "user123",
                     testCasesPassed: [
                         "tc1"
@@ -100,7 +103,8 @@ const sampleChallenges: Challenge[] = [
                 input: [-1, -2],
                 output: -3
             }
-        ]
+        ],
+        sampleCorrectSolution: null // Add the 'sampleCorrectSolution' property
     },
     {
         _id: new ObjectId().toString(),
@@ -128,7 +132,8 @@ const sampleChallenges: Challenge[] = [
                 input: 'OpenAI',
                 output: 'IAnepO'
             }
-        ]
+        ],
+        sampleCorrectSolution: null // Add the 'sampleCorrectSolution' property
     },
     {
         _id: new ObjectId().toString(),
@@ -156,7 +161,8 @@ const sampleChallenges: Challenge[] = [
                 input: [-10, -20, -30, -40, -50],
                 output: -10
             }
-        ]
+        ],
+        sampleCorrectSolution: null // Add the 'sampleCorrectSolution' property
     }
 ];
 

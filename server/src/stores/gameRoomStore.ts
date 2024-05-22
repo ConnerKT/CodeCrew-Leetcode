@@ -10,7 +10,13 @@ class GameRoomStore {
         this.redisClient = redisClient;
         this.redisClient.once("connect", () => {
             this.subRedisClient = redisClient.duplicate();
-            this.subRedisClient.connect();
+            let gameRooms = this.getAllGameRooms();
+            gameRooms.then((rooms) => {
+                for (const room of rooms) {
+                    console.log(`Subscribing to channel:room:${room.id}`);
+                    this.subRedisClient.subscribe(`channel:room:${room.id}`);
+                }
+            })
         })
     }
 

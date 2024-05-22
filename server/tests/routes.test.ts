@@ -37,7 +37,7 @@ describe('Game Room Management', () => {
         let roomId = "spicygrandma"
         let challengeIds = sampleChallenges.map(challenge => challenge._id)
         const response = await request(app).post('/gameroom').send({gameRoomId: roomId, challengeIds});
-
+        console.log("response", response.text)
 
         expect(response.statusCode).toBe(201);
         

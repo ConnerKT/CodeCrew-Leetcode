@@ -3,38 +3,40 @@ enum SubmissionLanguage {
     JavaScript = 'javascript'
 }
 
-class User {
-    username!: string;
-    id!: string;
+interface User {
+    username: string;
+    id: string;
 }
 
-class UserSubmission {
-    challengeId!: string;
-    userId!: string;
-    testCasesPassed!: string[];
-    submissionCode!: string;
-    submissionLanguage!: SubmissionLanguage;
+interface UserSubmission {
+    challengeId: string;
+    userId: string;
+    testCasesPassed: string[];
+    submissionCode: string;
+    submissionLanguage: SubmissionLanguage;
 }
 
-class TestCase {
-    id!: string;
-    input!: any;
-    output!: any;
+interface TestCase {
+    id: string;
+    input: any;
+    output: any;
 }
 
-class Challenge {
-    _id!: string;
-    title!: string;
-    difficulty!: string;
-    description!: string;
-    link!: string;
-    functionSignatures!: any;
-    testCases!: TestCase[];
+
+interface Challenge {
+    _id: string;
+    title: string;
+    difficulty: string;
+    description: string;
+    link: string;
+    functionSignatures: any;
+    testCases: TestCase[];
+    sampleCorrectSolution: any
 }
 
 class GameRoom {
-    id!: string;
-    users!: User[];
+    id: string;
+    users: User[];
     challenges!: { id: string, testCases: TestCase[], userSubmissions: UserSubmission[] }[];
 
     constructor(id: string, challenges: Challenge[]) {
