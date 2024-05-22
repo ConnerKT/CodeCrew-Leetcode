@@ -54,7 +54,7 @@ export const LoginProvider = ({ children }) => {
         apiLogout();
         setIsLoggedIn(false);
         setUser(null);
-        if(gameRoomState.connection.connected) {
+        if(gameRoomState.connection?.connected) {
             gameRoomState.disconnect();
         }
     };

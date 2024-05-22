@@ -29,7 +29,6 @@ appSocket.on("connection", async (socket: any) => {
     socket.on("submission", async (submission: UserSubmission) => {
       console.log(`Submission received from ${socket.request.session.username}`);
       console.log(submission);
-      // Emit to the room
       appSocket.to(roomId).emit('newSubmission', submission);
     });
   
@@ -48,8 +47,6 @@ appSocket.on("connection", async (socket: any) => {
 appSocket.once("connection", async (socket: any) => {
     gameroomStore.subRedisClient.on('pmessage', async (pattern, channel, message) => {
         if(channel == "__keyevent@0__:set"){
-            console.log(`Received message from channel ${channel}`);
-            console.log(`this is the message: ${message}`);
             let roomId = message.split(":").pop();
             let roomData = await gameroomStore.getGameRoomData(roomId);
             appSocket.to(roomId).emit('roomUpdate', roomData);
