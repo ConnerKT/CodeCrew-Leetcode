@@ -18,7 +18,7 @@ export const LoginProvider = ({ children }) => {
             console.log("Session data received:", data);
             gameRoom.roomData = data.roomData;
             gameRoom.user = data.user;
-            setUser({...data.user, challengeSolutionsStore: {}});
+            setUser({...data.user, submissionsStore: {}});
             setIsLoggedIn(true);
         });
         
@@ -34,8 +34,12 @@ export const LoginProvider = ({ children }) => {
         gameRoom.connection.on("roomUpdate", (data) => {
             console.log("Room update received:", data);
             setGameRoomState({...gameRoomState, roomData: data});
-        }
-        );
+        });
+
+        gameRoom.connection.on("submissionResult", (data) => {
+            console.log("Submission result received:", data);
+            setUser({...user, submissionsStore: {...user?.submissionsStore, [data.challengeId]: data}});
+        });
         gameRoom.connect()
         setGameRoomState(gameRoom)
         return () => {

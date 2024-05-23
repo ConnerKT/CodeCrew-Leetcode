@@ -12,6 +12,8 @@ import CodeEditor from './CodeEditor';
 import Typography from '@mui/material/Typography';
 import ChallengeDescription from './ChallengeDescription';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import Circle from '@mui/icons-material/Circle';
 import './ChallengeDetailsView.css';
 import { Tooltip } from '@mui/material';
 
@@ -53,6 +55,8 @@ function CodingChallengesView() {
         }
     }, [focusedChallengeIndex]);
     // console.log("focusedChallenge", focusedChallenge);
+
+    if( focusedChallengeIndex ){ console.log("userSolution", user.submissionsStore[focusedChallenge._id]);}
     return (
         <>
             {isPending ? (
@@ -99,15 +103,25 @@ function CodingChallengesView() {
                                                 setEditorContentsStore={setEditorContentsStore}
                                             />
                                         </Box>
-                                        <div style={{ display: "flex", flexDirection: "column", border: "3px solid rgb(35, 56, 91)" }}>
-                                            {focusedChallenge.testCases.map((testCase, index) => (
-                                                <Tooltip title={JSON.stringify(testCase.input)} placement="left">
+                                        <div style={{ display: "flex", flexDirection: "column", border: "3px solid rgb(35, 56, 91)", borderLeft: null }}>
+                                            {focusedChallenge.testCases.map((testCase, index) => {
+                                                let testCasePassed = user.submissionsStore[focusedChallenge._id]?.testCasesPassed?.find((testCasePassed) => testCasePassed.id === testCase.id);
+                                                
+                                                
+                                                return <Tooltip title={JSON.stringify(testCase.input)} placement="left">
 
                                                     <div key={index} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                                                        <CheckCircleOutlineIcon />
+
+                                                        {testCasePassed ? 
+                                                            <Circle color="success"/> : (
+                                                            !testCasePassed && user.submissionsStore[focusedChallenge._id]?.testCasesPassed != null ?
+                                                                                        <Circle color="error"/> : <CircleOutlinedIcon />
+
+                                                                                        )
+                                                        }
                                                     </div>
                                                 </Tooltip>
-                                            ))}
+                                            })}
                                         </div>
                                     </>
                                     )}

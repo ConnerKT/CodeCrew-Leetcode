@@ -19,10 +19,10 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
     const {user, gameRoom} = useLogin()
     const editorRef = useRef(null);
 
-    let challengeSolutions = user.challengeSolutionsStore[challenge._id]
-    if (!challengeSolutions) {
-      user.challengeSolutionsStore[challenge._id] = {}
-    }
+    // let challengeSolutions = user.submissionsStore[challenge._id]
+    // if (!challengeSolutions) {
+    //   user.submissionsStore[challenge._id] = {}
+    // }
     
 
 
