@@ -1,32 +1,16 @@
 import axios from 'axios';
 import appConfig from '../../config/appConfig';
-import { Challenge, UserSubmission } from '../../models';
+import { Challenge, TestCase, UserSubmission } from '../../models';
 import formatterFunction from './formatSubmission';
 
 const JUDGE0_API_URL = appConfig.JUDGE0_API_URL;
 const JUDGE0_API_KEY = appConfig.JUDGE0_API_KEY;  // Add your Judge0 API key here
-
-
 
 interface SubmissionPayload {
   source_code: string;
   language_id: number;
   stdin?: string;
 }
-
-// {
-//   "stdout": "sasas\n",
-//   "time": "0.031",
-//   "memory": 33668,
-//   "stderr": null,
-//   "token": "dd5f6929-f4ea-46e6-9c06-f76ee018616f",
-//   "compile_output": null,
-//   "message": null,
-//   "status": {
-//     "id": 3,
-//     "description": "Accepted"
-//   }
-// }
 
 interface SubmissionResponse {
   stdout: string;
@@ -42,51 +26,71 @@ interface SubmissionResponse {
   };
 }
 
-interface ResultResponse {
-  stdout: string;
-  stderr: string;
-  status: {
-    id: number;
-    description: string;
-  };
+interface SubmissionResult {
+  challengeId: string;
+  testCasesPassed: TestCase[];
+  testCasesFailed: TestCase[];
 }
 
-
-
+function compareOutputs(expectedOutput: any, userOutput: any): boolean {
+  if (Array.isArray(expectedOutput) && Array.isArray(userOutput)) {
+    // Sort and compare arrays
+    expectedOutput.sort();
+    userOutput.sort();
+    return JSON.stringify(expectedOutput) === JSON.stringify(userOutput);
+  } else if (typeof expectedOutput === 'object' && typeof userOutput === 'object') {
+    // Compare objects
+    return JSON.stringify(expectedOutput) === JSON.stringify(userOutput);
+  } else {
+    // Compare primitive values
+    return expectedOutput === userOutput;
+  }
+}
 
 class Judge0Service {
-
   static formatSubmissionPayload(challenge: Challenge, submission: UserSubmission): SubmissionPayload {
-    let inputs = challenge.testCases.map(testCase => JSON.stringify(testCase.input));
-    let inputsString = inputs.join(',');
-  
-    //javascript
-    let formattedCode = formatterFunction(challenge, submission)
+    let formattedCode = formatterFunction(challenge, submission);
     console.log("formattedCode", formattedCode);
-  
     return {
       source_code: formattedCode,
       language_id: 63,
     };
   }
 
-  static async createSubmission(payload: SubmissionPayload): Promise<SubmissionResponse> {
+  static async submitSolution(challenge: Challenge, submission: UserSubmission): Promise<SubmissionResult> {
+    const payload = this.formatSubmissionPayload(challenge, submission);
     const response = await axios.post(`${JUDGE0_API_URL}/submissions?wait=true`, payload, {
       headers: {
         'Content-Type': 'application/json',
         'X-RapidAPI-Key': JUDGE0_API_KEY,
       },
     });
-    return response.data;
+    let submissionResult = this.processSubmissionResult(challenge, response.data);
+    return submissionResult;
   }
 
-  static async getSubmissionResult(token: string): Promise<ResultResponse> {
-    const response = await axios.get(`${JUDGE0_API_URL}/submissions/${token}`, {
-      headers: {
-        'X-RapidAPI-Key': JUDGE0_API_KEY,
-      },
-    });
-    return response.data;
+  private static processSubmissionResult(challenge: Challenge, result: SubmissionResponse): SubmissionResult {
+    let testCasesPassed: TestCase[] = [];
+    let testCasesFailed: TestCase[] = [];
+
+    let outputs = JSON.parse(result.stdout);
+    // console.log("outputs", outputs);
+
+    for (let i = 0; i < challenge.testCases.length; i++) {
+      let expectedOutput = challenge.testCases[i].output;
+      let userOutput = outputs[i];
+      if (compareOutputs(expectedOutput, userOutput)) {
+        testCasesPassed.push(challenge.testCases[i]);
+      } else {
+        testCasesFailed.push(challenge.testCases[i]);
+      }
+    }
+
+    return {
+      challengeId: challenge._id,
+      testCasesPassed,
+      testCasesFailed,
+    };
   }
 }
 

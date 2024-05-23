@@ -13,6 +13,7 @@ import Typography from '@mui/material/Typography';
 import ChallengeDescription from './ChallengeDescription';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import './ChallengeDetailsView.css';
+import { Tooltip } from '@mui/material';
 
 function CodingChallengesView() {
     const { user, gameRoom } = useLogin();
@@ -20,7 +21,7 @@ function CodingChallengesView() {
     const [focusedChallenge, setFocusedChallenge] = useState(null);
     const [editorContentsStore, setEditorContentsStore] = useState({});
     const globalEditorContentsStore = useRef({});
-    const [showEditor, setShowEditor] = useState(false); // Toggle state for the editor
+    const [showEditor, setShowEditor] = useState(true); // Toggle state for the editor
 
     const { isPending, data: challenges } = useQuery({
         queryKey: ['challenges', gameRoom.roomData.problems],
@@ -51,7 +52,7 @@ function CodingChallengesView() {
             setFocusedChallenge(challenge);
         }
     }, [focusedChallengeIndex]);
-    console.log("focusedChallenge", focusedChallenge);
+    // console.log("focusedChallenge", focusedChallenge);
     return (
         <>
             {isPending ? (
@@ -72,15 +73,15 @@ function CodingChallengesView() {
                             <h1 id="challengeTitle">{focusedChallenge.title}</h1>
 
                             <div id="detailsSubContainer">
-                                <div style={{width: "100%", display: "flex", marginBottom: "6px " , justifyContent: "right"}}>
-                                    <div style={{display: 'flex', flexDirection: "column"}}>
-                                    <div style={{display: 'flex', alignItems: "center"}}>
-                                         Experimental feature <ScienceIcon SX={{display: "inline-block"}}/>
-                                    </div>
+                                <div style={{ width: "100%", display: "flex", marginBottom: "6px ", justifyContent: "right" }}>
+                                    <div style={{ display: 'flex', flexDirection: "column" }}>
+                                        <div style={{ display: 'flex', alignItems: "center" }}>
+                                            Experimental feature <ScienceIcon SX={{ display: "inline-block" }} />
+                                        </div>
                                         <Button
-                                                variant="contained"
-                                                color="primary"
-                                                onClick={() => setShowEditor(!showEditor)}>
+                                            variant="contained"
+                                            color="primary"
+                                            onClick={() => setShowEditor(!showEditor)}>
                                             {showEditor ? "Close" : "Submit a solution"}
                                         </Button>
 
@@ -91,22 +92,26 @@ function CodingChallengesView() {
                                     <ChallengeDescription challenge={focusedChallenge} />
 
                                     {showEditor && (<>
-                                                        <Box className="editor" position={"relative"}>
-                                                            <CodeEditor
-                                                                challenge={focusedChallenge}
-                                                                editorContentsStore={editorContentsStore}
-                                                                setEditorContentsStore={setEditorContentsStore}
-                                                            />
-                                                        </Box>
-                                                        <div style={{display: "flex", flexDirection: "column"}}>
-                                                            {focusedChallenge.testCases.map((testCase, index) => (
-                                                                <div key={index} style={{flex: 1, }}>
-                                                                    <CheckCircleOutlineIcon/>                                                                
-                                                                </div>))}
-                                                        </div>
-                                                    </>
+                                        <Box className="editor" position={"relative"}>
+                                            <CodeEditor
+                                                challenge={focusedChallenge}
+                                                editorContentsStore={editorContentsStore}
+                                                setEditorContentsStore={setEditorContentsStore}
+                                            />
+                                        </Box>
+                                        <div style={{ display: "flex", flexDirection: "column", border: "3px solid rgb(35, 56, 91)" }}>
+                                            {focusedChallenge.testCases.map((testCase, index) => (
+                                                <Tooltip title={JSON.stringify(testCase.input)} placement="left">
+
+                                                    <div key={index} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                        <CheckCircleOutlineIcon />
+                                                    </div>
+                                                </Tooltip>
+                                            ))}
+                                        </div>
+                                    </>
                                     )}
-                                                       
+
 
                                 </div>
                             </div>

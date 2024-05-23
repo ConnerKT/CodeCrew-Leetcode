@@ -3,7 +3,7 @@ import {Server as SocketioServer} from "socket.io";
 import gameroomStore from "./stores/gameRoomStore";
 import socketMiddleware from "./middleware/socketMiddleware";
 import { UserSubmission } from "./models";
-import Judge0Service  from "./services/judge0/judge0Service";
+import Judge0Service from "./services/judge0/judge0Service";
 
 
 const appSocket = new SocketioServer({
@@ -31,12 +31,11 @@ appSocket.on("connection", async (socket: any) => {
       console.log(`Submission received from ${socket.request.session.username}`);
       console.log(submission);
 
-      let formattedSubmission = Judge0Service.formatSubmissionPayload(challenge, submission);
 
 
-      let response = await Judge0Service.createSubmission(formattedSubmission)
-      console.log(response);
-      appSocket.to(roomId).emit('newSubmission', submission);
+      let submissionResult = await Judge0Service.submitSolution(challenge, submission)
+      // console.log(response);
+      socket.emit('submissionResult', submissionResult);
     });
   
 
