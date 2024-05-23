@@ -20,8 +20,11 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@babel/cli": "^7.24.5",
     "@babel/core": "^7.24.5",
+    "@babel/plugin-transform-react-constant-elements": "^7.24.1",
     "@babel/plugin-transform-react-jsx-self": "^7.24.5",
+    "@babel/preset-env": "^7.24.5",
     "axios": "^1.7.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "bun": "^1.1.9",
@@ -30,7 +33,9 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-session": "^1.18.0",
+    "html-parser": "^0.11.0",
     "ioredis": "^5.4.1",
+    "jsxte": "^3.3.1",
     "mongodb": "^6.6.2",
     "react": "^18.3.1",
     "socket.io": "^4.7.5"

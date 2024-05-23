@@ -1,7 +1,7 @@
 import axios from 'axios';
 import appConfig from '../../config/appConfig';
 import { Challenge, UserSubmission } from '../../models';
-import formatSubmission from './formatSubmission';
+import formatterFunction from './formatSubmission';
 
 const JUDGE0_API_URL = appConfig.JUDGE0_API_URL;
 const JUDGE0_API_KEY = appConfig.JUDGE0_API_KEY;  // Add your Judge0 API key here
@@ -61,7 +61,7 @@ class Judge0Service {
     let inputsString = inputs.join(',');
   
     //javascript
-    let formattedCode = formatSubmission(challenge, submission);
+    let formattedCode = formatterFunction(challenge, submission)
     console.log("formattedCode", formattedCode);
   
     return {
