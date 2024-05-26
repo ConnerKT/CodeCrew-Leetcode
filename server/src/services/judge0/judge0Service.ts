@@ -1,10 +1,8 @@
-import axios from 'axios';
+import { Axios, AxiosResponse } from 'axios';
 import appConfig from '../../config/appConfig';
-import { Challenge, TestCase, UserSubmission } from '../../models';
-import formatterFunction from './formatSubmission';
+import { Challenge, TestCase, UserSubmission, SubmissionLanguage } from '../../models';
+import submissionFormatter from './submissionFormatter';
 
-const JUDGE0_API_URL = appConfig.JUDGE0_API_URL;
-const JUDGE0_API_KEY = appConfig.JUDGE0_API_KEY;  // Add your Judge0 API key here
 
 interface SubmissionPayload {
   source_code: string;
@@ -32,54 +30,40 @@ interface SubmissionResult {
   testCasesFailed: TestCase[];
 }
 
-function compareOutputs(expectedOutput: any, userOutput: any): boolean {
-  if (Array.isArray(expectedOutput) && Array.isArray(userOutput)) {
-    // Sort and compare arrays
-    expectedOutput.sort();
-    userOutput.sort();
-    return JSON.stringify(expectedOutput) === JSON.stringify(userOutput);
-  } else if (typeof expectedOutput === 'object' && typeof userOutput === 'object') {
-    // Compare objects
-    return JSON.stringify(expectedOutput) === JSON.stringify(userOutput);
-  } else {
-    // Compare primitive values
-    return expectedOutput === userOutput;
-  }
+enum Judge0LanguageIds{
+  "javascript" = 63,
+  "python" = 71,
 }
 
-class Judge0Service {
-  static formatSubmissionPayload(challenge: Challenge, submission: UserSubmission): SubmissionPayload {
-    let formattedCode = formatterFunction(challenge, submission);
-    console.log("formattedCode", formattedCode);
-    return {
-      source_code: formattedCode,
-      language_id: 63,
-    };
-  }
 
-  static async submitSolution(challenge: Challenge, submission: UserSubmission): Promise<SubmissionResult> {
-    const payload = this.formatSubmissionPayload(challenge, submission);
-    const response = await axios.post(`${JUDGE0_API_URL}/submissions?wait=true`, payload, {
+class Judge0Service {
+
+  static httpClient: Axios = new Axios({
+      url: appConfig.JUDGE0_API_URL,
       headers: {
         'Content-Type': 'application/json',
-        'X-RapidAPI-Key': JUDGE0_API_KEY,
-      },
-    });
-    let submissionResult = this.processSubmissionResult(challenge, response.data);
+        'X-RapidAPI-Key': appConfig.JUDGE0_API_KEY
+      }
+  });
+
+  static async submitSolution(challenge: Challenge, submission: UserSubmission): Promise<SubmissionResult> {
+    let payload: SubmissionPayload = this.formatSubmissionPayload(challenge, submission);
+    let response: AxiosResponse<SubmissionResponse> = await this.httpClient.post(`submissions?wait=true`, payload);
+    let submissionResult: SubmissionResult = this.processSubmissionResult(challenge, response.data);
     return submissionResult;
   }
 
-  private static processSubmissionResult(challenge: Challenge, result: SubmissionResponse): SubmissionResult {
+  static processSubmissionResult(challenge: Challenge, result: SubmissionResponse): SubmissionResult {
     let testCasesPassed: TestCase[] = [];
     let testCasesFailed: TestCase[] = [];
 
-    let outputs = JSON.parse(result.stdout);
+    let outputs: any[] = JSON.parse(result.stdout);
     // console.log("outputs", outputs);
 
     for (let i = 0; i < challenge.testCases.length; i++) {
       let expectedOutput = challenge.testCases[i].output;
       let userOutput = outputs[i];
-      if (compareOutputs(expectedOutput, userOutput)) {
+      if (this.compareOutputs(expectedOutput, userOutput)) {
         testCasesPassed.push(challenge.testCases[i]);
       } else {
         testCasesFailed.push(challenge.testCases[i]);
@@ -92,6 +76,33 @@ class Judge0Service {
       testCasesFailed,
     };
   }
+
+  static compareOutputs(expectedOutput: any, userOutput: any): boolean {
+    if (Array.isArray(expectedOutput) && Array.isArray(userOutput)) {
+      // Sort and compare arrays
+      expectedOutput.sort();
+      userOutput.sort();
+      return JSON.stringify(expectedOutput) === JSON.stringify(userOutput);
+    } else if (typeof expectedOutput === 'object' && typeof userOutput === 'object') {
+      // Compare objects
+      return JSON.stringify(expectedOutput) === JSON.stringify(userOutput);
+    } else {
+      // Compare primitive values
+      return expectedOutput === userOutput;
+    }
+  }
+
+  static formatSubmissionPayload(challenge: Challenge, submission: UserSubmission): SubmissionPayload {
+    let formattedCode = submissionFormatter(challenge, submission);
+
+    return {
+      source_code: formattedCode,
+      language_id: Judge0LanguageIds[submission.submissionLanguage],
+    };
+  }
+
+  
 }
 
 export default Judge0Service;
+export { SubmissionResult, SubmissionResponse, SubmissionPayload, Judge0LanguageIds };

@@ -1,172 +1,123 @@
 import { GameRoom, SubmissionLanguage } from "../src/models"
 
+
 const sampleGameState: GameRoom = {
     id: "1234",
     users: [
-        {
-            username: "playerOne",
-            id: "user123"
-        },
-        {
-            username: "playerTwo",
-            id: "user124"
-        }
+      {
+        username: "playerOne",
+        id: "user123"
+      },
+      {
+        username: "playerTwo",
+        id: "user124"
+      }
     ],
     challenges: [
-        {
-            id: "challenge1",
-            testCases: [
-                {
-                    id: "tc1",
-                    input: [1, 2],
-                    output: 3
-                },
-                {
-                    id: "tc2",
-                    input: [10, 20],
-                    output: 30
-                }
-            ],
-            userSubmissions: [
-                {
-                    challengeId: "challenge1",
-                    userId: "user123",
-                    testCasesPassed: [
-                        "tc1",
-                        "tc2"
-                    ],
-                    submissionCode: "function add(a, b) { return a + b; }",
-                    submissionLanguage: SubmissionLanguage.JavaScript
-                },
-                {
-                    challengeId: "challenge1",
-                    userId: "user124",
-                    testCasesPassed: [
-                        "tc1"
-                    ],
-                    submissionCode: "function add(a, b) { return a + b; }",
-                    submissionLanguage: SubmissionLanguage.JavaScript
-                }
-            ]
-        },
-        {
-            id: "challenge2",
-            testCases: [
-                {
-                    id: "tc1",
-                    input: [1, 2],
-                    output: 3
-                }
-            ],
-            userSubmissions: [
-                {
-                    challengeId: "challenge2", // Add the 'challengeId' property
-                    userId: "user123",
-                    testCasesPassed: [
-                        "tc1"
-                    ],
-                    submissionCode: "function subtract(a, b) { return a - b; }",
-                    submissionLanguage: SubmissionLanguage.JavaScript
-                }
-            ]
-        }
+      {
+        id: "661d58f3799defea023aff45",
+        testCases: [
+          {
+            id: "tc1",
+            input: {
+              l1: [2, 4, 3],
+              l2: [5, 6, 4]
+            },
+            output: [7, 0, 8]
+          },
+          {
+            id: "tc2",
+            input: {
+              l1: [0],
+              l2: [0]
+            },
+            output: [0]
+          },
+          {
+            id: "tc3",
+            input: {
+              l1: [9, 9, 9, 9, 9, 9, 9],
+              l2: [9, 9, 9, 9]
+            },
+            output: [8, 9, 9, 9, 0, 0, 0, 1]
+          }
+        ],
+        userSubmissions: [
+          {
+            challengeId: "661d58f3799defea023aff45",
+            userId: "user123",
+            testCasesPassed: ["tc1", "tc2", "tc3"],
+            submissionCode: "function addTwoNumbers(l1, l2) {\n  // implementation\n}",
+            submissionLanguage: SubmissionLanguage.JavaScript
+          },
+          {
+            challengeId: "661d58f3799defea023aff45",
+            userId: "user124",
+            testCasesPassed: ["tc1", "tc2"],
+            submissionCode: "function addTwoNumbers(l1, l2) {\n  // implementation\n}",
+            submissionLanguage: SubmissionLanguage.JavaScript
+          },
+          {
+            challengeId: "661d58f3799defea023aff45",
+            userId: "user123",
+            testCasesPassed: ["tc1", "tc2", "tc3"],
+            submissionCode: "def addTwoNumbers(l1, l2):\n  # implementation",
+            submissionLanguage: SubmissionLanguage.Python
+          }
+        ]
+      }
     ]
-}
-
-import { ObjectId } from 'mongodb';
-import { Challenge, TestCase } from '../src/models';
-
-const sampleChallenges: Challenge[] = [
+  }
+  
+  import { ObjectId } from 'mongodb';
+  import { Challenge, TestCase } from '../src/models';
+  
+  const sampleChallenges: Challenge[] = [
     {
-        _id: new ObjectId().toString(),
-        title: 'Sum of Two Numbers',
-        difficulty: 'Easy',
-        description: 'Write a function that returns the sum of two numbers.',
-        link: 'https://example.com/challenges/sum-of-two-numbers',
-        functionSignatures: {
-            python: 'def sum_two_numbers(a: int, b: int) -> int:',
-            javascript: 'function sumTwoNumbers(a, b) {'
+      _id: "661d58f3799defea023aff45",
+      title: 'Add Two Numbers',
+      difficulty: 'Medium',
+      description: 'Write a function that adds two numbers represented as linked lists.',
+      link: 'https://leetcode.com/problems/add-two-numbers',
+      functionSignatures: [
+        {
+          "name": "addTwoNumbers",
+          "language": SubmissionLanguage.Python,
+          "value": "def addTwoNumbers(l1: ListNode, l2: ListNode) -> ListNode:\n\n\n    pass"
         },
-        testCases: [
-            {
-                id: new ObjectId().toString(),
-                input: [1, 2],
-                output: 3
-            },
-            {
-                id: new ObjectId().toString(),
-                input: [10, 20],
-                output: 30
-            },
-            {
-                id: new ObjectId().toString(),
-                input: [-1, -2],
-                output: -3
-            }
-        ],
-        sampleCorrectSolution: null // Add the 'sampleCorrectSolution' property
-    },
-    {
-        _id: new ObjectId().toString(),
-        title: 'Reverse a String',
-        difficulty: 'Medium',
-        description: 'Write a function that reverses a string.',
-        link: 'https://example.com/challenges/reverse-a-string',
-        functionSignatures: {
-            python: 'def reverse_string(s: str) -> str:',
-            javascript: 'function reverseString(s) {'
+        {
+          "name": "addTwoNumbers",
+          "language": SubmissionLanguage.JavaScript,
+          "value": "function addTwoNumbers(l1, l2) {\n\n\n}"
+        }
+      ],
+      testCases: [
+        {
+          id: new ObjectId().toString(),
+          input: {
+            l1: [2, 4, 3],
+            l2: [5, 6, 4]
+          },
+          output: [7, 0, 8]
         },
-        testCases: [
-            {
-                id: new ObjectId().toString(),
-                input: 'hello',
-                output: 'olleh'
-            },
-            {
-                id: new ObjectId().toString(),
-                input: 'world',
-                output: 'dlrow'
-            },
-            {
-                id: new ObjectId().toString(),
-                input: 'OpenAI',
-                output: 'IAnepO'
-            }
-        ],
-        sampleCorrectSolution: null // Add the 'sampleCorrectSolution' property
-    },
-    {
-        _id: new ObjectId().toString(),
-        title: 'Find Maximum Value',
-        difficulty: 'Hard',
-        description: 'Write a function that finds the maximum value in an array.',
-        link: 'https://example.com/challenges/find-maximum-value',
-        functionSignatures: {
-            python: 'def find_maximum(arr: list) -> int:',
-            javascript: 'function findMaximum(arr) {'
+        {
+          id: new ObjectId().toString(),
+          input: {
+            l1: [0],
+            l2: [0]
+          },
+          output: [0]
         },
-        testCases: [
-            {
-                id: new ObjectId().toString(),
-                input: [1, 2, 3, 4, 5],
-                output: 5
-            },
-            {
-                id: new ObjectId().toString(),
-                input: [10, 20, 30, 40, 50],
-                output: 50
-            },
-            {
-                id: new ObjectId().toString(),
-                input: [-10, -20, -30, -40, -50],
-                output: -10
-            }
-        ],
-        sampleCorrectSolution: null // Add the 'sampleCorrectSolution' property
+        {
+          id: new ObjectId().toString(),
+          input: {
+            l1: [9, 9, 9, 9, 9, 9, 9],
+            l2: [9, 9, 9, 9]
+          },
+          output: [8, 9, 9, 9, 0, 0, 0, 1]
+        }
+      ],
+      sampleCorrectSolution: null
     }
-];
-
-export default sampleChallenges;
-
-
+  ];
 export {sampleGameState, sampleChallenges}
