@@ -1,4 +1,4 @@
-import { Axios, AxiosResponse } from 'axios';
+import axios,{ Axios, AxiosInstance, AxiosResponse } from 'axios';
 import appConfig from '../../config/appConfig';
 import { Challenge, TestCase, UserSubmission, SubmissionLanguage } from '../../models';
 import submissionFormatter from './submissionFormatter';
@@ -38,8 +38,8 @@ enum Judge0LanguageIds{
 
 class Judge0Service {
 
-  static httpClient: Axios = new Axios({
-      url: appConfig.JUDGE0_API_URL,
+  static httpClient: AxiosInstance = axios.create({
+      baseURL: appConfig.JUDGE0_API_URL,
       headers: {
         'Content-Type': 'application/json',
         'X-RapidAPI-Key': appConfig.JUDGE0_API_KEY
@@ -48,7 +48,10 @@ class Judge0Service {
 
   static async submitSolution(challenge: Challenge, submission: UserSubmission): Promise<SubmissionResult> {
     let payload: SubmissionPayload = this.formatSubmissionPayload(challenge, submission);
-    let response: AxiosResponse<SubmissionResponse> = await this.httpClient.post(`submissions?wait=true`, payload);
+    const response = await this.httpClient.post(`/submissions?wait=true`, payload).catch((err) => {
+      console.error(err);
+      return err.response;
+    })
     let submissionResult: SubmissionResult = this.processSubmissionResult(challenge, response.data);
     return submissionResult;
   }

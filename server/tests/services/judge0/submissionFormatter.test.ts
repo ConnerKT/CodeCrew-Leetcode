@@ -102,7 +102,7 @@ describe('Submission Formatter', () => {
         import json
 
         
-        testInputs = 
+        testInputs = [[[2,4,3],[5,6,4]],[[0],[0]],[[9,9,9,9,9,9,9],[9,9,9,9]]]
         userSubmittedFunction = def addTwoNumbers(l1, l2):
           # implementation
         

@@ -20,7 +20,6 @@ appSocket.on("connection", async (socket: any) => {
     const roomId = socket.request.session.gameroomId;
     console.log(`User ${socket.request.session.username} connected and joined room ${roomId}`);
   
-    // Join the room
     socket.join(roomId);
   
     let roomData = await gameroomStore.getGameRoomData(roomId);
@@ -29,12 +28,9 @@ appSocket.on("connection", async (socket: any) => {
   
     socket.on("submission", async ({challenge, submission}) => {
       console.log(`Submission received from ${socket.request.session.username}`);
-      console.log(submission);
-
 
 
       let submissionResult = await Judge0Service.submitSolution(challenge, submission)
-      // console.log(response);
       socket.emit('submissionResult', submissionResult);
     });
   

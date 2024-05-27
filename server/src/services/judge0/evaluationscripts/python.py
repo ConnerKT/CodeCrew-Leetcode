@@ -1,6 +1,6 @@
 import json
 
-testInputs = {{testInputs}}
+testInputs = {{inputs}}
 userSubmittedFunction = {{userSubmittedFunction}}
 
 

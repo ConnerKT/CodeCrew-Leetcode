@@ -37,9 +37,6 @@ class GameRoomStore {
         await this.redisClient.set(`room:${gameRoomId}`, JSON.stringify(newGameRoom));
         await this.redisClient.expire(`room:${gameRoomId}`, 86400); // Set expiration time to 86400 seconds (1 day)
 
-        // Create a channel for the room
-        // await this.redisClient.publish(`channel:room:${gameRoomId}`, JSON.stringify(newGameRoom));
-        // await this.subRedisClient.subscribe(`channel:room:${gameRoomId}`);
 
     }
 

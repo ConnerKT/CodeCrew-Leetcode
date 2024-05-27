@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/workspace
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      - mongo
+      - redis
+
+    command: /bin/sh -c "while sleep 1000; do :; done"
+
+  mongo:
+    image: mongo:4.4
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-data:/data/db
+
+
+  redis:
+    image: redis:7.2
+    ports:
+      - "6379:6379"
+
+
+
+volumes:
+  mongodb-data:
+  judge0-data:
