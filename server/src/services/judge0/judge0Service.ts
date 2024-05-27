@@ -48,10 +48,8 @@ class Judge0Service {
 
   static async submitSolution(challenge: Challenge, submission: UserSubmission): Promise<SubmissionResult> {
     let payload: SubmissionPayload = this.formatSubmissionPayload(challenge, submission);
-    const response = await this.httpClient.post(`/submissions?wait=true`, payload).catch((err) => {
-      console.error(err);
-      return err.response;
-    })
+    console.log(payload.source_code)
+    const response = await this.httpClient.post(`/submissions?wait=true`, payload)
     let submissionResult: SubmissionResult = this.processSubmissionResult(challenge, response.data);
     return submissionResult;
   }

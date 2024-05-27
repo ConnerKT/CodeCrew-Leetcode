@@ -11,7 +11,19 @@ describe('Submission Formatter', () => {
     it("should format javascript submission correctly", async () => {
         const inputs: Parameters<typeof submissionFormatter> = [
             {
-                testCases: [
+              functionSignatures:  [
+                {
+                  "name": "addTwoNumbers",
+                  "language": SubmissionLanguage.Python,
+                  "value": "def addTwoNumbers(l1: ListNode, l2: ListNode) -> ListNode:\n\n\n    pass"
+                },
+                {
+                  "name": "addTwoNumbers",
+                  "language": SubmissionLanguage.JavaScript,
+                  "value": "function addTwoNumbers(l1, l2) {\n\n\n}"
+                }
+              ],
+              testCases: [
                     {
                       id: "tc1",
                       input: {
@@ -46,14 +58,14 @@ describe('Submission Formatter', () => {
 
         const expectedOutput = `
             const inputs = [[[2,4,3],[5,6,4]],[[0],[0]],[[9,9,9,9,9,9,9],[9,9,9,9]]];
-            const userSubmittedFunction = function addTwoNumbers(l1, l2) {
+            function addTwoNumbers(l1, l2) {
             // implementation
             };
             
             let outputs = [];
             for (let i = 0; i < inputs.length; i++) {
                 let input = inputs[i];
-                let output = userSubmittedFunction(...input);
+                let output = addTwoNumbers(...input);
                 outputs.push(output);
             }
             console.log(JSON.stringify(outputs));
@@ -66,7 +78,19 @@ describe('Submission Formatter', () => {
     it("should format python submission correctly", async () => {
         let inputs: Parameters<typeof submissionFormatter> = [
             {
-                testCases: [
+              functionSignatures:  [
+                {
+                  "name": "addTwoNumbers",
+                  "language": SubmissionLanguage.Python,
+                  "value": "def addTwoNumbers(l1: ListNode, l2: ListNode) -> ListNode:\n\n\n    pass"
+                },
+                {
+                  "name": "addTwoNumbers",
+                  "language": SubmissionLanguage.JavaScript,
+                  "value": "function addTwoNumbers(l1, l2) {\n\n\n}"
+                }
+              ],
+              testCases: [
                     {
                       id: "tc1",
                       input: {
@@ -103,14 +127,14 @@ describe('Submission Formatter', () => {
 
         
         testInputs = [[[2,4,3],[5,6,4]],[[0],[0]],[[9,9,9,9,9,9,9],[9,9,9,9]]]
-        userSubmittedFunction = def addTwoNumbers(l1, l2):
+        def addTwoNumbers(l1, l2):
           # implementation
         
         
         outputs = []
         for i in range(len(testInputs)):
             input = testInputs[i]
-            output = userSubmittedFunction(**input)
+            output = addTwoNumbers(**input)
             outputs.append(output)
             
         print(json.dumps(outputs))

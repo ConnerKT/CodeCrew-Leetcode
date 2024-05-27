@@ -1,13 +1,13 @@
 import json
 
 testInputs = {{inputs}}
-userSubmittedFunction = {{userSubmittedFunction}}
+{{userSubmittedFunction}}
 
 
 outputs = []
 for i in range(len(testInputs)):
     input = testInputs[i]
-    output = userSubmittedFunction(**input)
+    output = {{userSubmittedFunctionName}}(*input)
     outputs.append(output)
     
 print(json.dumps(outputs))
