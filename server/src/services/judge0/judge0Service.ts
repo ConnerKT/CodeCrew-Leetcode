@@ -24,10 +24,20 @@ interface SubmissionResponse {
   };
 }
 
+enum SubmissionStatus {
+  SUCCESS = "SUCCESS",
+  FAIL = "FAIL",
+  ERROR = "ERROR"
+}
+
 interface SubmissionResult {
+  status: SubmissionStatus;
   challengeId: string;
   testCasesPassed: TestCase[];
   testCasesFailed: TestCase[];
+  error?: {
+    message: string;
+  };
 }
 
 enum Judge0LanguageIds{
@@ -55,11 +65,24 @@ class Judge0Service {
   }
 
   static processSubmissionResult(challenge: Challenge, result: SubmissionResponse): SubmissionResult {
+    
+    if (result.status.id !== 3) {
+      // Compilation error
+      return {
+        status: SubmissionStatus.ERROR,
+        challengeId: challenge._id,
+        testCasesPassed: [],
+        testCasesFailed: challenge.testCases,
+        error: {
+          message: result.stderr,
+        },
+      };
+    }
+
     let testCasesPassed: TestCase[] = [];
     let testCasesFailed: TestCase[] = [];
 
     let outputs: any[] = JSON.parse(result.stdout);
-    // console.log("outputs", outputs);
 
     for (let i = 0; i < challenge.testCases.length; i++) {
       let expectedOutput = challenge.testCases[i].output;
@@ -72,6 +95,7 @@ class Judge0Service {
     }
 
     return {
+      status: testCasesFailed.length === 0 ? SubmissionStatus.SUCCESS : SubmissionStatus.FAIL,  
       challengeId: challenge._id,
       testCasesPassed,
       testCasesFailed,

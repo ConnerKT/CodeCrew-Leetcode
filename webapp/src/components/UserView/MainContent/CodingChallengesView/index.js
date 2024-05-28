@@ -11,11 +11,13 @@ import ChallengeSelectMenu from './ChallengeSelectMenu';
 import CodeEditor from './CodeEditor';
 import Typography from '@mui/material/Typography';
 import ChallengeDescription from './ChallengeDescription';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import Circle from '@mui/icons-material/Circle';
 import './ChallengeDetailsView.css';
 import { Tooltip } from '@mui/material';
+import { pink, white } from '@mui/material/colors';
 
 function CodingChallengesView() {
     const { user, gameRoom } = useLogin();
@@ -54,9 +56,14 @@ function CodingChallengesView() {
             setFocusedChallenge(challenge);
         }
     }, [focusedChallengeIndex]);
-    // console.log("focusedChallenge", focusedChallenge);
 
-    if( focusedChallengeIndex ){ console.log("userSolution", user.submissionsStore[focusedChallenge._id]);}
+    let testCaseBorderStyle = "3px solid rgb(35, 56, 91)"
+    let submissionStatus = user.submissionsStore[focusedChallenge?._id]?.status
+    console.log("submissionStatus", submissionStatus)
+    if (submissionStatus == "SUCCESS") {
+        testCaseBorderStyle = "3px solid green"
+    }
+
     return (
         <>
             {isPending ? (
@@ -96,29 +103,34 @@ function CodingChallengesView() {
                                     <ChallengeDescription challenge={focusedChallenge} />
 
                                     {showEditor && (<>
-                                        <Box className="editor" position={"relative"}>
+                                        <Box className="editor" style={{backgroundColor: "rgb(30, 30, 30)"}} position={"relative"}>
                                             <CodeEditor
                                                 challenge={focusedChallenge}
                                                 editorContentsStore={editorContentsStore}
                                                 setEditorContentsStore={setEditorContentsStore}
                                             />
                                         </Box>
-                                        <div style={{ display: "flex", flexDirection: "column", border: "3px solid rgb(35, 56, 91)", borderLeft: null }}>
+                                        <div style={{ 
+                                                display: "flex", 
+                                                flexDirection: "column", 
+                                                border: testCaseBorderStyle,
+                                                borderLeft: "none"
+                                            }}
+                                        >
                                             {focusedChallenge.testCases.map((testCase, index) => {
                                                 let testCasePassed = user.submissionsStore[focusedChallenge._id]?.testCasesPassed?.find((testCasePassed) => testCasePassed.id === testCase.id);
                                                 
                                                 
                                                 return <Tooltip title={JSON.stringify(testCase.input)} placement="left">
 
-                                                    <div key={index} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                                                    <div key={index} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgb(60, 60, 61)"}}>
 
                                                         {testCasePassed ? 
-                                                            <Circle color="success"/> : (
+                                                            <CheckCircleRoundedIcon color="success"/> : (
                                                             !testCasePassed && user.submissionsStore[focusedChallenge._id]?.testCasesPassed != null ?
-                                                                                        <Circle color="error"/> : <CircleOutlinedIcon />
+                                                                                        <CancelRoundedIcon sx={{color: "red"}} /> : <CircleOutlinedIcon sx={{color: "white"}} />
 
-                                                                                        )
-                                                        }
+                                                        )}
                                                     </div>
                                                 </Tooltip>
                                             })}

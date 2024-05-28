@@ -1,10 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Box, Select, MenuItem } from '@mui/material';
+import { Box, Select, MenuItem, CircularProgress } from '@mui/material';
 import { AppBar, Toolbar, Fab, Stack  } from '@mui/material';
 import Editor, { useMonaco } from '@monaco-editor/react';
 import './CodeEditor.css';
 import PublishIcon from '@mui/icons-material/Publish';
 import { useLogin } from '../../../../../contexts/LoginContext';
+import { StrictMode } from 'react';
 
 
 const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) => {
@@ -13,19 +14,12 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
     const languages = challenge.functionSignatures.map(signature => signature.language);
     const [language, setLanguage] = useState("javascript");
     const languageRef = useRef(language); // Ref to track the current language
+    const {user, gameRoom} = useLogin()
+    const editorRef = useRef(null);
+    const [awaitingSubmissionResult, setAwaitingSubmissionResult] = useState(false)
     useEffect(() => {
         languageRef.current = language;
     }, [language]);
-    const {user, gameRoom} = useLogin()
-    const editorRef = useRef(null);
-
-    // let challengeSolutions = user.submissionsStore[challenge._id]
-    // if (!challengeSolutions) {
-    //   user.submissionsStore[challenge._id] = {}
-    // }
-    
-
-
 
     useEffect(() => {
       if (editorRef.current && monaco && isEditorReady) {
@@ -68,15 +62,22 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
     };
 
     const handleSubmit = () => {
-      gameRoom.connection.emit("submission",{
-        challenge: challenge,
-        submission: {
-            challengeId: challenge._id,
-            submissionCode: editorRef.current.getValue(),
-            submissionLanguage: language,
-            userId: user.username
-        }
-    })
+        setAwaitingSubmissionResult(true)
+        gameRoom.connection.timeout(5000).emit("submission", 
+            {
+                challenge: challenge,
+                submission: {
+                    challengeId: challenge._id,
+                    submissionCode: editorRef.current.getValue(),
+                    submissionLanguage: language,
+                    userId: user.username
+                },
+            },
+            function(err, submissionResult){
+                setAwaitingSubmissionResult(false)
+                console.log("Submission result:", submissionResult)
+            }
+        )
     };
     return (
         <>
@@ -116,18 +117,23 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
                     wordWrap: 'on'
                 }}
             />
-            <Fab color="primary" variant='extended' aria-label="submit" sx={{
+            <Fab variant='extended' aria-label="submit" sx={{
                 position: 'absolute', bottom: 34, right: 34,
-                backgroundColor: 'rgb(35, 56, 91)', // Dark blue
+                backgroundColor: awaitingSubmissionResult == false ? 'rgb(35, 56, 91)' : "rgb(171, 171, 171)", // Dark blue
                 color: 'white', // Icon and text color
                 '&:hover': {
-                  backgroundColor: 'rgb(35, 66, 101)' // Lighter blue on hover
+                  backgroundColor: awaitingSubmissionResult == false ? 'rgb(35, 56, 91)' : "rgb(171, 171, 171)"
                 }
             }} onClick={handleSubmit}>
-                <Stack direction="column" alignItems="center" spacing={-0.3}>
-                    <PublishIcon />
-                    <div>Submit</div>
-                </Stack>
+                {awaitingSubmissionResult == false ? 
+                                                    <Stack direction="column" alignItems="center" spacing={-0.3}>
+                                                        <PublishIcon />
+                                                        <div>Submit</div>
+                                                    </Stack>
+                                                    :
+                                                    <CircularProgress color='info'/>
+                                                    
+                }
             </Fab>
 
         </>

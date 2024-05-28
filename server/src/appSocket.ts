@@ -26,12 +26,14 @@ appSocket.on("connection", async (socket: any) => {
     socket.emit("sessionData", { user: socket.request.session, roomData: roomData });
   
   
-    socket.on("submission", async ({challenge, submission}) => {
+    socket.on("submission", async ({challenge, submission}, callback) => {
       console.log(`Submission received from ${socket.request.session.username}`);
 
 
       let submissionResult = await Judge0Service.submitSolution(challenge, submission)
       socket.emit('submissionResult', submissionResult);
+      
+      callback(submissionResult);
     });
   
 
