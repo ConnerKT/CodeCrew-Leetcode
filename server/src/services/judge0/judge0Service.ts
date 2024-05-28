@@ -90,6 +90,7 @@ class Judge0Service {
       if (this.compareOutputs(expectedOutput, userOutput)) {
         testCasesPassed.push(challenge.testCases[i]);
       } else {
+        challenge.testCases[i].output = userOutput;
         testCasesFailed.push(challenge.testCases[i]);
       }
     }

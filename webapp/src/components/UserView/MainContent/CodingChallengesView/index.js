@@ -37,6 +37,22 @@ function CodingChallengesView() {
             return response.data;
         }
     });
+        // Load editorContentsStore from localStorage on mount
+        useEffect(() => {
+
+            const storedContents = localStorage.getItem('editorContentsStore');
+            if (storedContents) {
+                setEditorContentsStore(JSON.parse(storedContents));
+            }
+        }, []);
+    
+        // Store editorContentsStore in localStorage whenever it changes
+        useEffect(() => {
+            if (focusedChallenge) {
+                localStorage.setItem(`globalEditorContentsStore:${focusedChallenge._id}`, JSON.stringify(editorContentsStore));
+            }
+
+        }, [editorContentsStore]);
 
     useEffect(() => {
         if (focusedChallengeIndex !== null) {
@@ -45,13 +61,22 @@ function CodingChallengesView() {
             }
             let challenge = challenges[focusedChallengeIndex];
             let languages = challenge.functionSignatures.map((signature) => signature.language);
-            let editorContents = globalEditorContentsStore.current[challenge._id];
-            if (!editorContents) {
+            
+            let editorContents = localStorage.getItem(`globalEditorContentsStore:${challenge._id}`)
+            if(!editorContents) {
+                editorContents = globalEditorContentsStore.current[challenge._id];
+            }
+
+            if (editorContents) {
+                editorContents = JSON.parse(editorContents);
+            }
+            else {
                 editorContents = languages.reduce(
                     (acc, lang, index) => ({ ...acc, [challenge.functionSignatures[index].language]: `\n\n${challenge.functionSignatures[index].value}\n` }),
                     {}
                 );
             }
+            
             setEditorContentsStore(editorContents);
             setFocusedChallenge(challenge);
         }
@@ -59,7 +84,6 @@ function CodingChallengesView() {
 
     let testCaseBorderStyle = "3px solid rgb(35, 56, 91)"
     let submissionStatus = user.submissionsStore[focusedChallenge?._id]?.status
-    console.log("submissionStatus", submissionStatus)
     if (submissionStatus == "SUCCESS") {
         testCaseBorderStyle = "3px solid green"
     }
@@ -120,8 +144,15 @@ function CodingChallengesView() {
                                             {focusedChallenge.testCases.map((testCase, index) => {
                                                 let testCasePassed = user.submissionsStore[focusedChallenge._id]?.testCasesPassed?.find((testCasePassed) => testCasePassed.id === testCase.id);
                                                 
-                                                
-                                                return <Tooltip title={JSON.stringify(testCase.input)} placement="left">
+                                                let testCaseFailed = user.submissionsStore[focusedChallenge._id]?.testCasesFailed?.find((testCaseFailed) => testCaseFailed.id === testCase.id);
+                                                return <Tooltip title={<>
+                                                                        <h4>input: {JSON.stringify(testCase.input, undefined, 0.5)} </h4>
+                                                                        {
+                                                                        !testCaseFailed ? <h4>output: {JSON.stringify(testCase.output, undefined, 0.5)} </h4>
+                                                                                        : <h4>output: {JSON.stringify(testCase.output, undefined, 0.5)} </h4>
+                                                                        }
+                                                                       </>} 
+                                                                placement="left">
 
                                                     <div key={index} style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: "rgb(60, 60, 61)"}}>
 
