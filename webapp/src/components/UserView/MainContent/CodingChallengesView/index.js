@@ -146,10 +146,12 @@ function CodingChallengesView() {
                                                 
                                                 let testCaseFailed = user.submissionsStore[focusedChallenge._id]?.testCasesFailed?.find((testCaseFailed) => testCaseFailed.id === testCase.id);
                                                 return <Tooltip title={<>
-                                                                        <h4>input: {JSON.stringify(testCase.input, undefined, 0.5)} </h4>
-                                                                        {
-                                                                        !testCaseFailed ? <h4>output: {JSON.stringify(testCase.output, undefined, 0.5)} </h4>
-                                                                                        : <h4>output: {JSON.stringify(testCase.output, undefined, 0.5)} </h4>
+                                                                        <h4>Input: {JSON.stringify(testCase.input, undefined, 0.5)} </h4>
+                                                                        <h4>Expected Output: {JSON.stringify(testCase.output, undefined, 0.5)} </h4>
+                                                                        
+                                                                        {testCasePassed != null ? <h4>Output: <span style={{color: "green"}}>{JSON.stringify(testCase.output, undefined, 0.5)} </span> </h4> : ""}
+                                                                        {testCaseFailed != null ? <h4>Output:  <span style={{color: "red"}}>{JSON.stringify(testCaseFailed.output, undefined, 0.5)} </span> </h4> : ""
+
                                                                         }
                                                                        </>} 
                                                                 placement="left">
