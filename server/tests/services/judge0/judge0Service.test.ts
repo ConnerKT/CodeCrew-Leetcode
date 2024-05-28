@@ -9,6 +9,9 @@ import Judge0Service, {SubmissionResponse} from "../../../src/services/judge0/ju
 
 describe("processSubmissionResult", () => {
     it("should return correct pass/fails", async () => {
+        //mock httpclient for judge0service
+
+
         const inputs: Parameters<typeof Judge0Service.processSubmissionResult> = [
             {
                 testCases: [
@@ -24,7 +27,8 @@ describe("processSubmissionResult", () => {
                 ]
             } as Challenge,
             {
-                stdout: JSON.stringify([[7, 0, 8], [0], [8, 9, 9, 9, 0, 0, 0, 1]])
+                stdout: JSON.stringify([[7, 0, 8], [0], [8, 9, 9, 9, 0, 0, 0, 1]]),
+                status: {id: 3 }
             } as SubmissionResponse
         ]
 
@@ -49,7 +53,8 @@ describe("processSubmissionResult", () => {
                 ]
             } as Challenge,
             {
-                stdout: JSON.stringify([[7, 0, 8], [0], [1, 1]])
+                stdout: JSON.stringify([[7, 0, 8], [0], [1, 1]]),
+                status: {id: 3 }
             } as SubmissionResponse
         ]
 
@@ -75,7 +80,8 @@ describe("processSubmissionResult", () => {
                 ]
             } as Challenge,
             {
-                stdout: JSON.stringify([null, null, [8, 9, 9, 9, 0, 0, 0, 1]])
+                stdout: JSON.stringify([null, null, [8, 9, 9, 9, 0, 0, 0, 1]]),
+                status: {id: 3 }
             } as SubmissionResponse
         ]
 
@@ -102,7 +108,8 @@ describe("processSubmissionResult", () => {
                 ]
             } as Challenge,
             {
-                stdout: JSON.stringify([null, null, null])
+                stdout: JSON.stringify([null, null, null]),
+                status: {id: 3 }
             } as SubmissionResponse
         ]
 
@@ -129,7 +136,8 @@ describe("processSubmissionResult", () => {
                 ]
             } as Challenge,
             {
-                stdout: JSON.stringify([1, 9, -1])
+                stdout: JSON.stringify([1, 9, -1]),
+                status: {id: 3 }
             } as SubmissionResponse
         ]
 
@@ -156,7 +164,8 @@ describe("processSubmissionResult", () => {
                 ]
             } as Challenge,
             {
-                stdout: JSON.stringify(["rar", 2, -1])
+                stdout: JSON.stringify(["rar", 2, -1]),
+                status: {id: 3 }
             } as SubmissionResponse
         ]
 
@@ -183,7 +192,8 @@ describe("processSubmissionResult", () => {
                 ]
             } as Challenge,
             {
-                stdout: JSON.stringify(["rar", 2, -1])
+                stdout: JSON.stringify(["rar", 2, -1]),
+                status: {id: 3 }
             } as SubmissionResponse
         ]
 

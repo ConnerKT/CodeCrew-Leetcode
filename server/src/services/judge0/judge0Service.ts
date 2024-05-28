@@ -106,9 +106,11 @@ class Judge0Service {
   static compareOutputs(expectedOutput: any, userOutput: any): boolean {
     if (Array.isArray(expectedOutput) && Array.isArray(userOutput)) {
       // Sort and compare arrays
-      expectedOutput.sort();
-      userOutput.sort();
-      return JSON.stringify(expectedOutput) === JSON.stringify(userOutput);
+      let expectedOutputCopy = [...expectedOutput]
+      let userOutputCopy = [...userOutput]
+      expectedOutputCopy.sort();
+      userOutputCopy.sort();
+      return JSON.stringify(expectedOutputCopy) === JSON.stringify(userOutputCopy);
     } else if (typeof expectedOutput === 'object' && typeof userOutput === 'object') {
       // Compare objects
       return JSON.stringify(expectedOutput) === JSON.stringify(userOutput);

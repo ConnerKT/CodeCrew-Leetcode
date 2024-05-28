@@ -1,7 +1,8 @@
 import Redis from 'ioredis';
 import challengeStore from './challengeStore';
-import { GameRoom, User, Challenge } from "../models";
+import { GameRoom, User, Challenge, UserSubmission } from "../models";
 import redisClient from "../config/redisConfig";
+import { SubmissionResult } from '../services/judge0/judge0Service';
 
 class GameRoomStore {
     private redisClient: Redis;
@@ -73,6 +74,19 @@ class GameRoomStore {
                 gameRoomData.users.splice(userToRemoveIndex, 1);
                 await this.redisClient.set(`room:${gameroomId}`, JSON.stringify(gameRoomData));
                 // await this.redisClient.publish(`channel:room:${gameroomId}`, JSON.stringify(gameRoomData));
+            }
+        }
+    }
+
+    async addUserSubmissionToGameRoom(gameroomId: string, userSubmission: UserSubmission, submissionResult: SubmissionResult){
+        const gameRoomData = await this.getGameRoomData(gameroomId);
+        if (gameRoomData) {
+            for(let i = 0; i < gameRoomData.challenges.length; i++){
+                if(gameRoomData.challenges[i].id === userSubmission.challengeId){
+                    gameRoomData.challenges[i].userSubmissions.push({...userSubmission,...submissionResult})
+                    await this.redisClient.set(`room:${gameroomId}`, JSON.stringify(gameRoomData));
+                    return
+                }
             }
         }
     }

@@ -131,9 +131,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
                                                         <div>Submit</div>
                                                     </Stack>
                                                     :
-                                                    <CircularProgress color='info'/>
-                                                    
-                }
+                                                    <CircularProgress color='info'/>}
             </Fab>
 
         </>

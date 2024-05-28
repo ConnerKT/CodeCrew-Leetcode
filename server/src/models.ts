@@ -1,3 +1,5 @@
+import { SubmissionResult } from "./services/judge0/judge0Service";
+
 enum SubmissionLanguage {
     Python = 'python',
     JavaScript = 'javascript'
@@ -43,14 +45,14 @@ interface Challenge {
 class GameRoom {
     id: string;
     users: User[];
-    challenges!: { id: string, testCases: TestCase[], userSubmissions: UserSubmission[] }[];
+    challenges!: { id: string, testCases: TestCase[], userSubmissions: UserSubmission & SubmissionResult[] }[];
 
     constructor(id: string, challenges: Challenge[]) {
         this.id = id;
         this.challenges = challenges.map(challenge => ({
             id: challenge._id,
             testCases: challenge.testCases,
-            userSubmissions: []
+            userSubmissions: [] as UserSubmission & SubmissionResult[]
         }));
         this.users = [];
     }

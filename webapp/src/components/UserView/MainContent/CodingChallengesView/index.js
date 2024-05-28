@@ -14,7 +14,7 @@ import ChallengeDescription from './ChallengeDescription';
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
 import CancelRoundedIcon from '@mui/icons-material/CancelRounded';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import Circle from '@mui/icons-material/Circle';
+import { BarChart } from '@mui/x-charts/BarChart';
 import './ChallengeDetailsView.css';
 import { Tooltip } from '@mui/material';
 import { pink, white } from '@mui/material/colors';
@@ -87,7 +87,16 @@ function CodingChallengesView() {
     if (submissionStatus == "SUCCESS") {
         testCaseBorderStyle = "3px solid green"
     }
-
+    // console.log("gameRoom.roomData?.challenges?.userSubmissions", gameRoom.roomData?.challenges[0]?.userSubmissions)
+    let series = challenges?.map((challenge) => {
+        let userSubmissions = gameRoom.roomData?.challenges.find((roomChallenge) => roomChallenge.id === challenge._id)?.userSubmissions
+        console.log("userSubmissions", userSubmissions)
+        return {
+            label: challenge.title,
+            data: userSubmissions?.map((submission) => submission.testCasesPassed.length),
+        }
+    })
+    console.log("series", series)
     return (
         <>
             {isPending ? (
@@ -150,9 +159,7 @@ function CodingChallengesView() {
                                                                         <h4>Expected Output: {JSON.stringify(testCase.output, undefined, 0.5)} </h4>
                                                                         
                                                                         {testCasePassed != null ? <h4>Output: <span style={{color: "green"}}>{JSON.stringify(testCase.output, undefined, 0.5)} </span> </h4> : ""}
-                                                                        {testCaseFailed != null ? <h4>Output:  <span style={{color: "red"}}>{JSON.stringify(testCaseFailed.output, undefined, 0.5)} </span> </h4> : ""
-
-                                                                        }
+                                                                        {testCaseFailed != null ? <h4>Output:  <span style={{color: "red"}}>{JSON.stringify(testCaseFailed.output, undefined, 0.5)} </span> </h4> : ""}
                                                                        </>} 
                                                                 placement="left">
 
@@ -173,6 +180,19 @@ function CodingChallengesView() {
 
 
                                 </div>
+                            </div>
+                            <div id="leaderBoard" style={{width: "100%", border: "3px solid rgb(35, 56, 91)", boxSizing: "border-box"}}>
+                            <BarChart
+                                series={[
+                                    { data: [35, 44, 24, 34] },
+                                    { data: [51, 6, 49, 30] },
+                                    { data: [15, 25, 30, 50] },
+                                    { data: [60, 50, 15, 25] },
+                                ]}
+                                height={290}
+                                xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
+                                margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+                                />
                             </div>
                             <h1 id="linkToLeetcode">
                                 <a

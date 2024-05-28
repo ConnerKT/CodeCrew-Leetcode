@@ -32,6 +32,7 @@ appSocket.on("connection", async (socket: any) => {
 
       let submissionResult = await Judge0Service.submitSolution(challenge, submission)
       socket.emit('submissionResult', submissionResult);
+      await gameroomStore.addUserSubmissionToGameRoom(roomId, submission, submissionResult)
       
       callback(submissionResult);
     });

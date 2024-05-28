@@ -11,9 +11,9 @@ function MainContent() {
 
     return (
         <>
-            <Box id="MainContentHeader" sx={{ width: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4, position: "relative"}}>
+            <Box id="MainContentHeader" sx={{ width: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4, position: "relative", marginBottom: "none" }}>
 
-                    <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}>
+                    <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
                         {users.map((user) => {
                             let avatarUrl = `https://ui-avatars.com/api/?name=${user.username}&background=random&rounded=true&size=128`;
                             return (
