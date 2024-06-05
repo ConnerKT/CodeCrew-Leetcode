@@ -2,7 +2,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { GameRoom, login, logout as apiLogout } from '../api';
 
-
 const LoginContext = createContext();
 
 export const useLogin = () => useContext(LoginContext);
@@ -13,19 +12,21 @@ export const LoginProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
-        let gameRoom = new GameRoom()
+        let gameRoom = new GameRoom();
+        
         gameRoom.connection.on("sessionData", (data) => {
             console.log("Session data received:", data);
             gameRoom.roomData = data.roomData;
             gameRoom.user = data.user;
-            setUser({...data.user, submissionsStore: {}});
+            setUser({ ...data.user, submissionsStore: {} });
             setIsLoggedIn(true);
         });
         
-        gameRoom.connection.on("disconnect", (data) => {
+        gameRoom.connection.on("disconnect", () => {
             console.log("Disconnected from server");
             setIsLoggedIn(false);
         });
+        
         gameRoom.connection.on("connect_error", (error) => {
             console.error("Error connecting to server:", error);
             setIsLoggedIn(false);
@@ -33,15 +34,19 @@ export const LoginProvider = ({ children }) => {
 
         gameRoom.connection.on("roomUpdate", (data) => {
             console.log("Room update received:", data);
-            setGameRoomState({...gameRoomState, roomData: data});
+            setGameRoomState((prevGameRoomState) => ({
+                ...prevGameRoomState,
+                roomData: data,
+            }));
         });
-
+        
         gameRoom.connection.on("submissionResult", (data) => {
             console.log("Submission result received:", data);
             setUser({...user, submissionsStore: {...user?.submissionsStore, [data.challengeId]: data}});
         });
-        gameRoom.connect()
-        setGameRoomState(gameRoom)
+        gameRoom.connect();
+        setGameRoomState(gameRoom);
+
         return () => {
             if (gameRoom) gameRoom.disconnect();
         };
@@ -58,13 +63,13 @@ export const LoginProvider = ({ children }) => {
         apiLogout();
         setIsLoggedIn(false);
         setUser(null);
-        if(gameRoomState.connection?.connected) {
+        if (gameRoomState.connection?.connected) {
             gameRoomState.disconnect();
         }
     };
 
     return (
-        <LoginContext.Provider value={{ isLoggedIn, user: user, gameRoom: gameRoomState, login: handleLogin, logout: handleLogout }}>
+        <LoginContext.Provider value={{ isLoggedIn, user, gameRoom: gameRoomState, login: handleLogin, logout: handleLogout }}>
             {children}
         </LoginContext.Provider>
     );
