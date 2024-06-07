@@ -63,7 +63,7 @@ function AdminView() {
     fetchData();
   }, []);
 
-  console.log("itemsToAdd:", itemsToAdd);
+  // console.log("itemsToAdd:", itemsToAdd);
 
   const handleRemoveItem = (item) => {};
   // Set open state to true to show the modal

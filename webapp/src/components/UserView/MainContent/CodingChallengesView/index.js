@@ -87,16 +87,16 @@ function CodingChallengesView() {
     if (submissionStatus == "SUCCESS") {
         testCaseBorderStyle = "3px solid green"
     }
-    // console.log("gameRoom.roomData?.challenges?.userSubmissions", gameRoom.roomData?.challenges[0]?.userSubmissions)
+    console.log("gameRoom.roomData?.challenges?.userSubmissions", gameRoom.roomData?.challenges[0]?.userSubmissions)
     let series = challenges?.map((challenge) => {
         let userSubmissions = gameRoom.roomData?.challenges.find((roomChallenge) => roomChallenge.id === challenge._id)?.userSubmissions
-        console.log("userSubmissions", userSubmissions)
+        // console.log("userSubmissions", userSubmissions)
         return {
             label: challenge.title,
             data: userSubmissions?.map((submission) => submission.testCasesPassed.length),
         }
     })
-    console.log("series", series)
+    // console.log("series", series)
     return (
         <>
             {isPending ? (
@@ -120,7 +120,7 @@ function CodingChallengesView() {
                                 <div style={{ width: "100%", display: "flex", marginBottom: "6px ", justifyContent: "right" }}>
                                     <div style={{ display: 'flex', flexDirection: "column" }}>
                                         <div style={{ display: 'flex', alignItems: "center" }}>
-                                            Experimental feature <ScienceIcon SX={{ display: "inline-block" }} />
+                                            Experimental feature <ScienceIcon sx={{ display: "inline-block" }} />
                                         </div>
                                         <Button
                                             variant="contained"
@@ -154,7 +154,7 @@ function CodingChallengesView() {
                                                 let testCasePassed = user.submissionsStore[focusedChallenge._id]?.testCasesPassed?.find((testCasePassed) => testCasePassed.id === testCase.id);
                                                 
                                                 let testCaseFailed = user.submissionsStore[focusedChallenge._id]?.testCasesFailed?.find((testCaseFailed) => testCaseFailed.id === testCase.id);
-                                                return <Tooltip title={<>
+                                                return <Tooltip key={index} title={<>
                                                                         <h4>Input: {JSON.stringify(testCase.input, undefined, 0.5)} </h4>
                                                                         <h4>Expected Output: {JSON.stringify(testCase.output, undefined, 0.5)} </h4>
                                                                         

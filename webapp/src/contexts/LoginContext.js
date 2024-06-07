@@ -41,8 +41,11 @@ export const LoginProvider = ({ children }) => {
         });
         
         gameRoom.connection.on("submissionResult", (data) => {
-            console.log("Submission result received:", data);
-            setUser({...user, submissionsStore: {...user?.submissionsStore, [data.challengeId]: data}});
+            // console.log("Submission result received:", data);
+            setUser((prevUser) => ({
+                ...prevUser,
+                submissionsStore: {...prevUser?.submissionsStore, [data.challengeId]: data}
+            }));
         });
         gameRoom.connect();
         setGameRoomState(gameRoom);

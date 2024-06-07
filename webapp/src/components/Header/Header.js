@@ -14,7 +14,7 @@ function Header() {
 
         <header className="header-container">
         <Link to='/' id='headerImage'>
-        <img src="./CodeCrewLogo.png" alt="CodeCrewLogo" className="logo" onclick='/'/>
+        <img src="./CodeCrewLogo.png" alt="CodeCrewLogo" className="logo" onClick='/'/>
         </Link>
           
           

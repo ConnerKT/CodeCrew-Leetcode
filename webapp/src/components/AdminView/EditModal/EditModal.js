@@ -42,9 +42,9 @@ const handleDescriptionChange = (event) => {
 
 const handleSubmit = async () => {
 
-  console.log("Problem Name:", problemName);
-  console.log("Difficulty:", difficulty);
-  console.log("Description:", description);
+  // console.log("Problem Name:", problemName);
+  // console.log("Difficulty:", difficulty);
+  // console.log("Description:", description);
 
   try {
 

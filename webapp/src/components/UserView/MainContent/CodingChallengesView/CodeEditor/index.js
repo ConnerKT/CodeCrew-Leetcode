@@ -60,7 +60,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
         setLanguage(newLanguage);
 
     };
-    console.log("gameRoom", gameRoom)
+    // console.log("gameRoom", gameRoom)
     const handleSubmit = () => {
         setAwaitingSubmissionResult(true)
         gameRoom.connection.timeout(5000).emit("submission", 
@@ -75,7 +75,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
             },
             function(err, submissionResult){
                 setAwaitingSubmissionResult(false)
-                console.log("Submission result111:", submissionResult)
+                // console.log("Submission result111:", submissionResult)
             }
         )
     };
