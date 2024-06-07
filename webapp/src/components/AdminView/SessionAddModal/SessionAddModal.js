@@ -51,7 +51,7 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
       
       });
       
-      console.log(response);
+      // console.log(response);
   
       return response.data;
     } catch (error) {
@@ -97,14 +97,14 @@ const SessionAddModal = ({ open, handleClose, allItems }) => {
         const problem = allItems.find((item) => item._id === _id);
         return problem ? problem._id : "";
       });
-      console.log("Selected problems:", selectedProblemNames);
+      // console.log("Selected problems:", selectedProblemNames);
       handleClose(); 
     } else {
       console.error("Please select exactly 3 problems");
     }
     try {
       const response = await postSession(sessionName ,selectedProblems)
-      console.log(response);
+      // console.log(response);
       
   }catch(err){
       console.log(err);

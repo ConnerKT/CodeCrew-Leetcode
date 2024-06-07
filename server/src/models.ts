@@ -42,17 +42,18 @@ interface Challenge {
     sampleCorrectSolution: any
 }
 
+
 class GameRoom {
     id: string;
     users: User[];
-    challenges!: { id: string, testCases: TestCase[], userSubmissions: UserSubmission & SubmissionResult[] }[];
+    challenges!: { id: string, testCases: TestCase[], userSubmissions: {} }[];
 
     constructor(id: string, challenges: Challenge[]) {
         this.id = id;
         this.challenges = challenges.map(challenge => ({
             id: challenge._id,
             testCases: challenge.testCases,
-            userSubmissions: [] as UserSubmission & SubmissionResult[]
+            userSubmissions: {}
         }));
         this.users = [];
     }

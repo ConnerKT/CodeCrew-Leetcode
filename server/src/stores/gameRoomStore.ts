@@ -83,7 +83,7 @@ class GameRoomStore {
         if (gameRoomData) {
             for(let i = 0; i < gameRoomData.challenges.length; i++){
                 if(gameRoomData.challenges[i].id === userSubmission.challengeId){
-                    gameRoomData.challenges[i].userSubmissions.push({...userSubmission,...submissionResult})
+                    gameRoomData.challenges[i].userSubmissions[userSubmission.userId] = {...userSubmission,...submissionResult}
                     await this.redisClient.set(`room:${gameroomId}`, JSON.stringify(gameRoomData));
                     return
                 }

@@ -88,14 +88,14 @@ function CodingChallengesView() {
         testCaseBorderStyle = "3px solid green"
     }
     console.log("gameRoom.roomData?.challenges?.userSubmissions", gameRoom.roomData?.challenges[0]?.userSubmissions)
-    let series = challenges?.map((challenge) => {
-        let userSubmissions = gameRoom.roomData?.challenges.find((roomChallenge) => roomChallenge.id === challenge._id)?.userSubmissions
-        // console.log("userSubmissions", userSubmissions)
-        return {
-            label: challenge.title,
-            data: userSubmissions?.map((submission) => submission.testCasesPassed.length),
-        }
-    })
+    // let series = challenges?.map((challenge) => {
+    //     let userSubmissions = gameRoom.roomData?.challenges.find((roomChallenge) => roomChallenge.id === challenge._id)?.userSubmissions
+    //     // console.log("userSubmissions", userSubmissions)
+    //     return {
+    //         label: challenge.title,
+    //         data: userSubmissions?.map((submission) => submission.testCasesPassed.length),
+    //     }
+    // })
     // console.log("series", series)
     return (
         <>

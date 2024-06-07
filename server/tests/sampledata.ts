@@ -42,29 +42,22 @@ const sampleGameState: GameRoom = {
             output: [8, 9, 9, 9, 0, 0, 0, 1]
           }
         ],
-        userSubmissions: [
-          {
+        userSubmissions: {
+          user123: {
             challengeId: "661d58f3799defea023aff45",
             userId: "user123",
             testCasesPassed: ["tc1", "tc2", "tc3"],
             submissionCode: "function addTwoNumbers(l1, l2) {\n  // implementation\n}",
             submissionLanguage: SubmissionLanguage.JavaScript
           },
-          {
+          user124: {
             challengeId: "661d58f3799defea023aff45",
             userId: "user124",
             testCasesPassed: ["tc1", "tc2"],
             submissionCode: "function addTwoNumbers(l1, l2) {\n  // implementation\n}",
             submissionLanguage: SubmissionLanguage.JavaScript
           },
-          {
-            challengeId: "661d58f3799defea023aff45",
-            userId: "user123",
-            testCasesPassed: ["tc1", "tc2", "tc3"],
-            submissionCode: "def addTwoNumbers(l1, l2):\n  # implementation",
-            submissionLanguage: SubmissionLanguage.Python
-          }
-        ]
+      }
       }
     ]
   }
