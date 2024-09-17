@@ -87,7 +87,7 @@ function CodingChallengesView() {
     if (submissionStatus == "SUCCESS") {
         testCaseBorderStyle = "3px solid green"
     }
-    console.log("gameRoom.roomData?.challenges?.userSubmissions", gameRoom.roomData?.challenges[0]?.userSubmissions)
+    // console.log("gameRoom.roomData?.challenges?.userSubmissions", gameRoom.roomData?.challenges[0]?.userSubmissions)
     // let series = challenges?.map((challenge) => {
     //     let userSubmissions = gameRoom.roomData?.challenges.find((roomChallenge) => roomChallenge.id === challenge._id)?.userSubmissions
     //     // console.log("userSubmissions", userSubmissions)
@@ -97,6 +97,38 @@ function CodingChallengesView() {
     //     }
     // })
     // console.log("series", series)
+
+    let users = gameRoom.roomData?.users
+    // console.log("users", users)
+    // let challengeTitles = gameRoom.roomData?.challenges.map((challenge) => challenge.title)
+    let series = [];
+    gameRoom.roomData.challenges.forEach((challenge) => {
+        console.log("challenge", challenge)
+        let userSubmissionResults = users.map((user) => {
+            let userSubmission = challenge.userSubmissions[user.id]
+            if (userSubmission == null) {
+                return 0
+            }
+            return userSubmission.testCasesPassed.length
+        })
+        series.push({stack: challenge.title, data: userSubmissionResults})
+    })
+
+    // console.log(gameRoom.roomData?.challenges)
+    // let submissions = users.map((user) => {
+    //     let userSubmission = gameRoom.roomData.challenges.userSubmission[user.id]
+    //     if userSubmission
+    // let series = gameRoom.roomData?.challenges.map((challenge) => {
+    //     let userSubmissions = challenge.userSubmissions
+    //     return {
+    //         label: challenge.title,
+    //         data: users.map((user) => {
+    //             let submission = userSubmissions?.find((submission) => submission.userId === user.userId)
+    //             return submission?.testCasesPassed.length
+    //         }),
+    //     }
+    // })
+    console.log("series", series)
     return (
         <>
             {isPending ? (
@@ -184,15 +216,15 @@ function CodingChallengesView() {
                             <div id="leaderBoard" style={{width: "100%", border: "3px solid rgb(35, 56, 91)", boxSizing: "border-box"}}>
                             <BarChart
                                 series={[
-                                    { data: [35, 44, 24, 34] },
-                                    { data: [51, 6, 49, 30] },
-                                    { data: [15, 25, 30, 50] },
-                                    { data: [60, 50, 15, 25] },
+                                    { stack: "test", data: [35, 44, 24, 34] },
+                                    { stack: "test", data: [51, 6, 49, 30] },
                                 ]}
                                 height={290}
-                                xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
+                                yAxis={[{ data: users.map(user => user.username), scaleType: 'band' }]}
                                 margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+                                layout='horizontal'
                                 />
+
                             </div>
                             <h1 id="linkToLeetcode">
                                 <a

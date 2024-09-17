@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "bun",
+            "internalConsoleOptions": "neverOpen",
+            "request": "launch",
+            "name": "Debug Api",
+            "program": "src/server.ts",
+            "cwd": "${workspaceFolder}/server",
+            "stopOnEntry": false,
+            "watchMode": false
+        },
+        {
+            "type": "msedge",
+            "request": "launch",   // Change this from "attach" to "launch" to ensure it starts a new session
+            "name": "Launch Client",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/webapp",
+            "preLaunchTask": "Start debug server",
+            "userDataDir": "${workspaceFolder}/.vscode/edgeUserData",  // Optional: Creates a separate profile, ensuring a fresh session
+            "runtimeArgs": ["--new-window"] // Forces Edge to open a new window or tab
+          }
+          
+    ]
+}

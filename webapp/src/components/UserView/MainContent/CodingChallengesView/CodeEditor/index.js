@@ -70,7 +70,7 @@ const CodeEditor = ({ challenge, editorContentsStore, setEditorContentsStore }) 
                     challengeId: challenge._id,
                     submissionCode: editorRef.current.getValue(),
                     submissionLanguage: language,
-                    userId: user.username
+                    userId: user.id
                 },
             },
             function(err, submissionResult){

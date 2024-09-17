@@ -69,7 +69,7 @@ function LoginForm() {
                     textAlign="center"
                     gutterBottom
                 >
-                    Select a session to join
+                {isLoading == false && rooms.length == 0 ? "No sessions found" : "Select a session to join"}
                 </Typography>
 
                 {rooms && (
@@ -102,7 +102,7 @@ function LoginForm() {
                     margin="normal"
                 />
 
-                {isLoading && <Typography mt={2}>Loading game rooms...</Typography>}
+                {isLoading == true && <Typography mt={2}>Loading game rooms...</Typography>}
                 {isError && (
                     <Typography color="error" mt={2}>
                         Error loading game rooms. Please try again later.
@@ -114,7 +114,7 @@ function LoginForm() {
                     variant="contained"
                     color="primary"
                     fullWidth
-                    disabled={isLoading}
+                    disabled={isLoading == true || rooms.length == 0}
                     sx={{ mt: 2 }}
                 >
                     Join
