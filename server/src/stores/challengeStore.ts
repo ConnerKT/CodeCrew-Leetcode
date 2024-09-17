@@ -11,8 +11,8 @@ class ChallengeStore {
 
     async getAllChallenges(): Promise<Challenge[]> {
         const response = await this.mongoClient
-                            .db("leetcode")
-                            .collection<Challenge>("challenges")
+                            .db("testingLeet")
+                            .collection<Challenge>("problems")
                             .find({})
                             .toArray();
         return response;

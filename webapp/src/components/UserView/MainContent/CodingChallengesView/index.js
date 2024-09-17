@@ -37,22 +37,22 @@ function CodingChallengesView() {
             return response.data;
         }
     });
-        // Load editorContentsStore from localStorage on mount
-        useEffect(() => {
+    // Load editorContentsStore from localStorage on mount
+    useEffect(() => {
 
-            const storedContents = localStorage.getItem('editorContentsStore');
-            if (storedContents) {
-                setEditorContentsStore(JSON.parse(storedContents));
-            }
-        }, []);
+        const storedContents = localStorage.getItem('editorContentsStore');
+        if (storedContents) {
+            setEditorContentsStore(JSON.parse(storedContents));
+        }
+    }, []);
     
-        // Store editorContentsStore in localStorage whenever it changes
-        useEffect(() => {
-            if (focusedChallenge) {
-                localStorage.setItem(`globalEditorContentsStore:${focusedChallenge._id}`, JSON.stringify(editorContentsStore));
-            }
+    // Store editorContentsStore in localStorage whenever it changes
+    useEffect(() => {
+        if (focusedChallenge) {
+            localStorage.setItem(`globalEditorContentsStore:${focusedChallenge._id}`, JSON.stringify(editorContentsStore));
+        }
 
-        }, [editorContentsStore]);
+    }, [editorContentsStore]);
 
     useEffect(() => {
         if (focusedChallengeIndex !== null) {

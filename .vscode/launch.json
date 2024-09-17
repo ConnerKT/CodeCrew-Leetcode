@@ -8,7 +8,7 @@
             "type": "bun",
             "internalConsoleOptions": "neverOpen",
             "request": "launch",
-            "name": "Debug Api",
+            "name": "Api",
             "program": "src/server.ts",
             "cwd": "${workspaceFolder}/server",
             "stopOnEntry": false,
@@ -17,7 +17,7 @@
         {
             "type": "msedge",
             "request": "launch",   // Change this from "attach" to "launch" to ensure it starts a new session
-            "name": "Launch Client",
+            "name": "Client",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}/webapp",
             "preLaunchTask": "Start debug server",

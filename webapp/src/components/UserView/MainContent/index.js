@@ -13,20 +13,18 @@ function MainContent() {
         <>
             <Box id="MainContentHeader" sx={{ width: "100%", display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 4, position: "relative", marginBottom: "none" }}>
 
-                    <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
-                        {users.map((user) => {
-                            let avatarUrl = `https://ui-avatars.com/api/?name=${user.username}&background=random&rounded=true&size=128`;
-                            return (
-                                <Tooltip title={user.username} key={user.id}>
+                <Box sx={{ display: "flex", justifyContent: "center", flexWrap: "wrap"}}>
+                    {users.map((user) => {
+                        let avatarUrl = `https://ui-avatars.com/api/?name=${user.username}&background=random&rounded=true&size=128`;
+                        return <Tooltip title={user.username} key={user.id}>
                                     <Avatar src={avatarUrl} alt="avatar" sx={{ m: 2, border: thisUser.username == user.username ? "6px solid white": ""}} />
-                                </Tooltip>
-                            );
-                        })}
-                    </Box>
+                               </Tooltip>
+                    })}
+                </Box>
                 <Button sx={{position: "absolute", right: "3%", top: "3%"}} variant="contained" color="primary" onClick={logout}>
                     Leave
                 </Button>
-                </Box>
+            </Box>
 
             <CodingChallengesView />
         </>
