@@ -22,6 +22,7 @@ services:
       - "27017:27017"
     volumes:
       - mongodb-data:/data/db
+    command: mongod --bind_ip_all  # Listens on all network interfaces
 
 
   redis:

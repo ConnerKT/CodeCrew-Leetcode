@@ -18,6 +18,6 @@ app.use(express.json());
 app.use(sessionMiddleware);
 app.use(problemsRouter);
 app.use(gameRoomRouter);
-expressOasGenerator.init(app, {}, null, 60 * 1000, '/',)
+expressOasGenerator.init(app, {}, null, 60 * 1000, "docs")
 
 export default app;

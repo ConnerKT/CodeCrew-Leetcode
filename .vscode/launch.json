@@ -12,7 +12,7 @@
             "program": "src/server.ts",
             "cwd": "${workspaceFolder}/server",
             "stopOnEntry": false,
-            "watchMode": false
+            "watchMode": true
         },
         {
             "type": "msedge",

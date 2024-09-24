@@ -9,12 +9,14 @@ class ChallengeStore {
         this.mongoClient = mongoClient;
     }
 
-    async getAllChallenges(): Promise<Challenge[]> {
+    async getAllChallenges(): Promise<any> {
         const response = await this.mongoClient
-                            .db("testingLeet")
-                            .collection<Challenge>("problems")
+                            .db("leetcode")
+                            .collection("challenges")
                             .find({})
-                            .toArray();
+                            .toArray();        
+
+                            
         return response;
     }
 

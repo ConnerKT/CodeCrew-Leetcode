@@ -33,6 +33,9 @@ class GameRoomStore {
             throw new Error("Game room already exists");
         }
         const challenges = await challengeStore.getChallengesByIds(challengeIds);
+        if (challenges.length == 0) {
+            throw new Error(`Could not create gameroom. Could not find challenges with ids ${challengeIds}`)
+        }
 
         const newGameRoom = new GameRoom(gameRoomId, challenges);
         await this.redisClient.set(`room:${gameRoomId}`, JSON.stringify(newGameRoom));

@@ -29,12 +29,10 @@ appSocket.on("connection", async (socket: any) => {
       await gameroomStore.addUserSubmissionToGameRoom(roomId, submission, submissionResult)
       callback(submissionResult);
     });
-  
 
     // Handle disconnect
     socket.on('disconnect', () => {
       console.log(`User ${socket.request.session.username} disconnected from room ${roomId}`);
-      // Leave the room
       socket.leave(roomId);
     });
 });

@@ -24,7 +24,6 @@ describe('Game Room Management', () => {
 
         let gameRoomData: GameRoom = response.body;
         expect(gameRoomData).toEqual(expectedGameRoomData);
-
     });
 
     it('should return 404 when game room does not exist', async () => {
@@ -37,7 +36,6 @@ describe('Game Room Management', () => {
         let roomId = "spicygrandma"
         let challengeIds = sampleChallenges.map(challenge => challenge._id)
         const response = await request(app).post('/gameroom').send({gameRoomId: roomId, challengeIds});
-        console.log("response", response.text)
 
         expect(response.statusCode).toBe(201);
         
@@ -47,7 +45,20 @@ describe('Game Room Management', () => {
         }
         let expectedGameRoomData: GameRoom | null = JSON.parse(expectedGameRoomDataJson)
         expect(roomId.toString()).toEqual(expectedGameRoomData.id);
+    });
 
+    it('should throw error when using invalid challengeids', async () => {
+        let roomId = "spicygrandma"
+        let challengeIds = ["261d58f3799defea023agf45"]
+        const response = await request(app).post('/gameroom').send({gameRoomId: roomId, challengeIds});
 
+        expect(response.statusCode).toBe(400);
+        
+        let expectedGameRoomDataJson = await redisClient.get(`room:${roomId}`)
+        if (!expectedGameRoomDataJson) {
+            throw new Error("No game room data found")
+        }
+        let expectedGameRoomData: GameRoom | null = JSON.parse(expectedGameRoomDataJson)
+        expect(roomId.toString()).toEqual(expectedGameRoomData.id);
     });
 });
